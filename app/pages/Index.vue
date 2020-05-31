@@ -2,7 +2,7 @@
 	<main class="Index">
 		<ul>
 			<li v-for="tag_name in tag_names" :key="tag_name">
-				<Tag :name="tag_name"></Tag>
+				<AppTag :name="tag_name"></AppTag>
 			</li>
 		</ul>
 		
@@ -13,7 +13,7 @@
 </style>
 
 <script>
-	import Tag from "@/components/Tag"
+	import AppTag from "@/components/AppTag"
 
 	export default {
 		data(){
@@ -22,7 +22,7 @@
 			}
 		},
 		components: {
-			Tag
+			AppTag
 		}
 	}
 </script>
