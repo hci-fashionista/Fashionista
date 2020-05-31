@@ -5,7 +5,10 @@
 				<AppTag :name="tag_name"></AppTag>
 			</li>
 		</ul>
-		
+
+		<AppButton>
+			asdf
+		</AppButton>
 	</main>
 </template>
 
@@ -13,7 +16,8 @@
 </style>
 
 <script>
-	import AppTag from "@/components/AppTag"
+	import AppButton from "@/components/AppButton";
+	import AppTag from "@/components/AppTag";
 
 	export default {
 		data(){
@@ -22,6 +26,7 @@
 			}
 		},
 		components: {
+			AppButton,
 			AppTag
 		}
 	}
