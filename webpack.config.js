@@ -126,7 +126,8 @@ module.exports = {
 				test: /\.(png|jpe?g|gif|woff2?|otf|ttf|eot)(\?|#.*)?$/,
 				loader: 'file-loader',
 				options: {
-					name: 'files/[hash:8].[ext]'
+					name: 'files/[hash:8].[ext]',
+					esModule: false
 				}
 			}
 		]
