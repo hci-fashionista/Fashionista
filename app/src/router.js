@@ -8,5 +8,7 @@ Vue.use(VueRouter);
 export default new VueRouter({
 	routes: [
 		{ name: 'Index', path: '/', component: Index }
-	]
+	],
+
+	mode: 'history'
 });

@@ -7,9 +7,9 @@
 <style scoped>
 	button {
 		cursor: pointer;
-		color: #ffffff;
+		color: var(--grey-900);
 		font-family: 'Raleway', sans-serif;
-		background: #2196f3;
+		background: var(--blue-400);
 		border: none;
 		border-radius: 5px;
 		padding: 10px 20px;

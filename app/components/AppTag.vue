@@ -9,7 +9,7 @@
         font-family: 'Raleway';
         width: 140px;
         height: 25px;
-        background-color: #C1DFFB;
+        background-color: var(--blue-800);
         border-radius: 50px;
         font-size: medium;
         text-align: center;

@@ -60,7 +60,7 @@
 			}
 
 			&:hover {
-				background: rgba(0, 0, 0, .05);
+				background: var(--grey-850);
 			}
 		}
 	}
