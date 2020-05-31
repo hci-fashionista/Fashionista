@@ -26,7 +26,7 @@ span:last-child {
 </style>
 
 <script>
-import thumbsup from '@/assets/thumbsup.png'
+import thumbsup from '@/images/thumbsup.png'
 
 export default {
 	data() {
