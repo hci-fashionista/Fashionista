@@ -1,12 +1,14 @@
 <template>
 	<div>
 		<input type="text" v-model="typetext">
-		{{typetext}}
 	</div>
 </template>
 
 <style scoped>
-
+	input {
+		border: none;
+		background-color: var(--grey-800);
+	}
 </style>
 
 <script>

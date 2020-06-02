@@ -7,29 +7,68 @@
 
 		<div class="texts">
 			<p id="title">Title</p>
-			<p id="title_content">{{title}}</p>
+			<TextInput v-if="editable" v-model="title_text"></TextInput>
+			<p v-else id="title_content">{{title}}</p>
+			
 			<p id="description">Description</p>
-			<p id="description_content">{{description}}</p>
+			<TextInput v-if="editable" v-model="description_text"></TextInput>
+			<p v-else id="description_content">{{description}}</p>
+			
+			<template v-if="editable">
+				<p id="heightweight">Body Shape</p>
+				<div class="select_list">
+					<select v-model="selected_height">
+						<option disabled value="">Height</option>
+						<option>~150</option>
+						<option>150~160</option>
+						<option>160~170</option>
+						<option>170~180</option>
+						<option>180~190</option>
+						<option>190~</option>
+					</select>
+					<select v-model="selected_weight">
+						<option disabled value="">Weight</option>
+						<option>~50</option>
+						<option>50~60</option>
+						<option>60~70</option>
+						<option>70~80</option>
+						<option>80~90</option>
+						<option>90~</option>
+					</select>
+				</div>
+			</template>
+			<p id="tags">Tags</p>
 		</div>
-		<ul class="tags">
+		
+		<ul class="tags_list">
 			<li v-for="tag_name in tag_names" :key="tag_name">
 				<AppTag :name="tag_name"></AppTag>
 			</li>
 		</ul>
-		<div class="reviews">
-			<hr>
-			<AppLike id="app_like" :likes="12"></AppLike>
-			<hr>
-			<ul class="reviews_list">
-				<li v-for="review_set in review_array" :key="review_set">
-					<AppReview :id="review_set.id" :content="review_set.content"></AppReview>
-				</li>
-			</ul>
-			<hr>
-		</div>
+		
+		<template v-if="editable == false">
+			<div class="reviews">
+				<hr>
+				<AppLike id="app_like" :likes="12"></AppLike>
+				<hr>
+				<ul class="reviews_list">
+					<li v-for="(review_set,i) in review_array" :key="i">
+						<AppReview :id="review_set.id" :content="review_set.content"></AppReview>
+					</li>
+				</ul>
+				<hr>
+			</div>
+		</template>
+		
 		<div class="button">
+			<AppButton v-if="editable">
+				Upload to Ranking
+			</AppButton>
 			<AppButton>
 				To Shopping Cart
+			</AppButton>
+			<AppButton v-if="editable">
+				Cancel
 			</AppButton>
 		</div>
 	</div>
@@ -44,10 +83,16 @@
 		max-width: 400px;
 	}
 
-	.tags {
+	.select_list {
+		display: flex;
+		padding-bottom : 10px;
+	}
+
+	.tags_list {
 		display: flex;
 		flex-wrap: wrap;
 		padding-left: 0;
+		list-style: none;
 	}
 
 	.reviews {
@@ -63,7 +108,7 @@
 		padding: 0;
 	}
 
-	#title, #description {
+	#title, #description, #heightweight, #tags {
 		font-family: Raleway;
 		font-style: normal;
 		font-weight: bold;
@@ -95,13 +140,22 @@
 	import AppReview from "@/components/AppReview";
 	import AppButton from "@/components/AppButton";
 	import AppLike from "@/components/AppLike";
+	import TextInput from "@/components/TextInput";
 
 	export default {
+		data() {
+			return {
+				title_text : "",
+				description_text: "",
+				selected_height : "",
+				selected_weight : ""
+			};
+		},
 
 		props: {
 			tag_names: {
 				type: Array,
-				default: []
+				default: () => ["skinny_leg", "small_face", "long_leg"]
 			},
 			title: {
 				type: String,
@@ -113,9 +167,13 @@
 			},
 			review_array: {
 				type: Array,
-				default: [
+				default: () => [
 					{id: "None", content: "None"}
 				]
+			},
+			editable : {
+				type : Boolean,
+				default : true
 			}
 		},
 
@@ -123,7 +181,8 @@
 			AppButton,
 			AppTag,
 			AppLike,
-			AppReview
+			AppReview,
+			TextInput
 		}
 	}
 </script>
