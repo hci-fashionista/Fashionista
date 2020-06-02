@@ -7,7 +7,7 @@
 
 		<div class="tags">
 			<h3>Best</h3>
-			<transition-group class="tags_list" name="Fade" tag="ul">
+			<transition-group class="tags_list" name="FadeMove" tag="ul">
 				<li v-for="tag in candidates" :key="tag">
 					<div>
 						<AppTag class="tag"

@@ -31,7 +31,7 @@
 		padding: 0;
 	}
 
-	.Fade {
+	.FadeMove {
 		&-enter-active, &-leave-active {
 			transition: all .4s ease;
 		}
