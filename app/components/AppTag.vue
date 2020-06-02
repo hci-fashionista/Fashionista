@@ -1,19 +1,37 @@
 <template>
-	<div>
-		{{nameWithHash}}
+	<button class="tag is_selectable"
+		:class="{'is_selected': selected}"
+		@click="$emit('select')"
+		v-if="selectable">
+
+		{{ nameWithHash }}
+	</button>
+	<div class="tag is_selected" v-else>
+		{{ nameWithHash }}
 	</div>
 </template>
 
 <style scoped>
-	div{
+	.tag {
 		font-family: 'Raleway';
-		width: 140px;
 		height: 25px;
-		background-color: var(--blue-800);
+		background-color: var(--grey-750);
+		border: none;
 		border-radius: 50px;
+		padding: 0 20px;
+		line-height: 25px;
 		font-size: medium;
 		text-align: center;
-		line-height: 25px;
+		user-select: none;
+
+		&.is_selectable {
+			cursor: pointer;
+			outline: none;
+		}
+	}
+
+	.is_selected {
+		background-color: var(--blue-800);
 	}
 </style>
 
@@ -29,6 +47,14 @@
 			name: {
 				type: String,
 				default: "None"
+			},
+
+			selectable: {
+				type: Boolean
+			},
+
+			selected: {
+				type: Boolean
 			}
 		}
 	}

@@ -30,6 +30,24 @@
 		margin: 0;
 		padding: 0;
 	}
+
+	.Fade {
+		&-enter-active, &-leave-active {
+			transition: all .4s ease;
+		}
+
+		&-enter, &-leave-to {
+			opacity: 0;
+		}
+
+		&-leave-active {
+			position: absolute;
+		}
+
+		&-move {
+			transition: all .4s ease;
+		}
+	}
 </style>
 
 <script>
