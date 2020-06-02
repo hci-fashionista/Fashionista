@@ -33,6 +33,9 @@
 	.is_selected {
 		background-color: var(--blue-800);
 	}
+	.is_selected{
+		background-color: var(--blue-800);
+	}
 </style>
 
 <script>
@@ -56,6 +59,7 @@
 			selected: {
 				type: Boolean
 			}
+
 		}
 	}
 </script>
