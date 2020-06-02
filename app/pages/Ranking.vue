@@ -1,5 +1,7 @@
 <template>
     <div class="container">
+		<TagInput />
+
         <div class="search">
             <h1>Preset</h1>
             <div class="searchbox"></div>
@@ -26,9 +28,9 @@
 				    <AppClothwithRank :clothId="clothId"></AppClothwithRank>
 			    </li>
             </ul>
-            
+
         </div>
-        
+
     </div>
 </template>
 
@@ -45,50 +47,6 @@
     .search > h1 {
         margin-left: 20px;
         align-self: start;
-    }
-
-    .selected{
-        margin: 0px 30px;
-        list-style: none;
-		display: flex;
-        align-items: center;
-        align-self: flex-start;
-		max-height: 300px;
-		overflow: auto;
-        border: 0.5px solid var(--grey-100);
-        border-radius: 10px;
-        width: 50%;
-        height: 40px;
-        
-    }
-    .selected > li {
-        padding: 0px 10px;
-    }
-    .tags{
-        margin: 30px 30px;
-        align-self: flex-start;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .tags > h3 {
-        font-family: "Roboto";
-        font-weight: 300;
-        color: var(--blue-500);
-        align-self: start;
-        margin: 0px;
-        padding: 0px 10px;
-    }
-
-    .tags_list {
-        list-style: none;
-		display: flex;
-		max-height: 300px;
-		overflow: auto;
-        margin: 0px;
-	}
-    .tags_list > li {
-        padding: 0px 10px;
     }
 
     .rankings{
@@ -116,6 +74,8 @@
 <script>
     import AppClothwithRank from "@/components/AppClothwithRank"
     import AppTag from "@/components/AppTag"
+	import TagInput from "@/components/TagInput"
+
     export default {
         data() {
             return {
@@ -143,7 +103,8 @@
         },
         components: {
             AppClothwithRank,
-            AppTag
+            AppTag,
+			TagInput
         }
     }
 </script>
