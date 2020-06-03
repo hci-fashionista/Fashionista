@@ -1,6 +1,6 @@
 <template>
-	<AppPopup ref="popup" class='root flex'>
-		<div class='flex'><img :src="require('@/images/' + src)" alt='Clothes Picture'></div>
+	<AppPopup ref='popup' class='root flex'>
+		<div class='flex'><img :src="require('@/images/' + src).default" alt='Clothes Picture'></div>
 		<div class='flex column info'>
 			<div class='flex title'>
 				<h1>{{ info.title }}</h1>
