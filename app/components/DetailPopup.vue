@@ -89,12 +89,12 @@ img {
 }
 
 hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
+	display: block;
+	height: 1px;
+	border: 0;
+	border-top: 1px solid #ccc;
 	margin: 15px 0;
-    padding: 0;
+	padding: 0;
 }
 
 h3 {
