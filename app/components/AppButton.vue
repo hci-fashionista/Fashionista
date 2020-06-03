@@ -1,5 +1,5 @@
 <template>
-	<button @click="onClick" :class='color'>
+	<button @click="onClick" :class='getClass()'>
 		<slot></slot>
 	</button>
 </template>
@@ -32,6 +32,10 @@
 			background: var(--blue-500);
 		}
 	}
+
+	button.full-width {
+		width: 100%;
+	}
 </style>
 
 <script>
@@ -39,12 +43,22 @@
 		methods: {
 			onClick() {
 				this.$emit('click');
+			},
+			getClass() {
+				return {
+					[this.color]: true,
+					'full-width': this.fullWidth
+				}
 			}
 		},
 		props: {
 			color: {
 				type: String,
 				default: 'default'
+			},
+			fullWidth: {
+				type: Boolean,
+				default: false
 			}
 		}
 	};
