@@ -1,5 +1,5 @@
 <template>
-	<div class='root flex'>
+	<AppPopup ref="popup" class='root flex'>
 		<div class='flex'><img :src="require('@/images/' + src)" alt='Clothes Picture'></div>
 		<div class='flex column info'>
 			<div class='flex title'>
@@ -43,7 +43,7 @@
 				<AppButton>Cancel</AppButton>
 			</div>
 		</div>
-	</div>
+	</AppPopup>
 </template>
 
 <style scoped>
@@ -134,6 +134,12 @@ export default {
 					eta: 2
 				}
 			}
+		}
+	},
+
+	methods: {
+		open() {
+			this.$refs.popup.open();
 		}
 	}
 }
