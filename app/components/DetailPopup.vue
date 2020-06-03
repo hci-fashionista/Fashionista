@@ -48,7 +48,8 @@
 
 <style scoped>
 .root {
-	width: 1000px;
+	width: 90vw;
+	max-width: 1000px;
 	padding: 20px 40px;
 }
 
