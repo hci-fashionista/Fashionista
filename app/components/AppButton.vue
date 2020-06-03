@@ -1,5 +1,5 @@
 <template>
-	<button @click="onClick" :class='getClass()'>
+	<button @click="onClick" :class='getClass()' :disabled='disabled'>
 		<slot></slot>
 	</button>
 </template>
@@ -22,6 +22,10 @@
 
 		&:focus {
 			outline: 0;
+		}
+
+		&:disabled {
+			cursor: not-allowed;
 		}
 	}
 
@@ -57,6 +61,10 @@
 				default: 'default'
 			},
 			fullWidth: {
+				type: Boolean,
+				default: false
+			},
+			disabled: {
 				type: Boolean,
 				default: false
 			}
