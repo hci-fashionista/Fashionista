@@ -1,6 +1,8 @@
 <template>
 	<div class="coordination_detail">
 		<div class="clothes">
+			<AppCloth class="app_cloth"></Appcloth>
+			<AppCloth class="app_cloth"></Appcloth>
 			<div class="color_match">
 			</div>
 		</div>
@@ -19,32 +21,37 @@
 				<div class="select_list">
 					<select v-model="selected_height">
 						<option disabled value="">Height</option>
-						<option>~150</option>
-						<option>150~160</option>
-						<option>160~170</option>
-						<option>170~180</option>
-						<option>180~190</option>
-						<option>190~</option>
+						<option>-150</option>
+						<option>150-160</option>
+						<option>160-170</option>
+						<option>170-180</option>
+						<option>180-190</option>
+						<option>190-</option>
 					</select>
 					<select v-model="selected_weight">
 						<option disabled value="">Weight</option>
-						<option>~50</option>
-						<option>50~60</option>
-						<option>60~70</option>
-						<option>70~80</option>
-						<option>80~90</option>
-						<option>90~</option>
+						<option>-50</option>
+						<option>50-60</option>
+						<option>60-70</option>
+						<option>70-80</option>
+						<option>80-90</option>
+						<option>90-</option>
 					</select>
 				</div>
 			</template>
-			<p id="tags">Tags</p>
 		</div>
 		
-		<ul class="tags_list">
-			<li v-for="tag_name in tag_names" :key="tag_name">
-				<AppTag :name="tag_name"></AppTag>
-			</li>
-		</ul>
+		<template v-if="editable">
+			<p id="tags">Tags</p>
+			<TagInput></TagInput>
+		</template>
+		<template v-else>
+			<ul class="tags_list">
+				<li v-for="tag_name in tag_names" :key="tag_name">
+					<AppTag :name="tag_name"></AppTag>
+				</li>
+			</ul>
+		</template>
 		
 		<template v-if="editable == false">
 			<div class="reviews">
@@ -81,6 +88,26 @@
 		align-items: center;
 		padding: 30px;
 		max-width: 400px;
+
+		background-color : var(--grey-850);
+	}
+
+	.clothes {
+		display: flex;
+	}
+
+	.app_cloth >>> .clothImage img {
+		width: auto; height: auto;
+    	max-width: 100px;
+    	max-height: 100px;
+	}
+
+	.app_cloth >>> .clothName {
+		font-size: 15px;
+	}
+
+	.app_cloth >>> .price {
+		font-size: 12px;
 	}
 
 	.select_list {
@@ -136,11 +163,13 @@
 </style>
 
 <script>
+	import AppCloth from "@/components/AppCloth";
 	import AppTag from "@/components/AppTag";
 	import AppReview from "@/components/AppReview";
 	import AppButton from "@/components/AppButton";
 	import AppLike from "@/components/AppLike";
 	import TextInput from "@/components/TextInput";
+	import TagInput from "@/components/TagInput";
 
 	export default {
 		data() {
@@ -173,16 +202,18 @@
 			},
 			editable : {
 				type : Boolean,
-				default : true
+				default : false
 			}
 		},
 
 		components: {
+			AppCloth,
 			AppButton,
 			AppTag,
 			AppLike,
 			AppReview,
-			TextInput
+			TextInput,
+			TagInput
 		}
 	}
 </script>
