@@ -132,25 +132,7 @@
 
 <script>
 	import AppTag from "@/components/AppTag";
-<<<<<<< HEAD
-	document.addEventListener("DOMContentLoaded", function(){
-		const details = document.getElementsByTagName("details")[0]
-		// console.log(details)
-		details.addEventListener("toggle", event => {
-			if (details.open) {
-				document.getElementsByTagName("h3")[0].innerHTML = "All"
-				document.getElementsByClassName("best")[0].style.display = "none"
-			}
-			else {
-				document.getElementsByTagName("h3")[0].innerHTML = "Best"
-				document.getElementsByClassName("best")[0].style.display = "flex"
-			}
-		});
-		console.log(document.getElementsByTagName("details")[0])
-	});
-=======
 	import IconDropdown from "@/images/IconDropdown.svg?inline";
->>>>>>> Update TagInput using vue
 
 	export default {
 		data() {
