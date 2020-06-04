@@ -16,8 +16,9 @@
 <style>
 	:root{
 		--grey-100: #000000;
-		--grey-750: #EFEFEF;
-		--grey-800: #F5F5F5;
+		--grey-700: #dddddd;
+		--grey-750: #efefef;
+		--grey-800: #f5f5f5;
 		--grey-850: #f1f1f1;
 		--grey-900: #ffffff;
 
