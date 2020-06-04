@@ -1,8 +1,8 @@
 <template>
-	<div class="clothwithrank">
+	<div @click = "popup" class="clothwithrank">
 		<div class="info">
-			<div class="rank">{{detail.rank}}</div>
-			<div class="new" v-if="detail.is_new">new</div>
+			<div class="rank">{{clothId}}</div>
+			<!-- <div class="new" v-if="detail.is_new">new</div> -->
 		</div>
 		<AppCloth :name="detail.name" :price="detail.price" :likes="detail.likes"></AppCloth>
 	</div>
@@ -20,7 +20,7 @@
 		align-self: start;
 	}
 
-	div.new{
+	/* div.new{
 		width: 56px;
 		height: 56px;
 		border-radius: 30px;
@@ -31,7 +31,7 @@
 		font-family: 'Raleway';
 		font-size: 20px;
 		font-weight: 800;
-	}
+	} */
 
 	div.rank{
 		width: 56px;
@@ -49,14 +49,44 @@
 
 <script>
 	import AppCloth from "@/components/AppCloth";
+	import CoordinationDetail from "@/components/CoordinationDetail";
 	export default {
+		data() {
+			return {
+				Clothes: {
+					name: "Lorem",
+					likes: 0,
+					color: "Color",
+					price: "0",
+					type: "ClothesType",
+					delivery_date: 0,
+					gender: "남",
+					size: ["S", "M", "L"],
+					brand: "String",
+					image: "String" // Filename
+				}
+			}
+			
+		},
+		computed: {
+			detail() {
+				return this.Clothes
+			}
+		},
 		props: {
-			detail: {
-				type: Object
+			clothId: {
+				type: Number,
+				default: 0
 			}
 		},
 		components: {
-			AppCloth
+			AppCloth,
+			CoordinationDetail
+		},
+		methods: {
+			popup() {
+				
+			}
 		}
 	}
 </script>
