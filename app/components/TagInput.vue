@@ -2,7 +2,7 @@
 	<div class="tag_input">
 		<div class="selected">
 			<AppTag class="tag" v-for="tagName in selected" :key="tagName" :name="tagName"></AppTag>
-			<input class="search" type="text" v-model="searchText" @keydown="searchKeydown" key="input">
+			<div class="searchbox"><input class="search" type="text" placeholder="type tag" v-model="searchText" @keydown="searchKeydown" key="input" autofocus></div>
 		</div>
 
 		<div class="tags">
@@ -62,6 +62,24 @@
 		.tag {
 			margin: 0px 5px;
 		}
+	}
+
+	.searchbox{
+		background-color: var(--grey-750);
+		width: 10%;
+		height: 25px;
+		border-radius: 50px;
+		padding: 0 20px;
+		line-height: 25px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.search{
+		width: 100%;
+		font-family: 'Raleway';
+		font-size: medium;
+		text-align: center;
 	}
 
 	.toggle {

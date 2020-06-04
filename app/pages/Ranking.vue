@@ -4,15 +4,15 @@
         <div class="search">
             <h1>Preset</h1>
             <div class="body">
-                <select name="height" @change="heightChanged($event)">
+                <select id="height" name="height" @change="heightChanged($event)">
                     <option value="~150">~150cm</option>
-                    <option value="150~160">150cm~160cm</option>
+                    <option value="150~160" selected>150cm~160cm</option>
                     <option value="160~170">160cm~170cm</option>
-                    <option value="170~180" selected>170cm~180cm</option>
+                    <option value="170~180">170cm~180cm</option>
                     <option value="180~190">180cm~190cm</option>
                     <option value="190~">190cm~</option>
                 </select>
-                <select name="weight" @change="weightChanged($event)">
+                <select id="weight" name="weight" @change="weightChanged($event)">
                     <option value="~50">~50kg</option>
                     <option value="50~60" selected>50kg~60kg</option>
                     <option value="60~70">60kg~70kg</option>
@@ -35,11 +35,6 @@
                     {{coordination.totalPrice}}
                 </li>
             </ul>
-            <!-- <ul class="clothes_list">
-                <li v-for="clothId in clothIds" :key="clothId">
-				    <AppClothwithRank :clothId="clothId"></AppClothwithRank>
-			    </li>
-            </ul> -->
 
         </div>
 
@@ -115,39 +110,49 @@
         data() {
             return {
                 clothIds: [1,2,3,4,5,6,7,8,9],
-                total_tags: [ "skinny_leg",  "small_face", "long_leg", "large_face"],
-                tag_names: [ "skinny_leg",  "small_face", "long_leg", "large_face"],
-                bool: [false, false, false, false],
                 selected_tag_names: [],
-                height: "170cm~180cm",
-                weight: "50kg~60kg",
                 total_coordinations: [],
-                selected_coordinations: []
+                selected_coordinations: [],
+                height: "150~160",
+                weight: "50~60"
             }
         },
         methods: {
             tagChanged(received){
-                if(received.length < 1){
-                    this.selected_coordinations = JSON.parse(JSON.stringify(this.total_coordinations))
-                }
-                else{
-                    let temp = []
-                    this.total_coordinations.forEach(coordination => {
-                        console.log(coordination.tags.filter(tag => received.includes(tag)))
-                        if (coordination.tags.filter(tag => received.includes(tag)).length >= received.length){
-                            temp.push(coordination)
-                        }
-                    })
-                    this.selected_coordinations = temp
-                }
-                
+                console.log(received)
+                this.selected_tag_names = received
+                this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
             },
             heightChanged(event){
-                console.log(event.target.value)
+                this.height = event.target.value
+                this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
+                
             },
             weightChanged(event){
-                console.log(event.target.value)
+                this.weight = event.target.value
+                this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
+                
             },
+            filtering(coordination){
+                let coordination_height = coordination.bodyShape.height
+                let coordination_weight = coordination.bodyShape.weight
+                let selected_tags = this.selected_tag_names
+                if(coordination_height == this.height && coordination_weight == this.weight){
+                    console.log(selected_tags)
+                    console.log(coordination.tags)
+                    if(selected_tags.length < 1){
+                        return true
+                    }
+                    else if (coordination.tags.filter(tag => selected_tags.includes(tag)).length >= selected_tags.length){
+                        return true
+                    }
+                    else
+                        return false
+                }
+                else{
+                    return false
+                }
+            }
         },
         mounted() {
             db.collection("ranking").get().then(async (querySnapshot)=>{
@@ -159,7 +164,8 @@
                 });
             })
             .then(()=>{
-                this.selected_coordinations = JSON.parse(JSON.stringify(this.total_coordinations))
+                this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
+                // this.selected_coordinations = JSON.parse(JSON.stringify(this.total_coordinations))
                 console.log("finished")
             })
         },
