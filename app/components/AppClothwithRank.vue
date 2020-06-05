@@ -49,7 +49,6 @@
 
 <script>
 	import AppCloth from "@/components/AppCloth";
-	import CoordinationDetail from "@/components/CoordinationDetail";
 	export default {
 		data() {
 			return {
@@ -66,7 +65,7 @@
 					image: "String" // Filename
 				}
 			}
-			
+
 		},
 		computed: {
 			detail() {
@@ -80,12 +79,11 @@
 			}
 		},
 		components: {
-			AppCloth,
-			CoordinationDetail
+			AppCloth
 		},
 		methods: {
 			popup() {
-				
+
 			}
 		}
 	}
