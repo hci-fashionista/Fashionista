@@ -1,5 +1,5 @@
 <template>
-	<div class="CoordinationImages" :class="`CoordinationImages--${count}`" ref="images">
+	<div class="CoordinationImages" :class="[`CoordinationImages--${count}`, {is_photo}]" ref="images">
 		<slot></slot>
 	</div>
 </template>
@@ -85,6 +85,10 @@
 			height: 100%;
 			object-fit: contain;
 		}
+		
+		&.is_photo * {
+			object-fit: cover;
+		}
 	}
 </style>
 
@@ -95,7 +99,12 @@
 				count: 0
 			};
 		},
-
+		props: {
+			is_photo: {
+				type: Boolean,
+				default: false
+			}
+		},
 		mounted() {
 			this.count = this.$refs.images.children.length;
 		}
