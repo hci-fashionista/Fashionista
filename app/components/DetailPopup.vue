@@ -24,6 +24,8 @@
 				<div class='table'>
 					<div>Price</div>
 					<div>{{ info.price }} ₩</div>
+							<div>Average ETA</div>
+							<div>{{ info['delivery-date'] }} days</div>
 				</div>
 			</div>
 			<hr />
@@ -32,8 +34,6 @@
 				<div class='table'>
 					<div>Company</div>
 					<div>{{ deliveryCompany }}</div>
-					<div>ETA</div>
-					<div>{{ info.eta }} days</div>
 					<div class='flex buttons'>
 						<AppButton color='primary' fullWidth>Select</AppButton>
 						<AppButton fullWidth @click='close'>Cancel</AppButton>
