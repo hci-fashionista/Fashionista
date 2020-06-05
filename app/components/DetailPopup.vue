@@ -34,11 +34,11 @@
 					<div>{{ deliveryCompany }}</div>
 					<div>ETA</div>
 					<div>{{ info.eta }} days</div>
+					<div class='flex buttons'>
+						<AppButton color='primary' fullWidth>Select</AppButton>
+						<AppButton fullWidth @click='close'>Cancel</AppButton>
+					</div>
 				</div>
-			</div>
-			<div class='flex buttons'>
-				<AppButton>Select</AppButton>
-				<AppButton>Cancel</AppButton>
 			</div>
 		</div>
 	</AppPopup>
