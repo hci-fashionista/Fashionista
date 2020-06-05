@@ -29,10 +29,9 @@
         <div class="rankings">
             <h1>Ranking</h1>
             <ul class="coordinations_list">
-                <li v-for="coordination in selected_coordinations" :key="coordination.name">
-                    {{coordination.name}}
-                    {{coordination.description}}
-                    {{coordination.totalPrice}}
+                <li v-for="(coordination, index) in selected_coordinations" :key="index">
+                    <CoordinationwithRank :clothes="clothes_dict[coordination.id]" :detail="coordination" :index="index">
+                    </CoordinationwithRank>
                 </li>
             </ul>
 
@@ -83,7 +82,7 @@
         margin-left: 20px;
         align-self: start;
     }
-    .clothes_list {
+    .coordinations_list {
         list-style: none;
         padding: 0px 0px;
         display: grid;
@@ -91,7 +90,7 @@
         grid-gap: 10px;
         grid-auto-rows: minmax(100px, auto);
 	}
-    .clothes_list > li {
+    .coordinations_list > li {
         margin: 20px 20px;
     }
 </style>
@@ -101,7 +100,7 @@
     import AppTag from "@/components/AppTag"
 	import TagInput from "@/components/TagInput"
     import firebase from "../src/firebase.js"
-
+    import CoordinationwithRank from "@/components/CoordinationwithRank"
 
     const db = firebase.firestore()
     
@@ -114,12 +113,12 @@
                 total_coordinations: [],
                 selected_coordinations: [],
                 height: "150~160",
-                weight: "50~60"
+                weight: "50~60",
+                clothes_dict: {}
             }
         },
         methods: {
             tagChanged(received){
-                console.log(received)
                 this.selected_tag_names = received
                 this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
             },
@@ -152,16 +151,41 @@
                 else{
                     return false
                 }
-            }
+            },
         },
         mounted() {
             db.collection("ranking").get().then(async (querySnapshot)=>{
                 await querySnapshot.forEach((doc)=>{
                     // doc.data() is never undefined for query doc snapshots
-                    doc.data()["id"] = doc.id
-                    console.log(doc.id, " => ", doc.data());
-                    this.total_coordinations.push(doc.data())
+                    let dataObject = doc.data()
+                    dataObject["id"] = doc.id
+                    console.log(doc.id, " => ", dataObject);
+                    this.total_coordinations.push(dataObject)
                 });
+            })
+            .then(async ()=>{
+                await Promise.all(this.total_coordinations.map(async (coordination)=>{
+                    let clothes = coordination.clothes
+                    console.log(clothes.top)
+                    let docRef_top = db.collection("top").doc(clothes.top)
+                    let docRef_pants = db.collection("pants").doc(clothes.pants)
+                    this.clothes_dict[coordination.id] = []
+                    await docRef_top.get().then((data)=>{
+                        if (data.exists) {
+                            this.clothes_dict[coordination.id].push(data.data())
+                        } else {
+                            console.log("No such document!");
+                        }
+                    })
+                    await docRef_pants.get().then((data)=>{
+                        if (data.exists) {
+                            this.clothes_dict[coordination.id].push(data.data())
+                        } else {
+                            console.log("No such document!");
+                        }
+                    })
+                    console.log(this.clothes_dict[coordination.id])
+                }))
             })
             .then(()=>{
                 this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
@@ -172,7 +196,8 @@
         components: {
             AppClothwithRank,
             AppTag,
-			TagInput
+            TagInput,
+            CoordinationwithRank
         }
     }
 </script>
