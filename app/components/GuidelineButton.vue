@@ -4,15 +4,9 @@
 		@click="$emit('select')">
 
 		<CoordinationImages class="GuidelineButton__button" v-if="!custom">
-			<component
-				class="GuidelineButton__icon"
-				:is="getIconName(component.icon)"
-				:style="getIconColor(component.color)"
-				:key="index"
-				v-for="(component, index) in template.components"
-			/>
+			<GuidelineIcons :template="template" />
 		</CoordinationImages>
-		
+
 		<div class="GuidelineButton__button GuidelineButton__button--custom" v-else>
 			<slot />
 		</div>
@@ -68,13 +62,7 @@
 
 <script>
 	import CoordinationImages from "@/components/CoordinationImages";
-	import IconJeans from "@/images/IconJeans.svg?inline";
-	import IconTshirts from "@/images/IconTshirts.svg?inline";
-	import colors from "@/src/colors";
-
-	const icons = {
-		IconJeans, IconTshirts
-	};
+	import GuidelineIcons from "@/components/GuidelineIcons";
 
 	export default {
 		props: {
@@ -92,32 +80,9 @@
 			}
 		},
 
-		methods: {
-			getIconName(icon) {
-				if(icon.length === 0)
-					return 'IconUnknown';
-
-				const iconName = 'Icon' + icon[0].toUpperCase() + icon.slice(1);
-				if(!icons.hasOwnProperty(iconName))
-					return 'IconUnknown';
-
-				return iconName;
-			},
-
-			getIconColor(color) {
-				if(!color)
-					return;
-
-				if(!colors.hasOwnProperty(color))
-					return;
-
-				return { fill: colors[color].color };
-			}
-		},
-
 		components: {
 			CoordinationImages,
-			...icons
+			GuidelineIcons
 		}
 	};
 </script>

@@ -50,6 +50,8 @@
 
 			</div>
 		</transition>
+
+		<ColorChooserPopup ref="colorChooser" :template="template" />
 	</main>
 </template>
 
@@ -148,6 +150,7 @@
 </style>
 
 <script>
+	import ColorChooserPopup from "@/components/ColorChooserPopup";
 	import GuidelineButton from "@/components/GuidelineButton";
 	import IconPlus from "@/images/IconPlus.svg?inline";
 
@@ -155,8 +158,9 @@
 		{
 			id: 'tshirts-jeans',
 			name: 'T-shirts + Jeans',
-			components: {
-				't-shirts': {
+			components: [
+				{
+					id: 't-shirts',
 					name: 'T-Shirts',
 					icon: 'tshirts',
 					tags: [
@@ -164,28 +168,31 @@
 					]
 				},
 
-				'jeans': {
+				{
+					id: 'jeans',
 					name: 'Jeans',
 					icon: 'jeans',
 					tags: [
 						'Category:Jeans'
 					]
 				}
-			},
+			],
 
 			colorCandidates: [
 				{
 					id: 'black-black',
 					name: 'Black + Black',
-					components: {
-						't-shirts': {
+					components: [
+						{
+							id: 't-shirts',
 							color: 'black'
 						},
 
-						'jeans': {
+						{
+							id: 'jeans',
 							color: 'black'
 						}
-					}
+					]
 				}
 			]
 		}
@@ -219,10 +226,10 @@
 				return this.template.colorCandidates.map(candidate => {
 					const candidateCompiled = {...candidate};
 
-					Object.keys(candidateCompiled.components).forEach(key => {
-						candidateCompiled.components[key] = {
-							...this.template.components[key],
-							...candidate.components[key]
+					candidateCompiled.components.forEach((_, index) => {
+						candidateCompiled.components[index] = {
+							...this.template.components[index],
+							...candidate.components[index]
 						}
 					});
 
@@ -233,11 +240,12 @@
 
 		methods: {
 			showColorChooser() {
-
+				this.$refs.colorChooser.open();
 			}
 		},
 
 		components: {
+			ColorChooserPopup,
 			GuidelineButton,
 			IconPlus
 		}
