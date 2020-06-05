@@ -1,39 +1,45 @@
 <template>
-	<AppPopup ref='popup' class='root flex'>
-		<div class='flex'><img :src="info.image_large" alt='Clothes Picture'></div>
-		<div class='flex column info'>
-			<div class='flex title'>
-				<h1>{{ info.name }}</h1>
-				<AppLike :likes='likes'/>
-			</div>
-			<hr />
-			<div class='flex column'>
-				<h3>Product Info</h3>
-				<div class='table'>
-					<div>Brand</div>
-					<div>{{ info.brand }}</div>
-					<div>Size</div>
-					<div>{{ info.size.join(' / ') }}</div>
-					<div>Ratings</div>
-					<div>{{ rating }}</div>
-				</div>
-			</div>
-			<hr />
-			<div class='flex column'>
-				<h3>Price Info</h3>
-				<div class='table'>
-					<div>Price</div>
-					<div>{{ info.price }} ₩</div>
+	<AppPopup ref='popup'>
+		<div class='root flex'>
+			<div class='flex'><img :src="info.image_large" alt='Clothes Picture'></div>
+			<div class='flex column info' style='justify-content: space-around;'>
+				<div>
+					<div class='flex title'>
+						<h1>{{ info.name }}</h1>
+						<AppLike :likes='likes'/>
+					</div>
+					<hr />
+					<div class='flex column'>
+						<h3>Product Info</h3>
+						<div class='table'>
+							<div>Brand</div>
+							<div>{{ info.brand }}</div>
+							<div>Size</div>
+							<div>{{ info.size.join(' / ') }}</div>
+							<div>Ratings</div>
+							<div>{{ rating }}</div>
+						</div>
+					</div>
+					<hr />
+					<div class='flex column'>
+						<h3>Price Info</h3>
+						<div class='table'>
+							<div>Price</div>
+							<div>{{ info.price }} ₩</div>
+						</div>
+					</div>
+					<hr />
+					<div class='flex column'>
+						<h3>Delivery Info</h3>
+						<div class='table'>
+							<div>Company</div>
+							<div>{{ deliveryCompany }}</div>
 							<div>Average ETA</div>
 							<div>{{ info['delivery-date'] }} days</div>
+						</div>
+					</div>
 				</div>
-			</div>
-			<hr />
-			<div class='flex column'>
-				<h3>Delivery Info</h3>
-				<div class='table'>
-					<div>Company</div>
-					<div>{{ deliveryCompany }}</div>
+				<div>
 					<div class='flex buttons'>
 						<AppButton color='primary' fullWidth>Select</AppButton>
 						<AppButton fullWidth @click='close'>Cancel</AppButton>
@@ -107,16 +113,18 @@ h3 {
 <script>
 import AppLike from '@/components/AppLike'
 import AppButton from '@/components/AppButton'
+import AppPopup from '@/components/AppPopup'
 
 export default {
 	components: {
 		AppLike,
-		AppButton
+		AppButton,
+		AppPopup
 	},
 	data() {
 		return {
 			deliveryCompany: 'Daehan Tongun',
-			rating: 4,
+			rating: '4 / 5',
 			likes: 198
 		}
 	},
@@ -143,6 +151,9 @@ export default {
 	methods: {
 		open() {
 			this.$refs.popup.open();
+		},
+		close() {
+			this.$refs.popup.close();
 		}
 	}
 }
