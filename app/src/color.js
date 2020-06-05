@@ -101,19 +101,58 @@ function monoScore(rgb1, rgb2) {
     return Math.round((1 - dist([hsl1[0], 0, hsl1[2]], [hsl2[0], 0, hsl2[2]]) / maxDist) * 100)
 }
 
-/**
- * Returns the color match score of two rgb colors
- * @param {string|Number[]} rgb1 hex representation of color(containing pound sign) OR an array containing integer values of R, G, B respectively
- * @param {string|Number[]} rgb2 hex representation of color(containing pound sign) OR an array containing integer values of R, G, B respectively
- */
-export default function colorMatchScore(rgb1, rgb2) {
-    if (!Array.isArray(rgb1) && typeof rgb1 === 'string')
-        rgb1 = HEXToRGB(rgb1)
+const RGBMap = {
+    '연청': [100, 130, 170],
+    '스카이 블루': [117, 192, 227],
+    '파란색': [25, 50, 242],
+    '흰색': [255, 255, 255],
+    '데님': [85, 101, 125],
+    '회색': [156, 156, 155],
+    '아이보리': [255, 255, 241],
+    '검정색': [0, 0, 0],
+    '중청': [41, 58, 83],
+    '베이지색': [227, 195, 138],
+    '흑청': [33, 35, 34],
+    '카키': [91, 90, 62],
+    '네이비': [5, 33, 94],
+    '보라색': [71, 21, 104],
+    '라이트 핑크': [243, 168, 183],
+    '샌드': [198, 180, 153],
+    '라즈베리': [199, 77, 99],
+    '다크 그레이': [84, 86, 91],
+    '레드 브라운': [177, 83, 32],
+    '라벤더': [160, 127, 197],
+    '분홍색': [227, 58, 155],
+    '녹색': [86, 168, 54],
+    '라이트 오렌지': [226, 123, 47],
+    '민트': [103, 190, 172]
+}
 
-    if (!Array.isArray(rgb2) && typeof rgb2 === 'string')
-        rgb2 = HEXToRGB(rgb2)
+/**
+ * Convert a Korean color string to hex representation
+ * @param {string} color name of color in Korean. refer to the variable `RGBMap` for the specific names
+ */
+export function toRGB(color) {
+	if (!(RGBMap.hasOwnProperty(color)))
+		return '#FFFFFF'
+
+	return RGBToHEX(...RGBMap[color])
+}
+
+/**
+ * Returns the color match score of two colors
+ * @param {string} color1 name of color in Korean. refer to the variable `RGBMap` for the specific names
+ * @param {string} color2 name of color in Korean. refer to the variable `RGBMap` for the specific names
+ */
+export function colorMatchScore(color1, color2) {
+	if (!(RGBMap.hasOwnProperty(color1) && RGBMap.hasOwnProperty(color2)))
+		return 0
+
+	const rgb1 = RGBMap[color1]
+	const rgb2 = RGBMap[color2]
 
     const comp = compScore(rgb1, rgb2)
     const mono = monoScore(rgb1, rgb2)
     return Math.max(comp, mono)
 }
+
