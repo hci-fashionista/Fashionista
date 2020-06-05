@@ -54,7 +54,9 @@
 .root {
 	width: 90vw;
 	max-width: 1000px;
-	padding: 20px 40px;
+	padding: 40px 40px;
+	background-color: #FFFFFF;
+	border-radius: 15px;
 }
 
 img {
@@ -84,12 +86,13 @@ img {
 
 	&.info {
 		padding: 0 40px;
+		flex-grow: 1;
 	}
 }
 
 .table {
 	display: grid;
-	grid-template-columns: 1fr 3fr;
+	grid-template-columns: 2fr 3fr;
 	grid-column-gap: 80px;
 	margin-left: 20px;
 }
@@ -147,7 +150,6 @@ export default {
 			}
 		}
 	},
-
 	methods: {
 		open() {
 			this.$refs.popup.open();
