@@ -131,8 +131,8 @@
 						'name': "None",
 						'description': "None",
 						'totalPrice': 22000,
-						'colors': [],
-						'clothes': ['1306665', '1014964'],
+						'colors': ['파란색', '데님'],
+						'clothes': ['1033001', '1014964'],
 						'bodyShape': {
 							'height': '180-190',
 							'weight': '80-90'

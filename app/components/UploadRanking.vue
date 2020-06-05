@@ -40,13 +40,13 @@
 		</div>
 		
 		<p id="tags">Tags</p>
-		<TagInput></TagInput>
+		<TagInput @tagChanged="tagChanged"/>
 		
 		<div class="button">
-			<AppButton @click="updateCoordination">
+			<AppButton @click="saveCoordinationDetail">
 				save
 			</AppButton>
-			<AppButton>
+			<AppButton @click="uploadToRanking">
 				Upload to Ranking
 			</AppButton>
 			<AppButton>
@@ -138,7 +138,8 @@
 				title_text : "",
 				description_text: "",
 				selected_height : "",
-				selected_weight : ""
+				selected_weight : "",
+				selected_tags: []
 			}
 		},
 		props: {
@@ -150,8 +151,8 @@
 						'name': "None",
 						'description': "None",
 						'totalPrice': 22000,
-						'colors': [],
-						'clothes': ['1306665', '1014964'],
+						'colors': ['파란색', '데님'],
+						'clothes': ['1033001', '1014964'],
 						'bodyShape': {
 							'height': '180-190',
 							'weight': '80-90'
@@ -159,7 +160,7 @@
 						'tags': ["skinny_leg", "small_face", "long_leg"],
 						'likes': 0,
 						'reviews': [{'review_id': "None", 'review_content': "None"}],
-						'published': true,
+						'published': false,
 						'author' : "Dol Lee"
 					}
 					
@@ -178,6 +179,9 @@
 		},
 
 		methods: {
+			tagChanged(received){
+                this.selected_tags = received;
+            },
 			clothesList(clothId) {
 				const db = firebase.firestore();
 				
@@ -218,7 +222,7 @@
 					this.clothesList(this.Coordinations.clothes[i])
 				}
 			},
-			updateCoordination() {
+			saveCoordinationDetail() {
 				const db = firebase.firestore();
 				
 				let coordiRef = db.collection("myCoordinations").doc(this.Coordinations.id);
@@ -228,7 +232,19 @@
 					bodyShape: {
 						height: this.selected_height,
 						weight: this.selected_weight
-					}
+					},
+					tags: this.selected_tags
+				});
+			},
+			uploadToRanking() {
+				if(this.Coordinations.published){
+					return;
+				}
+				const db = firebase.firestore();
+				
+				let coordiRef = db.collection("myCoordinations").doc(this.Coordinations.id);
+				let updateThings = coordiRef.update({
+					published: true
 				});
 			}
 		},
