@@ -4,7 +4,7 @@ import 'firebase/firestore';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-	apiKey: "AIzaSyB-5VFYc50HeSc6X64XzfxyEzxpXqe3Nog",
+	apiKey: process.env.FIREBASE_API_KEY,
 	authDomain: "fashionista-cb19d.firebaseapp.com",
 	databaseURL: "https://fashionista-cb19d.firebaseio.com",
 	projectId: "fashionista-cb19d",
@@ -18,4 +18,3 @@ firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
 export default firebase;
-

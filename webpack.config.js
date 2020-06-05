@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 
+const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
@@ -141,6 +142,7 @@ module.exports = {
 	},
 
 	plugins: [
+		new Dotenv(),
 		new webpack.EnvironmentPlugin({
 			NODE_ENV: nodeEnv
 		}),
