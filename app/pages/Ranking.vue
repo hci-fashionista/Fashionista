@@ -137,8 +137,6 @@
                 let coordination_weight = coordination.bodyShape.weight
                 let selected_tags = this.selected_tag_names
                 if(coordination_height == this.height && coordination_weight == this.weight){
-                    console.log(selected_tags)
-                    console.log(coordination.tags)
                     if(selected_tags.length < 1){
                         return true
                     }
@@ -159,14 +157,12 @@
                     // doc.data() is never undefined for query doc snapshots
                     let dataObject = doc.data()
                     dataObject["id"] = doc.id
-                    console.log(doc.id, " => ", dataObject);
                     this.total_coordinations.push(dataObject)
                 });
             })
             .then(async ()=>{
                 await Promise.all(this.total_coordinations.map(async (coordination)=>{
                     let clothes = coordination.clothes
-                    console.log(clothes.top)
                     let docRef_top = db.collection("top").doc(clothes.top)
                     let docRef_pants = db.collection("pants").doc(clothes.pants)
                     this.clothes_dict[coordination.id] = []
@@ -184,7 +180,6 @@
                             console.log("No such document!");
                         }
                     })
-                    console.log(this.clothes_dict[coordination.id])
                 }))
             })
             .then(()=>{

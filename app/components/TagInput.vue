@@ -183,6 +183,8 @@
 
 		watch: {
 			selected: function(newSelected){
+				console.log(newSelected)
+				console.log(this.selected)
 				this.$emit('tagChanged', this.selected);
 			}
 		},
@@ -213,6 +215,9 @@
 					event.preventDefault();
 
 					if (this.candidates.length >= 1 && this.searchText.length > 0) {
+						if(this.isSelected(this.candidates[0])){
+							return null
+						}
 						this.selected.push(this.candidates[0]);
 						this.searchText = '';
 					}
