@@ -11,7 +11,7 @@
 			<h2>Template</h2>
 
 			<div class="Guideline__buttons">
-				<GuidelineButton v-for="templateOption in templates"
+				<GuidelineButton v-for="templateOption in templateCandidates"
 					:key="templateOption.id"
 					:template="templateOption"
 					:selected="template && template.id === templateOption.id"
@@ -44,14 +44,33 @@
 		</transition>
 
 		<transition name="Fade">
-			<div class="Guideline__section" v-if="phase >= 3">
+			<div class="Guideline__section Clothes" v-if="phase >= 3">
 				<h2>Clothes</h2>
 
+				<div class="Clothes__row">
+					<div class="Clothes__category">
+						<button v-for="component in template.components"
+							:key="component.id"
+							@click="openCategory(component)">
 
+							<component :is="getIcon(component.icon)" />
+						</button>
+					</div>
+
+					<transition name="Fade">
+						<div class="Clothes__items" v-if="category">
+							<AppCloth v-for="cloth in clothes" :key="cloth.id" @click="setCloth(cloth)" />
+						</div>
+					</transition>
+				</div>
 			</div>
 		</transition>
 
-		<ColorChooserPopup ref="colorChooser" :template="template" />
+		<ColorChooserPopup ref="colorChooser"
+			:template="template"
+			v-if="template"
+			@select="setCustomColor($event)"
+		/>
 	</main>
 </template>
 
@@ -90,6 +109,55 @@
 			* {
 				margin: 0 10px;
 			}
+		}
+	}
+
+	.Clothes {
+		&__row {
+			display: flex;
+			margin-left: 20px;
+		}
+
+		&__category {
+			background: var(--grey-700);
+			flex: 1;
+			max-width: 150px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 20px 30px;
+
+			* {
+				margin: 20px 0;
+				width: 100%;
+				max-width: 140px;
+				height: auto;
+			}
+
+			button {
+				cursor: pointer;
+				background: transparent;
+				border: none;
+				outline: none;
+
+				&:hover svg {
+					fill: var(--grey-550);
+				}
+			}
+
+			svg {
+				fill: var(--grey-600);
+				transition: fill .4s ease;
+			}
+		}
+
+		&__items {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-around;
+			overflow: auto;
+			max-height: 50vh;
+			flex: 1;
 		}
 	}
 
@@ -150,9 +218,14 @@
 </style>
 
 <script>
+	import AppCloth from "@/components/AppCloth";
 	import ColorChooserPopup from "@/components/ColorChooserPopup";
 	import GuidelineButton from "@/components/GuidelineButton";
+	import GuidelineIcons from "@/components/GuidelineIcons";
 	import IconPlus from "@/images/IconPlus.svg?inline";
+
+	import firebase from "@/src/firebase";
+	import { getIcon } from "@/components/GuidelineIcons";
 
 	const getMock = () => [
 		{
@@ -160,7 +233,7 @@
 			name: 'T-shirts + Jeans',
 			components: [
 				{
-					id: 't-shirts',
+					id: 'top',
 					name: 'T-Shirts',
 					icon: 'tshirts',
 					tags: [
@@ -169,7 +242,7 @@
 				},
 
 				{
-					id: 'jeans',
+					id: 'pants',
 					name: 'Jeans',
 					icon: 'jeans',
 					tags: [
@@ -185,12 +258,12 @@
 					components: [
 						{
 							id: 't-shirts',
-							color: 'black'
+							color: '검정색'
 						},
 
 						{
 							id: 'jeans',
-							color: 'black'
+							color: '검정색'
 						}
 					]
 				}
@@ -202,9 +275,11 @@
 		data() {
 			return {
 				stages: ['Template', 'Color', 'Clothes', 'Finish'],
-				templates: getMock(),
+				templateCandidates: getMock(),
 				template: null,
-				colors: null
+				colors: null,
+				category: null,
+				clothes: []
 			};
 		},
 
@@ -235,18 +310,71 @@
 
 					return candidateCompiled;
 				});
+			},
+
+			compiledTemplate() {
+				if(!this.template || !this.colors)
+					return {};
+
+				const template = {...this.template};
+				template.components = template.components.map((component, index) => {
+					return {
+						...component,
+						...this.colors.components[index]
+					};
+				});
+				delete template.colorCandidates;
+
+				return template;
 			}
 		},
 
 		methods: {
 			showColorChooser() {
-				this.$refs.colorChooser.open();
-			}
+				if(this.$refs.colorChooser)
+					this.$refs.colorChooser.open();
+			},
+
+			setCustomColor(colors) {
+				const customIdx = this.template.colorCandidates.findIndex(v => v.id === 'custom');
+				if(customIdx > 0)
+					this.template.colorCandidates.splice(customIdx, 1);
+
+				const newCandidate = {
+					id: 'custom',
+					name: 'Custom',
+					...colors
+				};
+
+				this.template.colorCandidates.push(newCandidate);
+				this.colors = newCandidate;
+			},
+
+			async openCategory(component) {
+				this.category = component.id;
+				this.clothes = [];
+
+				const db = firebase.firestore();
+				const clothes = await db.collection(component.id)
+					.get();
+
+				clothes.forEach(clothDoc => {
+					this.clothes.push(clothDoc.data());
+				});
+			},
+
+			setCloth(cloth) {
+
+			},
+
+			getIcon
 		},
 
 		components: {
+			AppCloth,
 			ColorChooserPopup,
 			GuidelineButton,
+			GuidelineIcons,
 			IconPlus
 		}
 	};

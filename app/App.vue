@@ -17,6 +17,7 @@
 	:root{
 		--grey-100: #000000;
 		--grey-300: #404040;
+		--grey-550: #a0a0a0;
 		--grey-600: #cccccc;
 		--grey-700: #dddddd;
 		--grey-750: #efefef;

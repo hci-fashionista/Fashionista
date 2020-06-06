@@ -43,7 +43,7 @@ function RGBToHSL(r, g, b) {
 	s = +(s * 100).toFixed(1)
 	l = +(l * 100).toFixed(1)
 
-    return [h, s, l]
+	return [h, s, l]
 }
 
 function HSLToRGB(h, s, l) {
@@ -133,10 +133,32 @@ const RGBMap = {
  * @param {string} color name of color in Korean. refer to the variable `RGBMap` for the specific names
  */
 export function toRGB(color) {
+	if(typeof color === 'object')
+		return color.hex;
+
 	if (!(RGBMap.hasOwnProperty(color)))
 		return '#FFFFFF'
 
 	return RGBToHEX(...RGBMap[color])
+}
+
+export function normalizeColor(color) {
+	if(typeof color !== 'object')
+		return color;
+
+	const { r, g, b } = color.rgba;
+	const { value } = Object.keys(RGBMap)
+		.reduce((minDistance, key) => {
+			const [r1, g1, b1] = RGBMap[key];
+			const distance = Math.hypot(r - r1, g - g1, b - b1);
+
+			if(minDistance.distance > distance)
+				return { distance, value: key };
+
+			return minDistance;
+		}, { distance: Infinity, value: null });
+
+	return value;
 }
 
 /**
@@ -145,6 +167,13 @@ export function toRGB(color) {
  * @param {string} color2 name of color in Korean. refer to the variable `RGBMap` for the specific names
  */
 export function colorMatchScore(color1, color2) {
+	if(color1 === color2)
+		return 30;
+
+	if(color1 === '검정색' || color2 === '검정색') {
+		return 70;
+	}
+
 	if (!(RGBMap.hasOwnProperty(color1) && RGBMap.hasOwnProperty(color2)))
 		return 0
 
@@ -153,7 +182,7 @@ export function colorMatchScore(color1, color2) {
 
 	const comp = compScore(rgb1, rgb2)
 	const mono = monoScore(rgb1, rgb2)
-	return Math.max(comp, mono)
+	return Math.max(0, Math.max(comp, mono))
 }
 
 
@@ -171,3 +200,20 @@ export function colorMatchScoreMulti(colors) {
 
 	return Math.floor(scores.reduce((prev, curr) => prev + curr, 0) / scores.length);
 }
+
+const getHSLVal = (num, step = 1) => color =>
+	!RGBMap.hasOwnProperty(color) ?
+		0 :
+		Math.floor(RGBToHSL(...RGBMap[color])[num] / step);
+
+const getHue = getHSLVal(0);
+const getLightness = getHSLVal(2);
+
+export const colors = Object.keys(RGBMap)
+	.sort((color1, color2) => {
+		const lightDiff = getLightness(color1) - getLightness(color2);
+		if(lightDiff !== 0)
+			return Math.sign(lightDiff);
+
+		return Math.sign(getHue(color1) - getHue(color2));
+	});

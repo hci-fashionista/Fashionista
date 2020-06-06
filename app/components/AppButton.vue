@@ -17,7 +17,7 @@
 		transition: all .4s ease;
 
 		&:hover {
-			background: #cccccc;
+			background: var(--grey-600);
 		}
 
 		&:focus {
@@ -25,6 +25,8 @@
 		}
 
 		&:disabled {
+			color: var(--grey-600) !important;
+			background: var(--grey-700) !important;
 			cursor: not-allowed;
 		}
 	}
