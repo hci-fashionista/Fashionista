@@ -322,7 +322,7 @@
 			}
 		},
 
-		beforeMount() {
+		mounted() {
 			this.makeClothesList()
 		}
 	}
