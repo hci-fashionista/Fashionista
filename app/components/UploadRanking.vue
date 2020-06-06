@@ -168,6 +168,16 @@
 				selected_tags: this.Coordinations.tags
 			}
 		},
+		watch: {
+			Coordinations () {
+				this.title_text = this.Coordinations.name;
+				this.description_text = this.Coordinations.description;
+				this.selected_height = this.Coordinations.bodyShape.height;
+				this.selected_weight = this.Coordinations.bodyShape.weight;
+				this.clothes_item=[];
+				this.makeClothesList();
+			}
+		},
 		props: {
 			Coordinations :{
 				type: Object,
@@ -176,9 +186,12 @@
 						'id': '0nZifbU3OmmfCI6wRfSY',
 						'name': "None",
 						'description': "None",
-						'totalPrice': 22000,
+						'totalPrice': '22000',
 						'colors': ['파란색', '데님'],
-						'clothes': ['1033001', '1014964'],
+						'clothes': {
+							'top': '1033001',
+							'pants': '1014964'
+						},
 						'bodyShape': {
 							'height': '180-190',
 							'weight': '80-90'
@@ -210,11 +223,11 @@
 			tagChanged(received){
                 this.selected_tags = received;
             },
-			clothesList(clothId) {
+			makeClothesList() {
 				const db = firebase.firestore();
-
-				let topRef = db.collection("top").doc(clothId);
-				let pantsRef = db.collection("pants").doc(clothId);
+				
+				let topRef = db.collection("top").doc(this.Coordinations.clothes.top);
+				let pantsRef = db.collection("pants").doc(this.Coordinations.clothes.pants);
 				let getTopDoc = topRef.get()
 					.then(doc => {
 						if (doc.exists) {
@@ -243,17 +256,11 @@
 					})
 					.catch(err => {
 					});
-
-			},
-			makeClothesList() {
-				for (var i=0; i< this.Coordinations.clothes.length; i++){
-					this.clothesList(this.Coordinations.clothes[i])
-				}
 			},
 			saveCoordinationDetail() {
 				const db = firebase.firestore();
 
-				let coordiRef = db.collection("myCoordinations").doc(this.Coordinations.id);
+				let coordiRef = db.collection("ranking").doc(this.Coordinations.id);
 				let updateThings = coordiRef.update({
 					name: this.title_text,
 					description: this.description_text,
@@ -270,7 +277,7 @@
 				}
 				const db = firebase.firestore();
 
-				let coordiRef = db.collection("myCoordinations").doc(this.Coordinations.id);
+				let coordiRef = db.collection("ranking").doc(this.Coordinations.id);
 				let updateThings = coordiRef.update({
 					published: true
 				});
@@ -285,12 +292,8 @@
 			}
 		},
 
-		beforeMount() {
-			this.makeClothesList()
-		},
-
 		mounted() {
-			this.open()
+			this.makeClothesList()
 		}
 	}
 </script>

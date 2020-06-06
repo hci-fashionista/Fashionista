@@ -243,8 +243,6 @@
 
 		watch: {
 			selected: function(newSelected){
-				console.log(newSelected)
-				console.log(this.selected)
 				this.$emit('tagChanged', this.selected);
 			}
 		},
