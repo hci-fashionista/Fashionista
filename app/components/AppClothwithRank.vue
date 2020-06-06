@@ -17,21 +17,9 @@
 
 	div.info{
 		height: 100%;
+		margin-right: 10px;
 		align-self: start;
 	}
-
-	/* div.new{
-		width: 56px;
-		height: 56px;
-		border-radius: 30px;
-		background-color: #F48484;
-		text-align: center;
-		color: white;
-		line-height: 56px;
-		font-family: 'Raleway';
-		font-size: 20px;
-		font-weight: 800;
-	} */
 
 	div.rank{
 		width: 56px;
