@@ -221,6 +221,12 @@
 				my_review: ""
 			}
 		},
+		watch: {
+			Coordinations () {
+				this.clothes_item=[];
+				this.makeClothesList();
+			}
+		},
 		props: {
 			Coordinations :{
 				type: Object,

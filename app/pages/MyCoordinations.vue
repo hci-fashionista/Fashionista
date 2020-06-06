@@ -71,7 +71,6 @@
         methods: {
             uploadRankingPopupOpen(coordi) {
 				this.selected_info = coordi;
-				console.log(this.selected_info);
                 if(this.$refs.uploadRankingPopup)
 					this.$refs.uploadRankingPopup.open();
 			},
@@ -95,7 +94,6 @@
                 });
             })
             .then(async ()=>{
-				console.log("loading");
                 await Promise.all(this.total_coordinations.map(async (coordination)=>{
                     let clothes = coordination.clothes
                     let docRef_top = db.collection("top").doc(clothes.top)
@@ -105,14 +103,12 @@
                         if (data.exists) {
                             this.clothes_dict[coordination.id].push(data.data())
                         } else {
-                            console.log("No such document!");
                         }
                     })
                     await docRef_pants.get().then((data)=>{
                         if (data.exists) {
                             this.clothes_dict[coordination.id].push(data.data())
                         } else {
-                            console.log("No such document!");
                         }
                     })
                 }))
@@ -120,7 +116,6 @@
             .then(()=>{
                 this.my_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
                 // this.selected_coordinations = JSON.parse(JSON.stringify(this.total_coordinations))
-                console.log("finished")
             })
         },
         components: {

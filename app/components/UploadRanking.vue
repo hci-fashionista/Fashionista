@@ -293,7 +293,6 @@
 		},
 
 		mounted() {
-			console.log(this.Coordinations);
 			this.makeClothesList()
 		}
 	}
