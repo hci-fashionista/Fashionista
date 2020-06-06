@@ -50,27 +50,27 @@
 <script>
 	import AppCloth from "@/components/AppCloth";
 	export default {
-		data() {
-			return {
-				detail: {
-					name: "Lorem",
-					likes: 0,
-					color: "Color",
-					price: "0",
-					type: "ClothesType",
-					delivery_date: 0,
-					gender: "남",
-					size: ["S", "M", "L"],
-					brand: "String",
-					image: "String" // Filename
-				}
-			}
-
-		},
 		props: {
 			clothId: {
 				type: Number,
 				default: 0
+			},
+			detail: {
+				type: Object,
+				default() {
+					return {
+						name: "Lorem",
+						likes: 0,
+						color: "Color",
+						price: "0",
+						type: "ClothesType",
+						delivery_date: 0,
+						gender: "남",
+						size: ["S", "M", "L"],
+						brand: "String",
+						image: "String" // Filename
+					}
+				}
 			}
 		},
 		components: {
