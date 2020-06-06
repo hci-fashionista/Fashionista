@@ -52,6 +52,16 @@
 			transition: all .4s ease;
 		}
 	}
+
+	.Fade {
+		&-enter-active, &-leave-active {
+			transition: all .4s ease;
+		}
+
+		&-enter, &-leave-to {
+			opacity: 0;
+		}
+	}
 </style>
 
 <script>
