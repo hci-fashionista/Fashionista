@@ -30,7 +30,7 @@
 </style>
 
 <script>
-	import { toRGB, colorMatchScore } from '@/src/color'
+	import { toRGB, colorMatchScoreMulti } from '@/src/color'
 
 	export default {
 		methods: {
@@ -43,14 +43,13 @@
 		props: {
 			colors: {
 				type: Array,
-				default: function() {
-					return ['연청', '스카이 블루']
-				}
+				default: ['연청', '스카이 블루']
 			}
 		},
 		computed: {
 			score() {
-				return colorMatchScore(...this.colors)
+				console.log(this.colors)
+				return colorMatchScoreMulti(this.colors)
 			}
 		}
 	}
