@@ -29,13 +29,15 @@
         <div class="rankings">
             <h1>Ranking</h1>
             <ul class="coordinations_list">
-                <li v-for="(coordination, index) in selected_coordinations" :key="index">
+                <li @click="showpopup(coordination)" v-for="(coordination, index) in selected_coordinations" :key="index">
                     <CoordinationwithRank :clothes="clothes_dict[coordination.id]" :detail="coordination" :index="index">
                     </CoordinationwithRank>
                 </li>
             </ul>
-
         </div>
+
+        <RankingCoordinationDetail ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info">
+        </RankingCoordinationDetail>
 
     </div>
 </template>
@@ -101,6 +103,7 @@
 	import TagInput from "@/components/TagInput"
     import firebase from "../src/firebase.js"
     import CoordinationwithRank from "@/components/CoordinationwithRank"
+    import RankingCoordinationDetail from "@/components/RankingCoordinationDetail"
 
     const db = firebase.firestore()
     
@@ -114,10 +117,17 @@
                 selected_coordinations: [],
                 height: "150~160",
                 weight: "50~60",
-                clothes_dict: {}
+                clothes_dict: {},
+                selected_info: null
             }
         },
         methods: {
+            showpopup(coordi){
+                console.log(coordi)
+                this.selected_info = coordi
+                if(this.$refs.coordinationChooser)
+					this.$refs.coordinationChooser.open();
+            },
             tagChanged(received){
                 this.selected_tag_names = received
                 this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
@@ -192,7 +202,8 @@
             AppClothwithRank,
             AppTag,
             TagInput,
-            CoordinationwithRank
+            CoordinationwithRank,
+            RankingCoordinationDetail
         }
     }
 </script>
