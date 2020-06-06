@@ -1,63 +1,70 @@
 <template>
-	<div class="coordination_detail">
-		<div class="clothes">
-			<div  v-for="cloth in this.clothes_item" :key="cloth.id">
-				<img :src="cloth.image" alt="cloth image" width="100" height="100">
-				<p>{{cloth.price}}</p>
+	<AppPopup ref='popup'>
+		<div class="coordination_detail">
+			<div class="clothes">
+				<div  v-for="cloth in this.clothes_item" :key="cloth.id">
+					<AppClothwithObject :cloth="cloth"/>
+				</div>
+				<div class="color_match">
+					<ColorScore :colors="this.Coordinations.colors" />
+				</div>
 			</div>
-			<div class="color_match">
-			</div>
-		</div>
 
-		<div class="texts">
-			<p id="title">Title</p>
-			<TextInput v-model="title_text"></TextInput>
+			<div class="textAndTag">
+				<div class="texts">
+					<p id="title">Title</p>
+					<TextInput class="textinput" v-model="title_text"></TextInput>
+					
+					<p id="description">Description</p>
+					<TextInput class="textinput" v-model="description_text"></TextInput>
+					
+					<p id="heightweight">Body Shape</p>
+					<div class="select_list">
+						<select v-model="selected_height">
+							<option disabled value="">Height</option>
+							<option>-150</option>
+							<option>150-160</option>
+							<option>160-170</option>
+							<option>170-180</option>
+							<option>180-190</option>
+							<option>190-</option>
+						</select>
+						<select v-model="selected_weight">
+							<option disabled value="">Weight</option>
+							<option>-50</option>
+							<option>50-60</option>
+							<option>60-70</option>
+							<option>70-80</option>
+							<option>80-90</option>
+							<option>90-</option>
+						</select>
+					</div>
+				</div>
+				
+				<div class="tag_input_div">
+					<p id="tags">Tags</p>
+					<TagInput :already_selected="this.Coordinations.tags" @tagChanged="tagChanged" small/>
+				</div>
+			</div>
 			
-			<p id="description">Description</p>
-			<TextInput v-model="description_text"></TextInput>
-			
-			<p id="heightweight">Body Shape</p>
-			<div class="select_list">
-				<select v-model="selected_height">
-					<option disabled value="">Height</option>
-					<option>-150</option>
-					<option>150-160</option>
-					<option>160-170</option>
-					<option>170-180</option>
-					<option>180-190</option>
-					<option>190-</option>
-				</select>
-				<select v-model="selected_weight">
-					<option disabled value="">Weight</option>
-					<option>-50</option>
-					<option>50-60</option>
-					<option>60-70</option>
-					<option>70-80</option>
-					<option>80-90</option>
-					<option>90-</option>
-				</select>
+			<div class="buttons">
+				<AppButton @click="saveCoordinationDetail">
+					save
+				</AppButton>
+				<AppButton @click="uploadToRanking">
+					Upload to Ranking
+				</AppButton>
+				<AppButton>
+					To Shopping Cart
+				</AppButton>
+				<AppButton @click="close">
+					Cancel
+				</AppButton>
 			</div>
 		</div>
-		
-		<p id="tags">Tags</p>
-		<TagInput @tagChanged="tagChanged"/>
-		
-		<div class="button">
-			<AppButton @click="saveCoordinationDetail">
-				save
-			</AppButton>
-			<AppButton @click="uploadToRanking">
-				Upload to Ranking
-			</AppButton>
-			<AppButton>
-				To Shopping Cart
-			</AppButton>
-			<AppButton>
-				Cancel
-			</AppButton>
-		</div>
-	</div>
+	</AppPopup>
 </template>
+
 
 <style scoped>
 	.coordination_detail {
@@ -65,81 +72,100 @@
 		flex-direction: column;
 		align-items: center;
 		padding: 30px;
-		max-width: 400px;
+		max-width: 2000px;
+		border-radius: 10px;
 
-		background-color : var(--grey-850);
+		background-color : var(--grey-900);
 	}
 
 	.clothes {
 		display: flex;
+		margin-bottom: 20px;
 	}
 
-	.tags_list {
+	.color_match {
 		display: flex;
-		flex-wrap: wrap;
-		padding-left: 0;
-		list-style: none;
+
+		& >>> .flex {
+			font-size : 20px;
+		}
+
+		& >>> .dot {
+			width: 30px;
+			height: 30px;
+		}
 	}
 
-	.reviews {
-		align-self: stretch;
-	}
-
-	.reviews_list {
+	.textAndTag {
 		display: flex;
-		flex-direction: column;
-		align-items: flex-start;
-		max-height: 300px;
-		overflow: auto;
-		padding: 0;
 	}
 
-	#title, #description {
-		font-family: Raleway;
-		font-style: normal;
-		font-weight: bold;
-		font-size: 12.3882px;
-		line-height: 15px;
+	.texts, .tag_input_div{
+		width: 100%;
+		margin: 10px;
 	}
 
-	#title_content, #description_content {
+	.textinput >>> input {
+		width: 100%;
+
 		font-family: Raleway;
 		font-style: normal;
 		font-weight: 500;
-		font-size: 15.6691px;
-		line-height: 18px;
+		font-size: 16px;
 
 		background: var(--grey-800);
 		border-radius: 5px;
 
 		padding : 5px;
+
+		&:focus {
+			outline: none;
+		}
 	}
 
-	#app_like {
-		margin: auto;
+	#title, #description, #heightweight, #tags {
+		font-family: Raleway;
+		font-style: normal;
+		font-weight: bold;
+		font-size: 13px;
+		line-height: 15px;
+	}
+
+	.buttons {
+		display:flex;
+		
+		& >>> button {
+			font-size: 13px;
+		}
+
+		& > * {
+			margin: 5px;
+		}
 	}
 
 </style>
 
 <script>
-	import AppCloth from "@/components/AppCloth";
+	import AppClothwithObject from "@/components/AppClothwithObject";
+	import ColorScore from "@/components/ColorScore";
 	import AppTag from "@/components/AppTag";
 	import AppReview from "@/components/AppReview";
 	import AppButton from "@/components/AppButton";
 	import AppLike from "@/components/AppLike";
 	import TextInput from "@/components/TextInput";
 	import TagInput from "@/components/TagInput";
+	import AppPopup from "@/components/AppPopup";
 	import firebase from "@/src/firebase.js";
 	
 	export default {
 		data() {
 			return {
 				clothes_item : [],
-				title_text : "",
-				description_text: "",
-				selected_height : "",
-				selected_weight : "",
-				selected_tags: []
+				title_text : this.Coordinations.name,
+				description_text: this.Coordinations.description,
+				selected_height : this.Coordinations.bodyShape.height,
+				selected_weight : this.Coordinations.bodyShape.weight,
+				selected_tags: this.Coordinations.tags
 			}
 		},
 		props: {
@@ -157,7 +183,7 @@
 							'height': '180-190',
 							'weight': '80-90'
 						},
-						'tags': ["skinny_leg", "small_face", "long_leg"],
+						'tags': ["skinny_legs", "long_legs"],
 						'likes': 0,
 						'reviews': [{'review_id': "None", 'review_content': "None"}],
 						'published': false,
@@ -169,13 +195,15 @@
 		},
 
 		components: {
-			AppCloth,
+			AppClothwithObject,
+			ColorScore,
 			AppButton,
 			AppTag,
 			AppLike,
 			AppReview,
 			TextInput,
-			TagInput
+			TagInput,
+			AppPopup
 		},
 
 		methods: {
@@ -246,11 +274,23 @@
 				let updateThings = coordiRef.update({
 					published: true
 				});
+			},
+			
+			open() {
+				this.$refs.popup.open();
+			},
+
+			close() {
+				this.$refs.popup.close();
 			}
 		},
 
 		beforeMount() {
 			this.makeClothesList()
+		},
+
+		mounted() {
+			this.open()
 		}
 	}
 </script>

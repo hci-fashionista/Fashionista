@@ -1,62 +1,98 @@
 <template>
-	<div class="coordination_detail">
-		<div class="clothes">
-			<div  v-for="cloth in this.clothes_item" :key="cloth.id">
-				<img :src="cloth.image" alt="cloth image" width="100" height="100">
-				<p>{{cloth.price}}</p>
+	<AppPopup ref='popup'>
+		<div class="coordination_detail">
+			<div class="clothes">
+				<div  v-for="cloth in this.clothes_item" :key="cloth.id">
+					<AppClothwithObject :cloth="cloth"/>
+				</div>
+				<div class="color_match">
+					<ColorScore :colors="this.Coordinations.colors" />
+				</div>
 			</div>
-			<div class="color_match">
-			</div>
-		</div>
 
-		<div class="texts">
-			<p id="title">Title</p>
-			<p id="title_content">{{this.Coordinations.name}}</p>
+			<div class="textAndReview">
+				<div class="texts">
+					<p id="title">Title</p>
+					<p id="title_content">{{this.Coordinations.name}}</p>
+					
+					<p id="description">Description</p>
+					<p id="description_content">{{this.Coordinations.description}}</p>
+					
+					<p id="tag">Tags</p>
+					<ul class="tags_list">
+						<li v-for="tag_name in this.Coordinations.tags" :key="tag_name">
+							<AppTag class="apptag" :name="tag_name"></AppTag>
+						</li>
+					</ul>
+				</div>
+				
+				<div class="reviews">
+					<p id="review">Reviews</p>
+					<hr>
+					<AppLike id="app_like" :likes="12"></AppLike>
+					<hr>
+					<ul class="reviews_list">
+						<li v-for="(review_set,i) in this.Coordinations.reviews" :key="i">
+							<AppReview :id="review_set.review_id" :content="review_set.review_content"></AppReview>
+						</li>
+					</ul>
+					<hr>
+					<div class="review_input">
+						<input class="review_text" type="text" @keyup.enter="submitReview" v-model="my_review">
+						<button class="review_submit" @click="submitReview" >submit</button>
+					</div>
+					<hr>
+				</div>
+			</div>
 			
-			<p id="description">Description</p>
-			<p id="description_content">{{this.Coordinations.description}}</p>
-			
+			<div class="button">
+				<AppButton color="primary" full-width @click="close">
+					To Shopping Cart
+				</AppButton>
+			</div>
 		</div>
-		
-		<ul class="tags_list">
-			<li v-for="tag_name in this.Coordinations.tags" :key="tag_name">
-				<AppTag :name="tag_name"></AppTag>
-			</li>
-		</ul>
-		
-		<div class="reviews">
-			<hr>
-			<AppLike id="app_like" :likes="12"></AppLike>
-			<hr>
-			<ul class="reviews_list">
-				<li v-for="(review_set,i) in this.Coordinations.reviews" :key="i">
-					<AppReview :id="review_set.review_id" :content="review_set.review_content"></AppReview>
-				</li>
-			</ul>
-			<hr>
-		</div>
-		
-		<div class="button">
-			<AppButton>
-				To Shopping Cart
-			</AppButton>
-		</div>
-	</div>
+	</AppPopup>
 </template>
 
 <style scoped>
 	.coordination_detail {
 		display: flex;
 		flex-direction: column;
+		justify-content: space-between;
 		align-items: center;
 		padding: 30px;
-		max-width: 400px;
+		max-width: 2000px;
+		border-radius: 10px;
 
-		background-color : var(--grey-850);
+		background-color : var(--grey-900);
+
 	}
 
 	.clothes {
 		display: flex;
+		margin-bottom: 30px;
+	}
+
+	.color_match {
+		display: flex;
+
+		& >>> .flex {
+			font-size : 20px;
+		}
+
+		& >>> .dot {
+			width: 30px;
+			height: 30px;
+		}
+	}
+
+	.textAndReview {
+		display: flex;
+	}
+
+	.texts {
+		width: 100%;
+		margin: 10px;
 	}
 
 	.tags_list {
@@ -64,10 +100,20 @@
 		flex-wrap: wrap;
 		padding-left: 0;
 		list-style: none;
+
+		overflow: auto;
+		max-height: 150px;
+	}
+	
+	.apptag {
+		margin-left : 5px;
+		margin-bottom: 10px;
 	}
 
 	.reviews {
 		align-self: stretch;
+		width: 100%;
+		margin: 10px;
 	}
 
 	.reviews_list {
@@ -77,13 +123,51 @@
 		max-height: 300px;
 		overflow: auto;
 		padding: 0;
+
+		li {
+			padding-bottom: 5px;
+		}
 	}
 
-	#title, #description {
+	.review_input {
+		display: flex;
+		justify-content: flex-end;
+
+		font-family: Titillium Web;
+		font-style: normal;
+		font-weight: normal;
+		font-size: 13px;
+		line-height: 21px;
+
+	}
+
+	.review_text {
+		border: none;
+		background: var(--grey-750);
+		border-radius: 18px;
+
+		&:focus {
+			outline: none;
+		}
+	}
+
+	.review_submit {
+		cursor: pointer;
+		color: var(--grey-100);
+		background: var(--grey-700);
+		font-family: 'Raleway', sans-serif;
+		font-size: 13px;
+		border: none;
+		border-radius: 5px;
+		padding: 5px 10px;
+		transition: all .4s ease;
+	}
+
+	#title, #description, #tag, #review {
 		font-family: Raleway;
 		font-style: normal;
 		font-weight: bold;
-		font-size: 12.3882px;
+		font-size: 13px;
 		line-height: 15px;
 	}
 
@@ -91,7 +175,7 @@
 		font-family: Raleway;
 		font-style: normal;
 		font-weight: 500;
-		font-size: 15.6691px;
+		font-size: 16px;
 		line-height: 18px;
 
 		background: var(--grey-800);
@@ -104,10 +188,23 @@
 		margin: auto;
 	}
 
+	.button {
+		display:flex;
+		
+		& >>> button {
+			font-size: 13px;
+		}
+
+		& > * {
+			margin: 5px;
+		}
+	}
+
 </style>
 
 <script>
-	import AppCloth from "@/components/AppCloth";
+	import AppClothwithObject from "@/components/AppClothwithObject";
+	import ColorScore from "@/components/ColorScore";
 	import AppTag from "@/components/AppTag";
 	import AppReview from "@/components/AppReview";
 	import AppButton from "@/components/AppButton";
@@ -115,11 +212,13 @@
 	import TextInput from "@/components/TextInput";
 	import TagInput from "@/components/TagInput";
 	import firebase from "@/src/firebase.js";
+	import AppPopup from "@/components/AppPopup";
 	
 	export default {
 		data() {
 			return {
-				clothes_item : []
+				clothes_item : [],
+				my_review: ""
 			}
 		},
 		props: {
@@ -127,7 +226,7 @@
 				type: Object,
 				default : ()=>{
 					return {
-						'id': 'None',
+						'id': '0nZifbU3OmmfCI6wRfSY',
 						'name': "None",
 						'description': "None",
 						'totalPrice': 22000,
@@ -140,7 +239,7 @@
 						'tags': ["skinny_leg", "small_face", "long_leg"],
 						'likes': 0,
 						'reviews': [{'review_id': "None", 'review_content': "None"}],
-						'published': true,
+						'published': false,
 						'author' : "Dol Lee"
 					}
 					
@@ -149,13 +248,15 @@
 		},
 
 		components: {
-			AppCloth,
+			AppClothwithObject,
+			ColorScore,
 			AppButton,
 			AppTag,
 			AppLike,
 			AppReview,
 			TextInput,
-			TagInput
+			TagInput,
+			AppPopup
 		},
 
 		methods: {
@@ -198,11 +299,38 @@
 				for (var i=0; i< this.Coordinations.clothes.length; i++){
 					this.clothesList(this.Coordinations.clothes[i])
 				}
+			},
+
+			submitReview() {
+				if(this.my_review == ""){
+					return;
+				}
+				this.Coordinations.reviews.push({'review_id': "Dol Lee", 'review_content': this.my_review});
+				const updateReview = this.Coordinations.reviews;
+				const db = firebase.firestore();
+				
+				let coordiRef = db.collection("myCoordinations").doc(this.Coordinations.id);
+				let updateThings = coordiRef.update({
+					reviews : updateReview
+				});
+				this.my_review = "";
+			},
+
+			open() {
+				this.$refs.popup.open();
+			},
+
+			close() {
+				this.$refs.popup.close();
 			}
 		},
 
 		beforeMount() {
 			this.makeClothesList()
+		},
+
+		mounted() {
+			this.open()
 		}
 	}
 </script>

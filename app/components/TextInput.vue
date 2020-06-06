@@ -15,7 +15,7 @@
 	export default {
 		data() {
 			return {
-				typetext: ""
+				typetext: this.message
 			};
 		},
 
