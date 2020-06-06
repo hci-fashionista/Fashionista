@@ -1,5 +1,5 @@
 <template>
-	<div class="tag_input">
+	<div class="tag_input"  :class="{'small': this.small}">
 		<div class="selected">
 			<AppTag class="tag" v-for="tagName in selected" :key="tagName" :name="tagName"></AppTag>
 			<div class="searchbox"><input class="search" type="text" placeholder="type tag" v-model="searchText" @keydown="searchKeydown" key="input" autofocus></div>
@@ -61,6 +61,54 @@
 
 		.tag {
 			margin: 0px 5px;
+		}
+	}
+
+	.small{
+		.selected {
+			min-height: 30px;
+			margin: 0px;
+			padding: 5px;
+			overflow: auto;
+			max-height: 60px;
+		}
+
+		.tag {
+			font-size: 12px;
+			margin: 5px;
+		}
+		
+		.searchbox {
+			padding: 0px;
+			margin: 5px;
+			line-height: 12px;
+			border-radius: 20px;
+			width: 35%;
+		}
+
+		.search {
+			font-size: 12px;
+		}
+
+		.toggle {
+			font-size: 12px;
+			padding-bottom: 10px;
+		}
+
+		.tags_list {
+			padding-left : 0px;
+			overflow: auto;
+			max-height: 100px;
+
+			li {
+				padding: 0px;
+			}
+		}
+
+		.tags {
+			margin: 0px;
+			padding-top: 15px;
+			flex-direction: column;
 		}
 	}
 
@@ -162,11 +210,23 @@
 					"paunchy", "pear", "circle", "rectangle", "hourglass", "long_waist", "short_arms"
 				],
 				tagName: [],
-				selected: [],
+				selected: this.already_selected,
 				searchText: '',
 				ableToDelete: false,
 				isUserTagOpen: false
 			};
+		},
+
+		props: {
+			already_selected: {
+				type: Array,
+				default: () => []
+			},
+
+			small: {
+				type: Boolean,
+				default: false
+			}
 		},
 
 		computed: {

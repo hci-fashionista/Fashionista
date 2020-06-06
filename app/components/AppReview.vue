@@ -21,7 +21,7 @@
 		font-family: Titillium Web;
 		font-style: normal;
 		font-weight: normal;
-		font-size: 13.7647px;
+		font-size: 13px;
 		line-height: 21px;
 
 	}
