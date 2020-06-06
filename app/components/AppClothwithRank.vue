@@ -1,7 +1,7 @@
 <template>
 	<div @click = "popup" class="clothwithrank">
 		<div class="info">
-			<div class="rank">{{clothId}}</div>
+			<div class="rank">{{clothId + 1}}</div>
 			<!-- <div class="new" v-if="detail.is_new">new</div> -->
 		</div>
 		<AppCloth :cloth="detail"></AppCloth>
