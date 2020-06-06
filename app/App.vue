@@ -17,6 +17,7 @@
 	:root{
 		--grey-100: #000000;
 		--grey-300: #404040;
+		--grey-550: #a0a0a0;
 		--grey-600: #cccccc;
 		--grey-700: #dddddd;
 		--grey-750: #efefef;
@@ -49,6 +50,16 @@
 
 		&-move {
 			transition: all .4s ease;
+		}
+	}
+
+	.Fade {
+		&-enter-active, &-leave-active {
+			transition: all .4s ease;
+		}
+
+		&-enter, &-leave-to {
+			opacity: 0;
 		}
 	}
 </style>

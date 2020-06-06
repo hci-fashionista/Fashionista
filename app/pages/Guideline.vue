@@ -11,7 +11,7 @@
 			<h2>Template</h2>
 
 			<div class="Guideline__buttons">
-				<GuidelineButton v-for="templateOption in templates"
+				<GuidelineButton v-for="templateOption in templateCandidates"
 					:key="templateOption.id"
 					:template="templateOption"
 					:selected="template && template.id === templateOption.id"
@@ -37,21 +37,97 @@
 						@select="showColorChooser"
 						custom
 					>
-						<IconPlus />
+						<IconPlus style="width: 5rem; height: 5rem; fill: var(--grey-300)" />
 					</GuidelineButton>
 				</div>
 			</div>
 		</transition>
 
 		<transition name="Fade">
-			<div class="Guideline__section" v-if="phase >= 3">
+			<div class="Guideline__section Clothes" v-if="phase >= 3">
 				<h2>Clothes</h2>
 
+				<div class="Clothes__row">
+					<div class="Clothes__category">
+						<button v-for="component in compiledTemplate.components"
+							:key="component.id"
+							@click="openCategory(component)">
 
+							<component :is="getIcon(component.icon)" v-if="!results[component.id]" />
+							<AppCloth :cloth="results[component.id]" v-else />
+						</button>
+					</div>
+
+					<div class="Clothes__container">
+						<transition name="Fade" mode="out-in">
+							<div class="Clothes__items Items"
+								v-if="category && loading" key="loading"
+							>
+								<span class="Items__heading">
+									Loading...
+								</span>
+
+								Please wait for a second
+							</div>
+
+							<div class="Clothes__items Clothes__items--list"
+								v-else-if="category && clothes.length > 0" :key="category"
+							>
+								<AppCloth v-for="cloth in clothes"
+									:cloth="cloth"
+									:key="cloth.id"
+									@click.native="setCloth(cloth)"
+								/>
+							</div>
+
+							<div class="Clothes__items Items"
+								v-else-if="category && clothes.length === 0" key="no-items"
+							>
+								<span class="Items__heading">
+									No items
+								</span>
+
+								Please change your criteria
+							</div>
+
+							<div class="Clothes__items Items" v-else key="unselected">
+								<IconArrowLeft class="Items__icon" />
+
+								<span class="Items__heading">
+									Please select category
+								</span>
+
+								Click the clothes you want to select
+							</div>
+						</transition>
+					</div>
+				</div>
 			</div>
 		</transition>
 
-		<ColorChooserPopup ref="colorChooser" :template="template" />
+		<transition name="Fade">
+			<div class="Guideline__section Finish" v-if="phase >= 4">
+				<h2>Finish</h2>
+
+				<div class="Finish__row">
+					<AppButton @click="toShoppingCart">
+						<IconCart />
+						To Shopping Cart
+					</AppButton>
+
+					<AppButton @click="toMyCoordinations" color="primary">
+						<IconPlus />
+						To My Coordinates
+					</AppButton>
+				</div>
+			</div>
+		</transition>
+
+		<ColorChooserPopup ref="colorChooser"
+			:template="template"
+			v-if="template"
+			@select="setCustomColor($event)"
+		/>
 	</main>
 </template>
 
@@ -60,6 +136,7 @@
 		max-width: 900px;
 		margin: 0 auto;
 		font-family: 'Raleway', sans-serif;
+		padding: 50px 0;
 
 		&__section {
 			margin-top: 50px;
@@ -90,6 +167,113 @@
 			* {
 				margin: 0 10px;
 			}
+		}
+	}
+
+	.Clothes {
+		&__row {
+			display: flex;
+			margin-left: 20px;
+		}
+
+		&__category {
+			background: var(--grey-700);
+			flex: 1;
+			max-width: 150px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			padding: 20px 30px;
+
+			* {
+				margin: 20px 0;
+				width: 100%;
+				max-width: 140px;
+				height: auto;
+			}
+
+			button {
+				cursor: pointer;
+				background: transparent;
+				border: none;
+				outline: none;
+
+				&:hover svg {
+					fill: var(--grey-550);
+				}
+			}
+
+			svg {
+				fill: var(--grey-600);
+				transition: fill .4s ease;
+			}
+		}
+
+		&__container {
+			flex: 1;
+			position: relative;
+			background: var(--grey-800);
+		}
+
+		&__items {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			justify-content: center;
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			padding: 0 50px;
+			box-sizing: border-box;
+
+			&--list {
+				flex-wrap: wrap;
+				flex-direction: row;
+				justify-content: space-around;
+				align-items: stretch;
+				overflow: auto;
+				padding: 0;
+
+				& > * {
+					cursor: pointer;
+					margin: 10px 5px;
+				}
+			}
+		}
+	}
+
+	.Finish {
+		&__row {
+			display: flex;
+			justify-content: center;
+
+			button {
+				display: flex;
+				align-items: center;
+				font-size: 1.3rem;
+				margin: 0 10px;
+
+				svg {
+					width: 1.5rem;
+					height: 1.5rem;
+					margin-right: 10px;
+				}
+
+				&.primary svg {
+					fill: var(--grey-900) !important;
+				}
+			}
+		}
+	}
+
+	.Items {
+		color: var(--grey-550);
+
+		&__heading {
+			margin-top: 2rem;
+			margin-bottom: .3rem;
+			font-size: 2rem;
+			font-weight: 700;
 		}
 	}
 
@@ -150,9 +334,17 @@
 </style>
 
 <script>
+	import AppButton from "@/components/AppButton";
+	import AppCloth from "@/components/AppCloth";
 	import ColorChooserPopup from "@/components/ColorChooserPopup";
 	import GuidelineButton from "@/components/GuidelineButton";
+	import GuidelineIcons from "@/components/GuidelineIcons";
+	import IconArrowLeft from "@/images/IconArrowLeft.svg?inline";
+	import IconCart from "@/images/IconCart.svg?inline";
 	import IconPlus from "@/images/IconPlus.svg?inline";
+
+	import firebase from "@/src/firebase";
+	import { getIcon } from "@/components/GuidelineIcons";
 
 	const getMock = () => [
 		{
@@ -160,7 +352,7 @@
 			name: 'T-shirts + Jeans',
 			components: [
 				{
-					id: 't-shirts',
+					id: 'top',
 					name: 'T-Shirts',
 					icon: 'tshirts',
 					tags: [
@@ -169,7 +361,7 @@
 				},
 
 				{
-					id: 'jeans',
+					id: 'pants',
 					name: 'Jeans',
 					icon: 'jeans',
 					tags: [
@@ -184,13 +376,13 @@
 					name: 'Black + Black',
 					components: [
 						{
-							id: 't-shirts',
-							color: 'black'
+							id: 'top',
+							color: '검정색'
 						},
 
 						{
-							id: 'jeans',
-							color: 'black'
+							id: 'pants',
+							color: '검정색'
 						}
 					]
 				}
@@ -198,13 +390,20 @@
 		}
 	];
 
+	const db = firebase.firestore();
+
 	export default {
 		data() {
 			return {
 				stages: ['Template', 'Color', 'Clothes', 'Finish'],
-				templates: getMock(),
+				templateCandidates: getMock(),
 				template: null,
-				colors: null
+				colors: null,
+				category: null,
+				clothes: [],
+				results: {},
+				cache: {},
+				loading: false
 			};
 		},
 
@@ -216,7 +415,10 @@
 				if(!this.colors)
 					return 2;
 
-				return 3;
+				if(!this.compiledTemplate.components.every(({id}) => this.results[id]))
+					return 3;
+
+				return 4;
 			},
 
 			colorCandidates() {
@@ -235,18 +437,142 @@
 
 					return candidateCompiled;
 				});
+			},
+
+			compiledTemplate() {
+				if(!this.template || !this.colors)
+					return {};
+
+				const template = {...this.template};
+				template.components = template.components.map((component, index) => {
+					return {
+						...component,
+						...this.colors.components[index]
+					};
+				});
+				delete template.colorCandidates;
+
+				return template;
 			}
 		},
 
 		methods: {
 			showColorChooser() {
-				this.$refs.colorChooser.open();
+				if(this.$refs.colorChooser)
+					this.$refs.colorChooser.open();
+			},
+
+			setCustomColor(colors) {
+				const customIdx = this.template.colorCandidates.findIndex(v => v.id === 'custom');
+				if(customIdx > 0)
+					this.template.colorCandidates.splice(customIdx, 1);
+
+				const newCandidate = {
+					id: 'custom',
+					name: 'Custom',
+					...colors
+				};
+
+				this.template.colorCandidates.push(newCandidate);
+				this.colors = newCandidate;
+			},
+
+			async openCategory(component) {
+				this.category = component.id;
+				this.clothes = [];
+
+				let clothesList = [];
+
+				this.loading = true;
+				if(!this.cache[component.id]) {
+					let cursor = db.collection(component.id);
+
+					if(component.color) {
+						cursor = cursor.where("color", "==", component.color);
+					}
+
+					const clothes = await cursor.get();
+					clothes.forEach(clothDoc => {
+						const data = clothDoc.data();
+						data.id = clothDoc.id;
+						clothesList.push(data);
+					});
+
+					this.cache[component.id] = [...clothesList];
+				} else {
+					clothesList = [...this.cache[component.id]];
+				}
+
+				this.loading = false;
+				this.clothes = clothesList;
+			},
+
+			setCloth(cloth) {
+				this.$set(this.results, this.category, cloth);
+			},
+
+			async toMyCoordinations() {
+				const coordination = {
+					author: 'Dol Lee',
+					bodyShape: {
+						height: 'height',
+						weight: 'weight'
+					},
+					clothes: this.compiledTemplate.components.map(v => this.results[v.id].id),
+					colors: this.compiledTemplate.components.map(v => v.color),
+					description: '',
+					likes: 0,
+					name: `New Coordination ${(new Date).toLocaleString()}`,
+					published: false,
+					reviews: [],
+					tags: [],
+					totalPrice: `${
+						this.clothes.reduce((prev, {price}) => prev + price, 0)
+					}`
+				};
+
+				await db.collection('myCoordinations').add(coordination);
+				this.$router.push('/mypage');
+			},
+
+			toShoppingCart() {
+
+			},
+
+			getIcon
+		},
+
+		watch: {
+			template() {
+				this.cache = {};
+				this.results = {};
+				this.clothes = [];
+				this.category = null;
+				this.colors = null;
+			},
+
+			async colors() {
+				this.cache = {};
+				this.clothes = [];
+
+				if(this.category) {
+					const component = this.compiledTemplate.components
+						.find(({id}) => id === this.category);
+
+					if(component)
+						await this.openCategory(component);
+				}
 			}
 		},
 
 		components: {
+			AppButton,
+			AppCloth,
 			ColorChooserPopup,
 			GuidelineButton,
+			GuidelineIcons,
+			IconArrowLeft,
+			IconCart,
 			IconPlus
 		}
 	};

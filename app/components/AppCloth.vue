@@ -31,6 +31,9 @@
 		font-size: 13px;
 		margin-left: 5px;
 		text-align: center;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	div.description{
 		display: flex;
