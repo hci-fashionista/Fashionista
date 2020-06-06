@@ -5,20 +5,20 @@
             <h1>Preset</h1>
             <div class="body">
                 <select id="height" name="height" @change="heightChanged($event)">
-                    <option value="~150">~150cm</option>
-                    <option value="150~160" selected>150cm~160cm</option>
-                    <option value="160~170">160cm~170cm</option>
-                    <option value="170~180">170cm~180cm</option>
-                    <option value="180~190">180cm~190cm</option>
-                    <option value="190~">190cm~</option>
+                    <option value="-150">-150cm</option>
+                    <option value="150-160" selected>150cm-160cm</option>
+                    <option value="160-170">160cm-170cm</option>
+                    <option value="170-180">170cm-180cm</option>
+                    <option value="180-190">180cm-190cm</option>
+                    <option value="190-">190cm-</option>
                 </select>
                 <select id="weight" name="weight" @change="weightChanged($event)">
-                    <option value="~50">~50kg</option>
-                    <option value="50~60" selected>50kg~60kg</option>
-                    <option value="60~70">60kg~70kg</option>
-                    <option value="70~80">70kg~80kg</option>
-                    <option value="80~90">80kg~90kg</option>
-                    <option value="90~">90kg~</option>
+                    <option value="-50">-50kg</option>
+                    <option value="50-60" selected>50kg-60kg</option>
+                    <option value="60-70">60kg-70kg</option>
+                    <option value="70-80">70kg-80kg</option>
+                    <option value="80-90">80kg-90kg</option>
+                    <option value="90-">90kg-</option>
                 </select>
             </div>
             <div class="tag_area">
@@ -115,8 +115,8 @@
                 selected_tag_names: [],
                 total_coordinations: [],
                 selected_coordinations: [],
-                height: "150~160",
-                weight: "50~60",
+                height: "150-160",
+                weight: "50-60",
                 clothes_dict: {},
                 selected_info: null
             }
@@ -159,7 +159,7 @@
                 else{
                     return false
                 }
-            },
+            }
         },
         mounted() {
             db.collection("ranking").get().then(async (querySnapshot)=>{
@@ -167,7 +167,9 @@
                     // doc.data() is never undefined for query doc snapshots
                     let dataObject = doc.data()
                     dataObject["id"] = doc.id
-                    this.total_coordinations.push(dataObject)
+                    if(dataObject["published"]){
+                        this.total_coordinations.push(dataObject)
+                    }            
                 });
             })
             .then(async ()=>{
@@ -193,6 +195,10 @@
                 }))
             })
             .then(()=>{
+                this.total_coordinations = this.total_coordinations.sort(function(coord1, coord2){
+                    return coord2.likes - coord1.likes
+                })
+                console.log(this.total_coordinations)
                 this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
                 // this.selected_coordinations = JSON.parse(JSON.stringify(this.total_coordinations))
                 console.log("finished")
