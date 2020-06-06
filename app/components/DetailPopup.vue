@@ -1,44 +1,50 @@
 <template>
-	<AppPopup ref='popup' class='root flex'>
-		<div class='flex'><img :src="info.image_large" alt='Clothes Picture'></div>
-		<div class='flex column info'>
-			<div class='flex title'>
-				<h1>{{ info.name }}</h1>
-				<AppLike :likes='likes'/>
-			</div>
-			<hr />
-			<div class='flex column'>
-				<h3>Product Info</h3>
-				<div class='table'>
-					<div>Brand</div>
-					<div>{{ info.brand }}</div>
-					<div>Size</div>
-					<div>{{ info.size.join(' / ') }}</div>
-					<div>Ratings</div>
-					<div>{{ rating }}</div>
+	<AppPopup ref='popup'>
+		<div class='root flex'>
+			<div class='flex'><img :src="info.image_large" alt='Clothes Picture'></div>
+			<div class='flex column info' style='justify-content: space-around;'>
+				<div>
+					<div class='flex title'>
+						<h1>{{ info.name }}</h1>
+						<AppLike :likes='likes'/>
+					</div>
+					<hr />
+					<div class='flex column'>
+						<h3>Product Info</h3>
+						<div class='table'>
+							<div>Brand</div>
+							<div>{{ info.brand }}</div>
+							<div>Size</div>
+							<div>{{ info.size.join(' / ') }}</div>
+							<div>Ratings</div>
+							<div>{{ rating }}</div>
+						</div>
+					</div>
+					<hr />
+					<div class='flex column'>
+						<h3>Price Info</h3>
+						<div class='table'>
+							<div>Price</div>
+							<div>{{ info.price }} ₩</div>
+						</div>
+					</div>
+					<hr />
+					<div class='flex column'>
+						<h3>Delivery Info</h3>
+						<div class='table'>
+							<div>Company</div>
+							<div>{{ deliveryCompany }}</div>
+							<div>Average ETA</div>
+							<div>{{ info['delivery-date'] }} days</div>
+						</div>
+					</div>
 				</div>
-			</div>
-			<hr />
-			<div class='flex column'>
-				<h3>Price Info</h3>
-				<div class='table'>
-					<div>Price</div>
-					<div>{{ info.price }} ₩</div>
+				<div>
+					<div class='flex buttons'>
+						<AppButton color='primary' fullWidth>Select</AppButton>
+						<AppButton fullWidth @click='close'>Cancel</AppButton>
+					</div>
 				</div>
-			</div>
-			<hr />
-			<div class='flex column'>
-				<h3>Delivery Info</h3>
-				<div class='table'>
-					<div>Company</div>
-					<div>{{ deliveryCompany }}</div>
-					<div>ETA</div>
-					<div>{{ info.eta }} days</div>
-				</div>
-			</div>
-			<div class='flex buttons'>
-				<AppButton>Select</AppButton>
-				<AppButton>Cancel</AppButton>
 			</div>
 		</div>
 	</AppPopup>
@@ -48,7 +54,9 @@
 .root {
 	width: 90vw;
 	max-width: 1000px;
-	padding: 20px 40px;
+	padding: 40px 40px;
+	background-color: #FFFFFF;
+	border-radius: 15px;
 }
 
 img {
@@ -78,12 +86,13 @@ img {
 
 	&.info {
 		padding: 0 40px;
+		flex-grow: 1;
 	}
 }
 
 .table {
 	display: grid;
-	grid-template-columns: 1fr 3fr;
+	grid-template-columns: 2fr 3fr;
 	grid-column-gap: 80px;
 	margin-left: 20px;
 }
@@ -107,16 +116,18 @@ h3 {
 <script>
 import AppLike from '@/components/AppLike'
 import AppButton from '@/components/AppButton'
+import AppPopup from '@/components/AppPopup'
 
 export default {
 	components: {
 		AppLike,
-		AppButton
+		AppButton,
+		AppPopup
 	},
 	data() {
 		return {
 			deliveryCompany: 'Daehan Tongun',
-			rating: 4,
+			rating: '4 / 5',
 			likes: 198
 		}
 	},
@@ -139,10 +150,12 @@ export default {
 			}
 		}
 	},
-
 	methods: {
 		open() {
 			this.$refs.popup.open();
+		},
+		close() {
+			this.$refs.popup.close();
 		}
 	}
 }
