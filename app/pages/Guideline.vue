@@ -49,19 +49,26 @@
 
 				<div class="Clothes__row">
 					<div class="Clothes__category">
-						<button v-for="component in template.components"
+						<button v-for="component in compiledTemplate.components"
 							:key="component.id"
 							@click="openCategory(component)">
 
-							<component :is="getIcon(component.icon)" />
+							<component :is="getIcon(component.icon)" v-if="!results[component.id]" />
+							<AppCloth :cloth="results[component.id]" v-else />
 						</button>
 					</div>
 
-					<transition name="Fade">
-						<div class="Clothes__items" v-if="category">
-							<AppCloth v-for="cloth in clothes" :key="cloth.id" @click="setCloth(cloth)" />
-						</div>
-					</transition>
+					<div class="Clothes__container">
+						<transition name="Fade">
+							<div class="Clothes__items" v-if="category">
+								<AppCloth v-for="cloth in clothes"
+									:cloth="cloth"
+									:key="cloth.id"
+									@click.native="setCloth(cloth)"
+								/>
+							</div>
+						</transition>
+					</div>
 				</div>
 			</div>
 		</transition>
@@ -151,13 +158,24 @@
 			}
 		}
 
+		&__container {
+			flex: 1;
+			position: relative;
+		}
+
 		&__items {
 			display: flex;
 			flex-wrap: wrap;
 			justify-content: space-around;
 			overflow: auto;
-			max-height: 50vh;
-			flex: 1;
+			position: absolute;
+			width: 100%;
+			height: 100%;
+
+			& > * {
+				cursor: pointer;
+				margin: 10px 5px;
+			}
 		}
 	}
 
@@ -279,7 +297,9 @@
 				template: null,
 				colors: null,
 				category: null,
-				clothes: []
+				clothes: [],
+				results: {},
+				cache: {}
 			};
 		},
 
@@ -354,20 +374,44 @@
 				this.category = component.id;
 				this.clothes = [];
 
-				const db = firebase.firestore();
-				const clothes = await db.collection(component.id)
-					.get();
+				let clothesList = [];
 
-				clothes.forEach(clothDoc => {
-					this.clothes.push(clothDoc.data());
-				});
+				if(!this.cache[component.id]) {
+					const db = firebase.firestore();
+					let cursor = db.collection(component.id);
+
+					if(component.color) {
+						cursor = cursor.where("color", "==", component.color);
+					}
+
+					const clothes = await cursor.get();
+					clothes.forEach(clothDoc => {
+						clothesList.push(clothDoc.data());
+					});
+
+					this.cache[component.id] = [...clothesList];
+				} else {
+					clothesList = [...this.cache[component.id]];
+				}
+
+				this.clothes = clothesList;
 			},
 
 			setCloth(cloth) {
-
+				this.$set(this.results, this.category, cloth);
 			},
 
 			getIcon
+		},
+
+		watch: {
+			template() {
+				this.cache = {};
+			},
+
+			color() {
+				this.cache = {};
+			}
 		},
 
 		components: {

@@ -199,7 +199,7 @@
 	import GuidelineIcons from "@/components/GuidelineIcons";
 	import IconResult from "@/images/IconResult.svg?inline";
 
-	import { colors, colorMatchScore, normalizeColor, toRGB } from "@/src/color.js";
+	import { colors, colorMatchScoreMulti, normalizeColor, toRGB } from "@/src/color.js";
 
 	export default {
 		data() {
@@ -236,15 +236,7 @@
 				if(this.paletteNormalized.length < 2)
 					return null;
 
-				const scores = [];
-				this.paletteNormalized.forEach((color1, index) => {
-					for (let i = index + 1; i < this.paletteNormalized.length; i++) {
-						const color2 = this.paletteNormalized[i];
-						scores.push(colorMatchScore(color1, color2));
-					}
-				});
-
-				return scores.reduce((prev, curr) => prev + curr, 0) / scores.length;
+				return colorMatchScoreMulti(this.paletteNormalized);
 			},
 
 			computedTemplate() {
