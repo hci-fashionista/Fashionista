@@ -3,7 +3,7 @@
 		<div class="coordination_detail">
 			<div class="clothes">
 				<div  v-for="cloth in this.clothes_item" :key="cloth.id">
-					<AppClothwithObject :cloth="cloth"/>
+					<AppCloth :cloth="cloth"/>
 				</div>
 				<div class="color_match">
 					<ColorScore :colors="this.Coordinations.colors" />
@@ -14,10 +14,10 @@
 				<div class="texts">
 					<p id="title">Title</p>
 					<p id="title_content">{{this.Coordinations.name}}</p>
-					
+
 					<p id="description">Description</p>
 					<p id="description_content">{{this.Coordinations.description}}</p>
-					
+
 					<p id="tag">Tags</p>
 					<ul class="tags_list">
 						<li v-for="tag_name in this.Coordinations.tags" :key="tag_name">
@@ -25,7 +25,7 @@
 						</li>
 					</ul>
 				</div>
-				
+
 				<div class="reviews">
 					<p id="review">Reviews</p>
 					<hr>
@@ -44,7 +44,7 @@
 					<hr>
 				</div>
 			</div>
-			
+
 			<div class="button">
 				<AppButton color="primary" full-width @click="close">
 					To Shopping Cart
@@ -104,7 +104,7 @@
 		overflow: auto;
 		max-height: 150px;
 	}
-	
+
 	.apptag {
 		margin-left : 5px;
 		margin-bottom: 10px;
@@ -190,7 +190,7 @@
 
 	.button {
 		display:flex;
-		
+
 		& >>> button {
 			font-size: 13px;
 		}
@@ -203,7 +203,7 @@
 </style>
 
 <script>
-	import AppClothwithObject from "@/components/AppClothwithObject";
+	import AppCloth from "@/components/AppCloth";
 	import ColorScore from "@/components/ColorScore";
 	import AppTag from "@/components/AppTag";
 	import AppReview from "@/components/AppReview";
@@ -213,7 +213,7 @@
 	import TagInput from "@/components/TagInput";
 	import firebase from "@/src/firebase.js";
 	import AppPopup from "@/components/AppPopup";
-	
+
 	export default {
 		data() {
 			return {
@@ -242,13 +242,13 @@
 						'published': false,
 						'author' : "Dol Lee"
 					}
-					
+
 				}
 			},
 		},
 
 		components: {
-			AppClothwithObject,
+			AppCloth,
 			ColorScore,
 			AppButton,
 			AppTag,
@@ -262,7 +262,7 @@
 		methods: {
 			clothesList(clothId) {
 				const db = firebase.firestore();
-				
+
 				let topRef = db.collection("top").doc(clothId);
 				let pantsRef = db.collection("pants").doc(clothId);
 				let getTopDoc = topRef.get()
@@ -308,7 +308,7 @@
 				this.Coordinations.reviews.push({'review_id': "Dol Lee", 'review_content': this.my_review});
 				const updateReview = this.Coordinations.reviews;
 				const db = firebase.firestore();
-				
+
 				let coordiRef = db.collection("myCoordinations").doc(this.Coordinations.id);
 				let updateThings = coordiRef.update({
 					reviews : updateReview

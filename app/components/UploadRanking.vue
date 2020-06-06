@@ -3,7 +3,7 @@
 		<div class="coordination_detail">
 			<div class="clothes">
 				<div  v-for="cloth in this.clothes_item" :key="cloth.id">
-					<AppClothwithObject :cloth="cloth"/>
+					<AppCloth :cloth="cloth"/>
 				</div>
 				<div class="color_match">
 					<ColorScore :colors="this.Coordinations.colors" />
@@ -14,10 +14,10 @@
 				<div class="texts">
 					<p id="title">Title</p>
 					<TextInput class="textinput" v-model="title_text"></TextInput>
-					
+
 					<p id="description">Description</p>
 					<TextInput class="textinput" v-model="description_text"></TextInput>
-					
+
 					<p id="heightweight">Body Shape</p>
 					<div class="select_list">
 						<select v-model="selected_height">
@@ -40,13 +40,13 @@
 						</select>
 					</div>
 				</div>
-				
+
 				<div class="tag_input_div">
 					<p id="tags">Tags</p>
 					<TagInput :already_selected="this.Coordinations.tags" @tagChanged="tagChanged" small/>
 				</div>
 			</div>
-			
+
 			<div class="buttons">
 				<AppButton @click="saveCoordinationDetail">
 					save
@@ -133,7 +133,7 @@
 
 	.buttons {
 		display:flex;
-		
+
 		& >>> button {
 			font-size: 13px;
 		}
@@ -146,7 +146,7 @@
 </style>
 
 <script>
-	import AppClothwithObject from "@/components/AppClothwithObject";
+	import AppCloth from "@/components/AppCloth";
 	import ColorScore from "@/components/ColorScore";
 	import AppTag from "@/components/AppTag";
 	import AppReview from "@/components/AppReview";
@@ -156,7 +156,7 @@
 	import TagInput from "@/components/TagInput";
 	import AppPopup from "@/components/AppPopup";
 	import firebase from "@/src/firebase.js";
-	
+
 	export default {
 		data() {
 			return {
@@ -189,13 +189,13 @@
 						'published': false,
 						'author' : "Dol Lee"
 					}
-					
+
 				}
 			},
 		},
 
 		components: {
-			AppClothwithObject,
+			AppCloth,
 			ColorScore,
 			AppButton,
 			AppTag,
@@ -212,7 +212,7 @@
             },
 			clothesList(clothId) {
 				const db = firebase.firestore();
-				
+
 				let topRef = db.collection("top").doc(clothId);
 				let pantsRef = db.collection("pants").doc(clothId);
 				let getTopDoc = topRef.get()
@@ -252,7 +252,7 @@
 			},
 			saveCoordinationDetail() {
 				const db = firebase.firestore();
-				
+
 				let coordiRef = db.collection("myCoordinations").doc(this.Coordinations.id);
 				let updateThings = coordiRef.update({
 					name: this.title_text,
@@ -269,13 +269,13 @@
 					return;
 				}
 				const db = firebase.firestore();
-				
+
 				let coordiRef = db.collection("myCoordinations").doc(this.Coordinations.id);
 				let updateThings = coordiRef.update({
 					published: true
 				});
 			},
-			
+
 			open() {
 				this.$refs.popup.open();
 			},

@@ -4,7 +4,7 @@
 			<div class="rank">{{clothId}}</div>
 			<!-- <div class="new" v-if="detail.is_new">new</div> -->
 		</div>
-		<AppCloth :name="detail.name" :price="detail.price" :likes="detail.likes"></AppCloth>
+		<AppCloth :cloth="detail"></AppCloth>
 	</div>
 </template>
 
@@ -52,7 +52,7 @@
 	export default {
 		data() {
 			return {
-				Clothes: {
+				detail: {
 					name: "Lorem",
 					likes: 0,
 					color: "Color",
@@ -66,11 +66,6 @@
 				}
 			}
 
-		},
-		computed: {
-			detail() {
-				return this.Clothes
-			}
 		},
 		props: {
 			clothId: {
