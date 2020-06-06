@@ -7,7 +7,7 @@
 
 		<div class="tags">
 			<button class="toggle" :class="{'toggle--opened': isTagsOpen}" @click="onToggle">
-				<transition name="Fade">
+				<transition name="FadeMove">
 					<div v-if="isTagsOpen" key="all">All</div>
 					<div v-else key="best">Best</div>
 				</transition>
@@ -77,7 +77,7 @@
 			font-size: 12px;
 			margin: 5px;
 		}
-		
+
 		.searchbox {
 			padding: 0px;
 			margin: 5px;

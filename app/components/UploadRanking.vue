@@ -72,7 +72,8 @@
 		flex-direction: column;
 		align-items: center;
 		padding: 30px;
-		max-width: 2000px;
+		max-width: 800px;
+		width: 80vw;
 		border-radius: 10px;
 
 		background-color : var(--grey-900);
@@ -103,6 +104,7 @@
 	.texts, .tag_input_div{
 		width: 100%;
 		margin: 10px;
+		flex: 1;
 	}
 
 	.textinput >>> input {
@@ -225,7 +227,7 @@
             },
 			makeClothesList() {
 				const db = firebase.firestore();
-				
+
 				let topRef = db.collection("top").doc(this.Coordinations.clothes.top);
 				let pantsRef = db.collection("pants").doc(this.Coordinations.clothes.pants);
 				let getTopDoc = topRef.get()

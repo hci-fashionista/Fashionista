@@ -518,7 +518,10 @@
 						height: 'height',
 						weight: 'weight'
 					},
-					clothes: this.compiledTemplate.components.map(v => this.results[v.id].id),
+					clothes: Object.keys(this.results).reduce((obj, key) => {
+						obj[key] = this.results[key].id;
+						return obj;
+					}, {}),
 					colors: this.compiledTemplate.components.map(v => v.color),
 					description: '',
 					likes: 0,
@@ -527,11 +530,13 @@
 					reviews: [],
 					tags: [],
 					totalPrice: `${
-						this.clothes.reduce((prev, {price}) => prev + price, 0)
+						Object.keys(this.results)
+							.map(v => this.results[v])
+							.reduce((prev, {price}) => prev + price, 0)
 					}`
 				};
 
-				await db.collection('myCoordinations').add(coordination);
+				await db.collection('ranking').add(coordination);
 				this.$router.push('/mypage');
 			},
 
