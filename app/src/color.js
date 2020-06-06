@@ -156,3 +156,18 @@ export function colorMatchScore(color1, color2) {
 	return Math.max(comp, mono)
 }
 
+
+export function colorMatchScoreMulti(colors) {
+	if(colors.length < 2)
+		return 0;
+
+	const scores = [];
+	colors.forEach((color1, index) => {
+		for (let i = index + 1; i < colors.length; i++) {
+			const color2 = colors[i];
+			scores.push(colorMatchScore(color1, color2));
+		}
+	});
+
+	return Math.floor(scores.reduce((prev, curr) => prev + curr, 0) / scores.length);
+}
