@@ -1,33 +1,38 @@
 <template>
 	<main class="Index">
-		<ul>
-			<li v-for="tag_name in tag_names" :key="tag_name">
-				<AppTag :name="tag_name"></AppTag>
-			</li>
-		</ul>
-
-		<AppButton>
-			asdf
-		</AppButton>
+		<SideBar>
+			<a>Best</a>
+			<hr />
+			<a>Men</a>
+			<a>Women</a>
+			<hr />
+			<a>Top</a>
+			<a>Outer</a>
+			<a>Onepiece</a>
+			<a>Pants</a>
+			<a>Shirt</a>
+			<a>Bag</a>
+			<a>Sneakers</a>
+			<a>Shoes</a>
+			<a>Watch</a>
+			<a>Headwear</a>
+			<a>Jewelry</a>
+		</SideBar>
 	</main>
 </template>
 
 <style scoped>
+	.Index {
+		position: relative;
+	}
 </style>
 
 <script>
-	import AppButton from "@/components/AppButton";
-	import AppTag from "@/components/AppTag";
+	import SideBar from "@/components/SideBar";
 
 	export default {
-		data(){
-			return {
-				tag_names: ["skinny_leg", "small_face", "long_leg"]
-			}
-		},
 		components: {
-			AppButton,
-			AppTag
+			SideBar
 		}
 	}
 </script>
