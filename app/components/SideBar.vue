@@ -11,7 +11,6 @@
 		height: 100%;
 		max-width: 300px;
 		min-width: 220px;
-		position: absolute;
 		display: flex;
 		z-index: 1;
 		float: left;
