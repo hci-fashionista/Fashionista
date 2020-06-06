@@ -167,7 +167,9 @@
                     // doc.data() is never undefined for query doc snapshots
                     let dataObject = doc.data()
                     dataObject["id"] = doc.id
-                    this.total_coordinations.push(dataObject)
+                    if(dataObject["published"]){
+                        this.total_coordinations.push(dataObject)
+                    }            
                 });
             })
             .then(async ()=>{
