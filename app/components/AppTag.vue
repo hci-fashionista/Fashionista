@@ -23,6 +23,7 @@
 		font-size: medium;
 		text-align: center;
 		user-select: none;
+		transition: background-color .4s ease;
 
 		&.is_selectable {
 			cursor: pointer;

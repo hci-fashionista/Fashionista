@@ -24,6 +24,7 @@
 		padding: 15px 15px;
 		border-radius: 20px;
 		margin: 10px 10px;
+		transition: all .4s ease;
 		&:hover{
 			background: var(--grey-850);
 		}
