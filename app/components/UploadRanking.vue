@@ -43,16 +43,16 @@
 
 				<div class="tag_input_div">
 					<p id="tags">Tags</p>
-					<TagInput :already_selected="this.Coordinations.tags" @tagChanged="tagChanged" small/>
+					<TagInput :already_selected="selected_tags" @tagChanged="tagChanged" small/>
 				</div>
 			</div>
 
 			<div class="buttons">
-				<AppButton @click="saveCoordinationDetail">
-					save
+				<AppButton @click="saveCoordinationDetail" :disabled="canSave" :color="btnSave">
+					{{saveMsg}}
 				</AppButton>
-				<AppButton @click="uploadToRanking">
-					Upload to Ranking
+				<AppButton @click="uploadToRanking" :disabled="canUpload" :color="btnUpload">
+					{{uploadMsg}}
 				</AppButton>
 				<AppButton>
 					To Shopping Cart
@@ -72,8 +72,8 @@
 		flex-direction: column;
 		align-items: center;
 		padding: 30px;
-		max-width: 800px;
-		width: 80vw;
+		max-width: 1000px;
+		width: 90vw;
 		border-radius: 10px;
 
 		background-color : var(--grey-900);
@@ -167,7 +167,39 @@
 				description_text: this.Coordinations.description,
 				selected_height : this.Coordinations.bodyShape.height,
 				selected_weight : this.Coordinations.bodyShape.weight,
-				selected_tags: this.Coordinations.tags
+				selected_tags: [...this.Coordinations.tags]
+			}
+		},
+		computed: {
+			saveMsg() {
+				if(this.canSave) return "Already Saved!";
+				else return "save";
+			},
+			uploadMsg() {
+				console.log(this.Coordinations);
+				if(this.Coordinations.published) return "Alreday Upload to Ranking!";
+				else return "Upload to Ranking";
+			},
+			canSave() {
+				if(this.title_text != this.Coordinations.name) return false;
+				if(this.description_text != this.Coordinations.description) return false;
+				if(this.selected_height != this.Coordinations.bodyShape.height) return false;
+				if(this.selected_weight != this.Coordinations.bodyShape.weight) return false;
+				if(JSON.stringify(this.selected_tags) != JSON.stringify(this.Coordinations.tags)) return false;
+				return true;
+			},
+			btnSave() {
+				if(this.canSave) return "default";
+				else return "primary";
+			},
+			canUpload() {
+				if(this.Coordinations.published) return true;
+				if(this.title_text && this.description_text && this.selected_height && this.selected_weight && this.selected_tags.length) return false;
+				return true;
+			},
+			btnUpload() {
+				if(this.canUpload) return "default";
+				else return "primary";
 			}
 		},
 		watch: {
@@ -272,6 +304,8 @@
 					},
 					tags: this.selected_tags
 				});
+				this.$emit('updateCloth');
+				this.close();
 			},
 			uploadToRanking() {
 				if(this.Coordinations.published){
@@ -283,6 +317,8 @@
 				let updateThings = coordiRef.update({
 					published: true
 				});
+				this.saveCoordinationDetail();
+				this.$router.push('/ranking');
 			},
 
 			open() {
