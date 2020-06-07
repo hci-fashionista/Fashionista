@@ -5,7 +5,7 @@
 			<div class='flex column info' style='justify-content: space-around;'>
 				<div>
 					<div class='flex title'>
-						<h1>{{ info.name }}</h1>
+						<h1 :title="info.name">{{ info.name }}</h1>
 						<AppLike :likes='likes'/>
 					</div>
 					<hr />
@@ -41,7 +41,7 @@
 				</div>
 				<div>
 					<div class='flex buttons'>
-						<AppButton color='primary' fullWidth>Select</AppButton>
+						<AppButton color='primary' @click="select" fullWidth>Select</AppButton>
 						<AppButton fullWidth @click='close'>Cancel</AppButton>
 					</div>
 				</div>
@@ -69,6 +69,13 @@ img {
 
 	&.title {
 		justify-content: flex-start;
+
+		h1 {
+			font-size: 1.8rem;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+		}
 	}
 
 	&.buttons {
@@ -87,6 +94,7 @@ img {
 	&.info {
 		padding: 0 40px;
 		flex-grow: 1;
+		width: 0;
 	}
 }
 
@@ -141,7 +149,7 @@ export default {
 					'delivery-date': 2,
 					gender: 'M',
 					image: 'https://image.msscdn.net/images/goods_img/20190416/1014964/1014964_2_125.jpg',
-					image_large: 'https://image.msscdn.net/images/goods_img/20180813/827198/827198_2_500.jpg',
+					img_large: 'https://image.msscdn.net/images/goods_img/20180813/827198/827198_2_500.jpg',
 					name: '멋쟁이 청바지',
 					price: 10000,
 					size: ['XS', 'S', 'M', 'L', 'XL'],
@@ -156,6 +164,10 @@ export default {
 		},
 		close() {
 			this.$refs.popup.close();
+		},
+		select() {
+			this.$emit('select');
+			this.close();
 		}
 	}
 }
