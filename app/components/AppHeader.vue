@@ -19,24 +19,22 @@
 			<router-link class="AppHeader__item" to="/mypage">
 				<IconShirt /> My Coordinates
 			</router-link>
-
-			<div class="AppHeader__item">
-
-			</div>
 		</nav>
 	</header>
+	
 </template>
 
 <style scoped>
+
 	.AppHeader {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		font-family: 'Raleway', sans-serif;
-		max-width: 1200px;
+		width: 100%;
+		background-color: var(--grey-850);
 		margin: 0 auto;
-		padding: 0 10px;
-
+		
 		&__brand {
 			margin: 0;
 		}
@@ -45,6 +43,7 @@
 			display: flex;
 			align-self: stretch;
 			align-items: stretch;
+			margin-right: 100px;
 		}
 
 		&__item {
@@ -63,7 +62,7 @@
 			}
 
 			&:hover {
-				background: var(--grey-850);
+				background: var(--grey-700);
 			}
 		}
 		&__main {
@@ -73,6 +72,7 @@
 			text-decoration: none;
 			font-size: 1.1rem;
 			padding: 20px 15px;
+			margin-left: 150px;
 		}
 	}
 </style>

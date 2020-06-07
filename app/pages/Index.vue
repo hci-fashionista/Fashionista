@@ -1,6 +1,7 @@
 <template>
 	<main class="Index">
 		<SideBar>
+			<hr />
 			<a>Best</a>
 			<hr />
 			<a>Men</a>
