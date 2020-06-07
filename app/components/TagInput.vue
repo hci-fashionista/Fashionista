@@ -53,7 +53,7 @@
 		align-self: flex-start;
 		flex-wrap: wrap;
 		overflow: auto;
-		border: 0.5px solid var(--grey-100);
+		border: 0.5px solid var(--grey-550);
 		border-radius: 10px;
 		min-height: 40px;
 		padding: 5px 10px;
@@ -138,7 +138,7 @@
 		display: flex;
 		align-items: center;
 		font-family: "Roboto";
-		font-weight: 300;
+		font-weight: 400;
 		font-size: 1.3rem;
 		color: var(--blue-500);
 		align-self: start;
@@ -151,7 +151,7 @@
 		}
 
 		svg {
-			margin-left: 20px;
+			margin-left: 10px;
 			stroke: var(--blue-500);
 			transition: all .4s ease;
 		}
