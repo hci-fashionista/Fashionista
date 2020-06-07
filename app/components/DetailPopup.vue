@@ -1,7 +1,7 @@
 <template>
 	<AppPopup ref='popup'>
 		<div class='root flex'>
-			<div class='flex'><img :src="info.image_large" alt='Clothes Picture'></div>
+			<div class='flex'><img :src="info.img_large || info.image" alt='Clothes Picture'></div>
 			<div class='flex column info' style='justify-content: space-around;'>
 				<div>
 					<div class='flex title'>

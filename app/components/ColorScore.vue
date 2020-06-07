@@ -1,6 +1,6 @@
 <template>
 	<div class='flex column'>
-		<div v-for='color in colors' :key='color' :style='getColor(color)' class='dot'>
+		<div v-for='(color, i) in colors' :key='i' :style='getColor(color)' class='dot'>
 		</div>
 		<div> {{ score }} </div>
 	</div>

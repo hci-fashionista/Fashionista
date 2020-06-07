@@ -20,24 +20,46 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		max-width: 220px;
+		padding: 15px 15px;
+		border-radius: 20px;
+		margin: 10px 10px;
+		&:hover{
+			background: var(--grey-850);
+		}
 	}
 	div.clothName{
 		font-family: 'Roboto';
-		width: 100%;
-		font-size: 22px;
+		width: 12vw;
+		font-size: 18px;
 		margin-left: 5px;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	div.description{
 		display: flex;
 		width: 100%;
 	}
 	div.price {
-		font-size: 18px;
+		font-size: 16px;
 		flex-grow: 1;
 		margin-left: 5px;
 	}
 	div.like{
 		margin-right: 5px;
+		& >>> div {
+			width: 25px;
+		}
+
+		& >>> span {
+			font-size: 15px;
+		}
+
+		& >>> img {
+			width : 10px;
+			height : 10px;
+		}
 	}
     .coordination_photo {
         width: 160px;

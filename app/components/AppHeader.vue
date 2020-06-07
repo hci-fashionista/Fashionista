@@ -1,8 +1,11 @@
 <template>
 	<header class="AppHeader">
-		<h1 class="AppHeader__brand">
-			Fashionista
-		</h1>
+		<router-link class="AppHeader__main" to="/">
+			<h1 class="AppHeader__brand">
+				Fashionista
+			</h1>
+		</router-link>
+		
 
 		<nav class="AppHeader__items">
 			<router-link class="AppHeader__item" to="/cart">
@@ -62,6 +65,14 @@
 			&:hover {
 				background: var(--grey-850);
 			}
+		}
+		&__main {
+			display: flex;
+			align-items: center;
+			color: inherit;
+			text-decoration: none;
+			font-size: 1.1rem;
+			padding: 20px 15px;
 		}
 	}
 </style>
