@@ -1,31 +1,44 @@
 <template>
-	<div class='root'>
-		<div class="container">
-			<div class="search">
+	<div class='root flex'>
+		<div class="container flex">
+			<div class="search flex">
 				<h1>Preset</h1>
-				<div class="body">
-					<select id="height" name="height" @change="heightChanged($event)">
-						<option value="-150">-150cm</option>
-						<option value="150-160" selected>150cm-160cm</option>
-						<option value="160-170">160cm-170cm</option>
-						<option value="170-180">170cm-180cm</option>
-						<option value="180-190">180cm-190cm</option>
-						<option value="190-">190cm-</option>
-					</select>
-					<select id="weight" name="weight" @change="weightChanged($event)">
-						<option value="-50">-50kg</option>
-						<option value="50-60" selected>50kg-60kg</option>
-						<option value="60-70">60kg-70kg</option>
-						<option value="70-80">70kg-80kg</option>
-						<option value="80-90">80kg-90kg</option>
-						<option value="90-">90kg-</option>
-					</select>
-				</div>
-				<div class="tag_area">
-					<TagInput @tagChanged="tagChanged"/>
+				<div class='preset'>
+					<div v-if="isPresetOpen">
+						<div class="body flex">
+							<select name="height" @change="heightChanged($event)">
+								<option value="-150">-150cm</option>
+								<option value="150-160" selected>150cm-160cm</option>
+								<option value="160-170">160cm-170cm</option>
+								<option value="170-180">170cm-180cm</option>
+								<option value="180-190">180cm-190cm</option>
+								<option value="190-">190cm-</option>
+							</select>
+							<select name="weight" @change="weightChanged($event)">
+								<option value="-50">-50kg</option>
+								<option value="50-60" selected>50kg-60kg</option>
+								<option value="60-70">60kg-70kg</option>
+								<option value="70-80">70kg-80kg</option>
+								<option value="80-90">80kg-90kg</option>
+								<option value="90-">90kg-</option>
+							</select>
+						</div>
+						<div class="tag_area">
+							<TagInput @tagChanged="tagChanged"/>
+						</div>
+					</div>
+					<div v-else></div>
+					<div class="flex center collapse" :class="{'collapse--opened': isPresetOpen}">
+						<div v-if="!isPresetOpen" class="flex center collapse-message">
+							Toggle Preset
+						</div>
+						<button @click="togglePreset">
+							<IconDropdown />
+						</button>
+					</div>
 				</div>
 			</div>
-			<div class="rankings">
+			<div class="rankings flex">
 				<h1>Ranking</h1>
 				<ul class="coordinations_list">
 					<li @click="showpopup(coordination)" v-for="(coordination, index) in selected_coordinations" :key="index">
@@ -33,59 +46,112 @@
 					</li>
 				</ul>
 			</div>
-			<RankingCoordinationDetail ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info">
-			</RankingCoordinationDetail>
+			<RankingCoordinationDetail ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info" />
 		</div>
 	</div>
 </template>
 
 <style scoped>
-	.root {
+	.flex {
 		display: flex;
+
+		& .center {
+			justify-content: center;
+		}
+	}
+
+	.root {
 		flex-direction: column;
 		align-items: center;
 	}
+
 	.container{
-		display: flex;
+		width: 80vw;
 		flex-direction: column;
 		align-items: flex-start;
 	}
-	.search{
-		display: flex;
+
+	.search, .rankings{
+		max-width: 1500px;
+		width: 90%;
 		flex-direction: column;
-		align-items: center;
+
+		& > h1 {
+			margin-left: 0;
+			align-self: start;
+			font-size: 2.4rem;
+		}
 	}
-	.search > h1 {
-		margin-left: 20px;
-		align-self: start;
+
+	.rankings {
+		& > h1 {
+			margin-bottom: 0;
+		}
 	}
+
+	.search {
+		& .preset {
+			border: 0.5px solid var(--grey-700);
+			border-radius: 10px;
+		}
+	}
+
+	.collapse {
+		& > button {
+			border: none;
+			cursor: pointer;
+			outline: none;
+			display: flex;
+			background: transparent;
+			align-items: center;
+			font-family: "Roboto";
+			font-weight: 300;
+			font-size: 1.3rem;
+			color: var(--blue-500);
+			align-self: start;
+			margin: 10px 0;
+			padding: 0px 10px;
+		}
+
+		&--opened svg {
+			transform: rotate(180deg);
+		}
+
+		& svg {
+			stroke: var(--grey-300);
+			transition: all .4s ease;
+		}
+
+		&-message {
+			color: var(--grey-300);
+			font-weight: bold;
+			font-size: 1rem;
+			margin-top: 10px;
+		}
+	}
+
 	.body {
 		align-self: flex-start;
 		margin: 30px 30px;
 		display: flex;
 		width: 22%;
+
+		& > select{
+			min-width: 130px;
+			width: 50%;
+			min-height: 40px;
+			border-radius: 10px;
+			padding: 10px;
+			font-size: medium;
+			margin-right: 20px;
+		}
 	}
-	.body > select{
-		width: 40%;
-		min-height: 40px;
-		padding: 10px;
-		font-size: medium;
-		margin-right: 20px;
-		border-radius: 10px;
-	}
+
 	.tag_area {
-		width: 60%;
+		width: 100%;
 		align-self: flex-start;
 	}
-	.rankings{
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-	.rankings > h1 {
-		margin-left: 20px;
-		align-self: start;
-	}
+
 	.coordinations_list {
 		list-style: none;
 		padding: 0px 0px;
@@ -93,9 +159,10 @@
 		grid-template-columns: repeat(5, 1fr);
 		grid-gap: 10px;
 		grid-auto-rows: minmax(100px, auto);
-	}
-	.coordinations_list > li {
-		margin: 20px 20px;
+
+		& > li {
+			margin: 20px 20px;
+		}
 	}
 </style>
 
@@ -106,6 +173,7 @@
 	import firebase from "../src/firebase.js"
 	import CoordinationwithRank from "@/components/CoordinationwithRank"
 	import RankingCoordinationDetail from "@/components/RankingCoordinationDetail"
+	import IconDropdown from "@/images/IconDropdown.svg?inline";
 
 	const db = firebase.firestore()
 	export default {
@@ -118,7 +186,8 @@
 				height: "150-160",
 				weight: "50-60",
 				clothes_dict: {},
-				selected_info: null
+				selected_info: null,
+				isPresetOpen: true
 			}
 		},
 		methods: {
@@ -159,6 +228,9 @@
 				else{
 					return false
 				}
+			},
+			togglePreset(event) {
+				this.isPresetOpen = !this.isPresetOpen
 			}
 		},
 		mounted() {
@@ -209,7 +281,8 @@
 			AppTag,
 			TagInput,
 			CoordinationwithRank,
-			RankingCoordinationDetail
+			RankingCoordinationDetail,
+			IconDropdown
 		}
 	}
 </script>
