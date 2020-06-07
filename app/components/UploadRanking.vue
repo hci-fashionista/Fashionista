@@ -110,7 +110,7 @@
 	.textinput >>> input {
 		width: 100%;
 
-		font-family: Raleway;
+		font-family: var(--main-font);
 		font-style: normal;
 		font-weight: 500;
 		font-size: 16px;
@@ -126,7 +126,7 @@
 	}
 
 	#title, #description, #heightweight, #tags {
-		font-family: Raleway;
+		font-family: var(--main-font);
 		font-style: normal;
 		font-weight: bold;
 		font-size: 13px;

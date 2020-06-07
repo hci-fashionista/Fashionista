@@ -16,10 +16,11 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		max-width: 220px;		
+		max-width: 220px;
 		padding: 15px 15px;
 		border-radius: 20px;
 		margin: 10px 10px;
+		transition: all .4s ease;
 		&:hover{
 			background: var(--grey-850);
 		}
@@ -31,7 +32,7 @@
 	}
 
 	div.clothName{
-		font-family: 'Roboto';
+		font-family: var(--main-font);
 		width: 12vw;
 		font-size: 18px;
 		margin-left: 5px;

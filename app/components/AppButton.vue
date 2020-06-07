@@ -9,7 +9,7 @@
 		cursor: pointer;
 		color: var(--grey-100);
 		background: var(--grey-700);
-		font-family: 'Raleway', sans-serif;
+		font-family: var(--main-font);
 		font-size: 1.2rem;
 		border: none;
 		border-radius: 5px;

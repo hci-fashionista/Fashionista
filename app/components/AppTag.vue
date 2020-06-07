@@ -13,7 +13,7 @@
 
 <style scoped>
 	.tag {
-		font-family: 'Raleway';
+		font-family: var(--main-font);
 		height: 25px;
 		background-color: var(--grey-750);
 		border: none;
@@ -23,6 +23,7 @@
 		font-size: medium;
 		text-align: center;
 		user-select: none;
+		transition: background-color .4s ease;
 
 		&.is_selectable {
 			cursor: pointer;

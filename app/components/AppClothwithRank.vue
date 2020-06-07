@@ -28,7 +28,7 @@
 		text-align: center;
 		color: white;
 		line-height: 45px;
-		font-family: 'Roboto';
+		font-family: var(--main-font);
 		font-size: 35px;
 		font-weight: 800;
 	}

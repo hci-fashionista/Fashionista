@@ -141,7 +141,7 @@
 	.Guideline {
 		max-width: 900px;
 		margin: 0 auto;
-		font-family: 'Raleway', sans-serif;
+		font-family: var(--main-font);
 		padding: 50px 0;
 
 		&__section {
