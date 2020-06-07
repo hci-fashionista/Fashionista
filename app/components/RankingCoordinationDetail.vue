@@ -29,7 +29,7 @@
 				<div class="reviews">
 					<p id="review">Reviews</p>
 					<hr>
-					<AppLike id="app_like" :likes="12"></AppLike>
+					<AppLike id="app_like" :likes="this.Coordinations.likes"></AppLike>
 					<hr>
 					<ul class="reviews_list">
 						<li v-for="(review_set,i) in this.Coordinations.reviews" :key="i">
@@ -61,7 +61,8 @@
 		justify-content: space-between;
 		align-items: center;
 		padding: 30px;
-		max-width: 2000px;
+		max-width: 1000px;
+		width: 90vw;
 		border-radius: 10px;
 
 		background-color : var(--grey-900);
