@@ -22,19 +22,24 @@
 		<div class='content'>
 			<div class="rankings">
 				<h1>New Item</h1>
-				<ul class="coordinations_list">
-					<li v-for="(value, id, index) in clothes" :key="index">
-						<AppClothwithRank :clothId="index" :detail="value" />
-					</li>
-				</ul>
+				<div class="center">
+					<ul class="coordinations_list">
+						<li v-for="(value, id, index) in clothes" :key="index">
+							<AppClothwithRank :clothId="index" :detail="value" />
+						</li>
+					</ul>
+				</div>
 			</div>
 			<div class="rankings">
 				<h1>Ranking</h1>
-				<ul class="coordinations_list">
-					<li v-for="(value, name, index) in coordinations" :key="index">
-						<CoordinationwithRank :clothes="value.clothes" :detail="value.detail" :index="index"/>
-					</li>
-				</ul>
+				<div class="center">
+					<ul class="coordinations_list">
+						<li v-for="(value, name, index) in coordinations" :key="index">
+							<CoordinationwithRank :clothes="value.clothes" :detail="value.detail" :index="index"/>
+						</li>
+					</ul>
+				</div>
+				
 			</div>
 		</div>
 	</main>
@@ -49,25 +54,26 @@
 	.content {
 		display: flex;
 		flex-direction: column;
+		width: 100%;
 	}
 
     .rankings{
         display: flex;
         flex-direction: column;
         align-items: center;
-
+		width: 100%;
 		& > h1 {
 			margin-left: 20px;
 			align-self: start;
 		}
     }
-
     .coordinations_list {
         list-style: none;
         padding: 0px 0px;
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        grid-gap: 10px;
+        grid-template-columns: repeat(4, 1fr);
+		margin: 0 auto;
+        grid-gap: 3vw;
         grid-auto-rows: minmax(100px, auto);
 
 		& > li {

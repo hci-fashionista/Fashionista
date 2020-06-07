@@ -1,8 +1,11 @@
 <template>
 	<header class="AppHeader">
-		<h1 class="AppHeader__brand">
-			Fashionista
-		</h1>
+		<router-link class="AppHeader__item" to="/">
+			<h1 class="AppHeader__brand">
+				Fashionista
+			</h1>
+		</router-link>
+		
 
 		<nav class="AppHeader__items">
 			<router-link class="AppHeader__item" to="/cart">

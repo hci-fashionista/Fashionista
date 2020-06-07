@@ -16,21 +16,20 @@
 	}
 
 	div.info{
-		height: 100%;
-        margin-right: 10px;
+		height: 250px;
 		align-self: start;
 	}
 
 	div.rank{
-		width: 56px;
-		height: 56px;
+		width: 45px;
+		height: 45px;
 		margin-bottom: 5px;
 		background-color: var(--blue-400);
 		text-align: center;
 		color: white;
-		line-height: 56px;
+		line-height: 45px;
 		font-family: 'Roboto';
-		font-size: 41px;
+		font-size: 35px;
 		font-weight: 800;
 	}
     
