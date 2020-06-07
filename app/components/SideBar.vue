@@ -6,7 +6,6 @@
 
 <style scoped>
 	.sidenav {
-		border-top: 1px solid var(--grey-600);
 		border-bottom: 1px solid var(--grey-600);
 		height: 100%;
 		max-width: 300px;
@@ -17,19 +16,25 @@
 		color: #111;
 		background-color: var(--grey-850);
 		flex-direction: column;
-		overflow-y: scroll;
+		overflow-y: hidden;
 
 		& > a {
 			text-align: center;
 			font-size: 1.3rem;
-			margin: 15px 0;
+			padding: 15px 0;
+			&:hover{
+				background: var(--grey-700);
+				transition: all .2s ease
+
+			}
 		}
 		& > hr {
 			height: 1px;
 			border: 0;
 			border-top: 1px solid var(--grey-600);
+			background-color: var(--grey-600);
 			display: block;
-			margin: 3px 0;
+			margin: 1px 0;
 			padding: 0;
 		}
 	}
