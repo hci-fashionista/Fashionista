@@ -28,6 +28,8 @@
 		--blue-400: #2196f3;
 		--blue-500: #42a5f5;
 		--blue-800: #c1dffb;
+
+		--main-font: 'Raleway', sans-serif;
 	}
 
 	html, body {

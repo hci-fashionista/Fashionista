@@ -125,7 +125,7 @@
 	}
 	.search{
 		width: 100%;
-		font-family: 'Raleway';
+		font-family: var(--main-font);
 		font-size: medium;
 		text-align: center;
 	}
@@ -137,8 +137,8 @@
 		outline: none;
 		display: flex;
 		align-items: center;
-		font-family: "Roboto";
 		font-weight: 400;
+		font-family: var(--main-font);
 		font-size: 1.3rem;
 		color: var(--blue-500);
 		align-self: start;

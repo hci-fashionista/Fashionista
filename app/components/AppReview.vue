@@ -18,7 +18,7 @@
 	}
 
 	#id, #content {
-		font-family: Titillium Web;
+		font-family: var(--main-font);
 		font-style: normal;
 		font-weight: normal;
 		font-size: 13px;

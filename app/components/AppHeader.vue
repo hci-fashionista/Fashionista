@@ -5,7 +5,7 @@
 				Fashionista
 			</h1>
 		</router-link>
-		
+
 
 		<nav class="AppHeader__items">
 			<router-link class="AppHeader__item" to="/cart">
@@ -30,9 +30,10 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		font-family: 'Raleway', sans-serif;
 		width: 100%;
 		background-color: var(--grey-850);
+		font-family: var(--main-font);
+		max-width: 1200px;
 		margin: 0 auto;
 		
 		&__brand {

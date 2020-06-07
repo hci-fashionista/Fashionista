@@ -134,7 +134,7 @@
 		display: flex;
 		justify-content: flex-end;
 
-		font-family: Titillium Web;
+		font-family: var(--main-font);
 		font-style: normal;
 		font-weight: normal;
 		font-size: 13px;
@@ -156,7 +156,7 @@
 		cursor: pointer;
 		color: var(--grey-100);
 		background: var(--grey-700);
-		font-family: 'Raleway', sans-serif;
+		font-family: var(--main-font);
 		font-size: 13px;
 		border: none;
 		border-radius: 5px;
@@ -165,7 +165,7 @@
 	}
 
 	#title, #description, #tag, #review {
-		font-family: Raleway;
+		font-family: var(--main-font);
 		font-style: normal;
 		font-weight: bold;
 		font-size: 13px;
@@ -173,7 +173,7 @@
 	}
 
 	#title_content, #description_content {
-		font-family: Raleway;
+		font-family: var(--main-font);
 		font-style: normal;
 		font-weight: 500;
 		font-size: 16px;
@@ -272,7 +272,7 @@
 		methods: {
 			makeClothesList() {
 				const db = firebase.firestore();
-				
+
 				let topRef = db.collection("top").doc(this.Coordinations.clothes.top);
 				let pantsRef = db.collection("pants").doc(this.Coordinations.clothes.pants);
 				let getTopDoc = topRef.get()

@@ -13,7 +13,7 @@
 
 <style scoped>
 	.tag {
-		font-family: 'Raleway';
+		font-family: var(--main-font);
 		height: 25px;
 		background-color: var(--grey-750);
 		border: none;

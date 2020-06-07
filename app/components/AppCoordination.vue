@@ -29,7 +29,7 @@
 		}
 	}
 	div.clothName{
-		font-family: 'Roboto';
+		font-family: var(--main-font);
 		width: 12vw;
 		font-size: 18px;
 		margin-left: 5px;

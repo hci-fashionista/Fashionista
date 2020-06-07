@@ -47,7 +47,7 @@
 		&__text {
 			margin-top: 10px;
 			font-size: 1.1rem;
-			font-family: 'Raleway', sans-serif;
+			font-family: var(--main-font);
 		}
 
 		&:hover &__button {
