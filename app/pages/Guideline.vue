@@ -76,7 +76,7 @@
 								<AppCloth v-for="cloth in clothes"
 									:cloth="cloth"
 									:key="cloth.id"
-									@click.native="setCloth(cloth)"
+									@click.native="openCloth(cloth)"
 								/>
 							</div>
 
@@ -127,6 +127,12 @@
 			:template="template"
 			v-if="template"
 			@select="setCustomColor($event)"
+		/>
+
+		<DetailPopup ref="clothDetail"
+			:info="selectedClothes"
+			v-if="selectedClothes"
+			@select="setCloth(selectedClothes)"
 		/>
 	</main>
 </template>
@@ -337,6 +343,7 @@
 	import AppButton from "@/components/AppButton";
 	import AppCloth from "@/components/AppCloth";
 	import ColorChooserPopup from "@/components/ColorChooserPopup";
+	import DetailPopup from "@/components/DetailPopup";
 	import GuidelineButton from "@/components/GuidelineButton";
 	import GuidelineIcons from "@/components/GuidelineIcons";
 	import IconArrowLeft from "@/images/IconArrowLeft.svg?inline";
@@ -403,7 +410,8 @@
 				clothes: [],
 				results: {},
 				cache: {},
-				loading: false
+				loading: false,
+				selectedClothes: null
 			};
 		},
 
@@ -507,6 +515,14 @@
 				this.clothes = clothesList;
 			},
 
+			openCloth(cloth) {
+				this.selectedClothes = cloth;
+				this.$nextTick(() => {
+					if(this.$refs.clothDetail)
+						this.$refs.clothDetail.open();
+				});
+			},
+
 			setCloth(cloth) {
 				this.$set(this.results, this.category, cloth);
 			},
@@ -574,6 +590,7 @@
 			AppButton,
 			AppCloth,
 			ColorChooserPopup,
+			DetailPopup,
 			GuidelineButton,
 			GuidelineIcons,
 			IconArrowLeft,
