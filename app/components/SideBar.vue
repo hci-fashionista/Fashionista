@@ -12,7 +12,7 @@
 		max-width: 300px;
 		min-width: 220px;
 		display: flex;
-		z-index: 1;
+
 		float: left;
 		color: #111;
 		background-color: var(--grey-850);

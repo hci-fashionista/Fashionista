@@ -34,14 +34,15 @@
 				<h1>Ranking</h1>
 				<div class="center">
 					<ul class="coordinations_list">
-						<li v-for="(value, name, index) in coordinations" :key="index">
+						<li @click="showpopup(value.detail)" v-for="(value, name, index) in coordinations" :key="index">
 							<CoordinationwithRank :clothes="value.clothes" :detail="value.detail" :index="index"/>
 						</li>
 					</ul>
 				</div>
-				
 			</div>
 		</div>
+		<RankingCoordinationDetail ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info">
+        </RankingCoordinationDetail>
 	</main>
 </template>
 
@@ -86,19 +87,51 @@
 	import SideBar from "@/components/SideBar";
 	import AppClothwithRank from "@/components/AppClothwithRank"
 	import CoordinationwithRank from "@/components/CoordinationwithRank"
-    import firebase from "@/src/firebase.js"
+	import firebase from "@/src/firebase.js"
+	import RankingCoordinationDetail from "@/components/RankingCoordinationDetail"
 
 	export default {
 		data() {
 			return {
 				coordinations: {},
-				clothes: {}
+				clothes: {},
+				selected_info: {
+					'id': '0nZifbU3OmmfCI6wRfSY',
+					'name': "None",
+					'description': "None",
+					'totalPrice': '22000',
+					'colors': ['파란색', '데님'],
+					'clothes': {
+						'top': '1033001',
+						'pants': '1014964'
+					},
+					'bodyShape': {
+						'height': '180-190',
+						'weight': '80-90'
+					},
+					'tags': ["skinny_leg", "small_face", "long_leg"],
+					'likes': 0,
+					'reviews': [{'review_id': "None", 'review_content': "None"}],
+					'published': false,
+					'author' : "Dol Lee"
+				}
 			}
 		},
 		components: {
 			SideBar,
 			AppClothwithRank,
-			CoordinationwithRank
+			CoordinationwithRank,
+			RankingCoordinationDetail
+		},
+		methods:{
+			showpopup(coordi){
+                console.log(coordi)
+                this.selected_info = coordi
+				if(this.$refs.coordinationChooser){
+					this.$refs.coordinationChooser.open();
+				}
+					
+            },
 		},
 		async mounted() {
 			const db = firebase.firestore()
