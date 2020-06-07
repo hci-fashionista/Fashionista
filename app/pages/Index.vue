@@ -24,7 +24,7 @@
 				<h1>New Item</h1>
 				<div class="center">
 					<ul class="coordinations_list">
-						<li v-for="(value, id, index) in clothes" :key="index">
+						<li @click="showpopupCloth(value)" v-for="(value, id, index) in clothes" :key="index">
 							<AppClothwithRank :clothId="index" :detail="value" />
 						</li>
 					</ul>
@@ -34,7 +34,7 @@
 				<h1>Ranking</h1>
 				<div class="center">
 					<ul class="coordinations_list">
-						<li @click="showpopup(value.detail)" v-for="(value, name, index) in coordinations" :key="index">
+						<li @click="showpopupCoordi(value.detail)" v-for="(value, name, index) in coordinations" :key="index">
 							<CoordinationwithRank :clothes="value.clothes" :detail="value.detail" :index="index"/>
 						</li>
 					</ul>
@@ -43,6 +43,8 @@
 		</div>
 		<RankingCoordinationDetail ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info">
         </RankingCoordinationDetail>
+		<DetailPopup ref="clothChooser" :info="selected_info_cloth" v-if="selected_info_cloth">
+		</DetailPopup>
 	</main>
 </template>
 
@@ -74,12 +76,15 @@
         display: grid;
         grid-template-columns: repeat(4, 1fr);
 		margin: 0 auto;
-        grid-gap: 3vw;
+        grid-gap: 2vw;
         grid-auto-rows: minmax(100px, auto);
 
 		& > li {
 			margin: 20px 20px;
+			cursor: pointer;
+			
 		}
+		
 	}
 </style>
 
@@ -89,6 +94,7 @@
 	import CoordinationwithRank from "@/components/CoordinationwithRank"
 	import firebase from "@/src/firebase.js"
 	import RankingCoordinationDetail from "@/components/RankingCoordinationDetail"
+	import DetailPopup from "@/components/DetailPopup"
 
 	export default {
 		data() {
@@ -114,6 +120,18 @@
 					'reviews': [{'review_id': "None", 'review_content': "None"}],
 					'published': false,
 					'author' : "Dol Lee"
+				},
+				selected_info_cloth: {
+					brand: 'Gap',
+					color: '데님',
+					'delivery-date': 2,
+					gender: 'M',
+					image: 'https://image.msscdn.net/images/goods_img/20190416/1014964/1014964_2_125.jpg',
+					image_large: 'https://image.msscdn.net/images/goods_img/20180813/827198/827198_2_500.jpg',
+					name: '멋쟁이 청바지',
+					price: 10000,
+					size: ['XS', 'S', 'M', 'L', 'XL'],
+					type: 'pants'
 				}
 			}
 		},
@@ -121,16 +139,22 @@
 			SideBar,
 			AppClothwithRank,
 			CoordinationwithRank,
-			RankingCoordinationDetail
+			RankingCoordinationDetail,
+			DetailPopup
 		},
 		methods:{
-			showpopup(coordi){
-                console.log(coordi)
+			showpopupCoordi(coordi){
                 this.selected_info = coordi
 				if(this.$refs.coordinationChooser){
 					this.$refs.coordinationChooser.open();
 				}
-					
+			},
+			showpopupCloth(cloth){
+                console.log(cloth)
+                this.selected_info_cloth = cloth
+				if(this.$refs.clothChooser){
+					this.$refs.clothChooser.open();
+				}
             },
 		},
 		async mounted() {
@@ -138,7 +162,7 @@
 
 			// initialize coordinations
 			const coordinations = {}
-			const rankingSnap = await db.collection("ranking").get()
+			const rankingSnap = await db.collection("ranking").limit(4).get()
 			rankingSnap.forEach((doc, idx) => {
 				coordinations[doc.id] = { "detail": doc.data() }
 			})

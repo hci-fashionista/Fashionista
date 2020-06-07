@@ -16,8 +16,13 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		max-width: 220px;
-
+		max-width: 220px;		
+		padding: 15px 15px;
+		border-radius: 20px;
+		margin: 10px 10px;
+		&:hover{
+			background: var(--grey-850);
+		}
 	}
 	img {
 		object-fit: contain;
