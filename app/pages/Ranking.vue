@@ -6,17 +6,19 @@
 				<div class='preset'>
 					<div v-if="isPresetOpen">
 						<div class="body flex">
-							<select name="height" @change="heightChanged($event)">
+							<select id="height" name="height" v-model="height" v-on:input="heightChanged($event)">
+								<option value="all">height-free</option>
 								<option value="-150">-150cm</option>
-								<option value="150-160" selected>150cm-160cm</option>
+								<option value="150-160">150cm-160cm</option>
 								<option value="160-170">160cm-170cm</option>
 								<option value="170-180">170cm-180cm</option>
 								<option value="180-190">180cm-190cm</option>
 								<option value="190-">190cm-</option>
 							</select>
-							<select name="weight" @change="weightChanged($event)">
+							<select id="weight" name="weight" v-model="weight" v-on:input="weightChanged($event)">
+								<option value="all">weight-free</option>
 								<option value="-50">-50kg</option>
-								<option value="50-60" selected>50kg-60kg</option>
+								<option value="50-60">50kg-60kg</option>
 								<option value="60-70">60kg-70kg</option>
 								<option value="70-80">70kg-80kg</option>
 								<option value="80-90">80kg-90kg</option>
@@ -46,7 +48,7 @@
 					</li>
 				</ul>
 			</div>
-			<RankingCoordinationDetail ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info" />
+			<RankingCoordinationDetail v-on:reload="(...args)=>this.reload([...args])" ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info" />
 		</div>
 	</div>
 </template>
@@ -181,8 +183,9 @@
 			return {
 				selected_tag_names: [],
 				total_coordinations: [],
-				height: "150-160",
-				weight: "50-60",
+				selected_coordinations: [],
+				height: "all",
+				weight: "all",
 				clothes_dict: {},
 				selected_info: null,
 				isPresetOpen: true
@@ -216,7 +219,13 @@
 				let coordination_height = coordination.bodyShape.height
 				let coordination_weight = coordination.bodyShape.weight
 				let selected_tags = this.selected_tag_names
-				if(coordination_height == this.height && coordination_weight == this.weight){
+				if(this.height !="all" && coordination_height != this.height){
+					return false
+				}
+				else if(this.weight !="all" && coordination_weight != this.weight){
+					return false
+				}
+				else{
 					if(selected_tags.length < 1){
 						return true
 					}
@@ -226,12 +235,26 @@
 					else
 						return false
 				}
-				else{
-					return false
-				}
+				
 			},
 			togglePreset(event) {
 				this.isPresetOpen = !this.isPresetOpen
+			},
+			reload(args){
+				console.log(args[0])
+				console.log(args[1])
+				const db = firebase.firestore();
+				let coordiRef = db.collection("ranking").doc(args[0]);
+				let updateThings = coordiRef.update({
+					likes : args[1]
+				});
+				this.selected_coordinations.forEach((coordination)=>{
+					if(coordination.id == args[0]){
+						console.log("일단")
+						coordination.likes = args[1]
+					}
+				})
+				console.log(this.selected_coordinations)
 			}
 		},
 		mounted() {
@@ -277,6 +300,7 @@
 					return coord2.likes - coord1.likes
 				})
 				console.log(this.total_coordinations)
+				this.selected_coordinations = JSON.parse(JSON.stringify(this.total_coordinations))
 				console.log("finished")
 			})
 		},

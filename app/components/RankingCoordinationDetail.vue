@@ -29,7 +29,7 @@
 				<div class="reviews">
 					<p id="review">Reviews</p>
 					<hr>
-					<AppLike id="app_like" :likes="this.Coordinations.likes"></AppLike>
+					<AppLike id="app_like" @newLikes="newLikes" :likes="this.Coordinations.likes"></AppLike>
 					<hr>
 					<ul class="reviews_list">
 						<li v-for="(review_set,i) in this.Coordinations.reviews" :key="i">
@@ -324,7 +324,11 @@
 
 			close() {
 				this.$refs.popup.close();
-			}
+			},
+			newLikes(newlikes){
+				console.log(newlikes)
+				this.$emit('reload', this.Coordinations.id, newlikes);
+			},	
 		},
 
 		mounted() {
