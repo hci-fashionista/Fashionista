@@ -93,7 +93,6 @@
 <script>
 	import AppClothwithRank from "@/components/AppClothwithRank"
 	import AppTag from "@/components/AppTag"
-	import TagInput from "@/components/TagInput"
 	import firebase from "../src/firebase.js"
 	import CoordinationwithRank from "@/components/CoordinationwithRank"
 	import UploadRanking from "@/components/UploadRanking"
@@ -104,7 +103,6 @@
 	export default {
 		data() {
 			return {
-				clothIds: [1,2,3,4,5,6,7,8,9],
 				total_coordinations: [],
 				my_coordinations: [],
 				height: "150~160",
@@ -179,7 +177,6 @@
 		components: {
 			AppClothwithRank,
 			AppTag,
-			TagInput,
 			CoordinationwithRank,
 			UploadRanking,
 			IconPlus

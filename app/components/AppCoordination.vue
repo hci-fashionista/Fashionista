@@ -1,10 +1,10 @@
 <template>
 	<div class="cloth">
-        <CoordinationImages class="coordination_photo" is_photo>
-            <div v-for="cloth in clothes" :key="cloth.name">
-                <img :src="cloth.image">
-            </div>
-        </CoordinationImages>
+		<CoordinationImages class="coordination_photo" is_photo>
+			<div v-for="cloth in clothes" :key="cloth.name">
+				<img :src="cloth.image">
+			</div>
+		</CoordinationImages>
 		<div class="clothName">{{this.name}}</div>
 		<div class="description">
 			<div class="price">{{priceWithWon}}</div>
@@ -62,15 +62,15 @@
 			height : 10px;
 		}
 	}
-    .coordination_photo {
-        width: 160px;
-        height: 160px;
-    }
+	.coordination_photo {
+		width: 160px;
+		height: 160px;
+	}
 </style>
 
 <script>
 	import AppLike from "@/components/AppLike";
-    import CoordinationImages from "@/components/CoordinationImages"
+	import CoordinationImages from "@/components/CoordinationImages"
 
 	export default {
 		data(){
@@ -94,15 +94,15 @@
 			likes: {
 				type: Number,
 				default: 0
-            },
-            clothes: {
-                type: Array,
-                default: []
-            }
+			},
+			clothes: {
+				type: Array,
+				default: () => []
+			}
 		},
 		components: {
-            AppLike,
-            CoordinationImages
+			AppLike,
+			CoordinationImages
 		}
 	}
 </script>

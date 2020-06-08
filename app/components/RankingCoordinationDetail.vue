@@ -211,7 +211,6 @@
 	import AppButton from "@/components/AppButton";
 	import AppLike from "@/components/AppLike";
 	import TextInput from "@/components/TextInput";
-	import TagInput from "@/components/TagInput";
 	import firebase from "@/src/firebase.js";
 	import AppPopup from "@/components/AppPopup";
 
@@ -265,7 +264,6 @@
 			AppLike,
 			AppReview,
 			TextInput,
-			TagInput,
 			AppPopup
 		},
 

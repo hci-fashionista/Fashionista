@@ -24,7 +24,7 @@
 							</select>
 						</div>
 						<div class="tag_area">
-							<TagInput @tagChanged="tagChanged"/>
+							<TagInput v-model="selected_tag_names"/>
 						</div>
 					</div>
 					<div v-else></div>
@@ -41,7 +41,7 @@
 			<div class="rankings flex">
 				<h1>Ranking</h1>
 				<ul class="coordinations_list">
-					<li @click="showpopup(coordination)" v-for="(coordination, index) in selected_coordinations" :key="index">
+					<li @click="showpopup(coordination)" v-for="(coordination, index) in selected_coordinations" :key="coordination.id">
 						<CoordinationwithRank :clothes="clothes_dict[coordination.id]" :detail="coordination" :index="index" />
 					</li>
 				</ul>
@@ -179,10 +179,8 @@
 	export default {
 		data() {
 			return {
-				clothIds: [1,2,3,4,5,6,7,8,9],
 				selected_tag_names: [],
 				total_coordinations: [],
-				selected_coordinations: [],
 				height: "150-160",
 				weight: "50-60",
 				clothes_dict: {},
@@ -190,6 +188,13 @@
 				isPresetOpen: true
 			}
 		},
+
+		computed: {
+			selected_coordinations() {
+				return this.total_coordinations.filter(coordination => this.filtering(coordination));
+			}
+		},
+
 		methods: {
 			showpopup(coordi){
 				console.log(coordi)
@@ -199,17 +204,13 @@
 			},
 			tagChanged(received){
 				this.selected_tag_names = received
-				this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
 			},
 			heightChanged(event){
 				this.height = event.target.value
-				this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
 
 			},
 			weightChanged(event){
 				this.weight = event.target.value
-				this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
-
 			},
 			filtering(coordination){
 				let coordination_height = coordination.bodyShape.height
@@ -234,47 +235,50 @@
 			}
 		},
 		mounted() {
-			db.collection("ranking").get().then(async (querySnapshot)=>{
+			db.collection("ranking").get().then(async querySnapshot => {
+				const total_coordinations = [];
 				await querySnapshot.forEach((doc)=>{
 					// doc.data() is never undefined for query doc snapshots
 					let dataObject = doc.data()
 					dataObject["id"] = doc.id
 					if(dataObject["published"]){
-						this.total_coordinations.push(dataObject)
+						total_coordinations.push(dataObject)
 					}
 				});
+
+				return total_coordinations;
 			})
-				.then(async ()=>{
-					await Promise.all(this.total_coordinations.map(async (coordination)=>{
-						let clothes = coordination.clothes
-						let docRef_top = db.collection("top").doc(clothes.top)
-						let docRef_pants = db.collection("pants").doc(clothes.pants)
-						this.clothes_dict[coordination.id] = []
-						await docRef_top.get().then((data)=>{
-							if (data.exists) {
-								this.clothes_dict[coordination.id].push(data.data())
-							} else {
-								console.log("No such document!");
-							}
-						})
-						await docRef_pants.get().then((data)=>{
-							if (data.exists) {
-								this.clothes_dict[coordination.id].push(data.data())
-							} else {
-								console.log("No such document!");
-							}
-						})
-					}))
-				})
-				.then(()=>{
-					this.total_coordinations = this.total_coordinations.sort(function(coord1, coord2){
-						return coord2.likes - coord1.likes
+			.then(async total_coordinations => {
+				await Promise.all(total_coordinations.map(async (coordination)=>{
+					let clothes = coordination.clothes
+					let docRef_top = db.collection("top").doc(clothes.top)
+					let docRef_pants = db.collection("pants").doc(clothes.pants)
+					this.clothes_dict[coordination.id] = []
+					await docRef_top.get().then((data)=>{
+						if (data.exists) {
+							this.clothes_dict[coordination.id].push(data.data())
+						} else {
+							console.log("No such document!");
+						}
 					})
-					console.log(this.total_coordinations)
-					this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
-					// this.selected_coordinations = JSON.parse(JSON.stringify(this.total_coordinations))
-					console.log("finished")
+					await docRef_pants.get().then((data)=>{
+						if (data.exists) {
+							this.clothes_dict[coordination.id].push(data.data())
+						} else {
+							console.log("No such document!");
+						}
+					})
+				}))
+
+				return total_coordinations
+			})
+			.then(total_coordinations => {
+				this.total_coordinations = total_coordinations.sort(function(coord1, coord2){
+					return coord2.likes - coord1.likes
 				})
+				console.log(this.total_coordinations)
+				console.log("finished")
+			})
 		},
 		components: {
 			AppClothwithRank,
