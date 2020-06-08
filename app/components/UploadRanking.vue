@@ -43,7 +43,7 @@
 
 				<div class="tag_input_div">
 					<p id="tags">Tags</p>
-					<TagInput :already_selected="selected_tags" @tagChanged="tagChanged" small/>
+					<TagInput v-model="selected_tags" small/>
 				</div>
 			</div>
 
@@ -254,9 +254,6 @@
 		},
 
 		methods: {
-			tagChanged(received){
-                this.selected_tags = received;
-            },
 			makeClothesList() {
 				const db = firebase.firestore();
 

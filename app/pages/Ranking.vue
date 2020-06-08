@@ -24,7 +24,7 @@
 							</select>
 						</div>
 						<div class="tag_area">
-							<TagInput @tagChanged="tagChanged"/>
+							<TagInput v-model="selected_tag_names"/>
 						</div>
 					</div>
 					<div v-else></div>
@@ -179,10 +179,8 @@
 	export default {
 		data() {
 			return {
-				clothIds: [1,2,3,4,5,6,7,8,9],
 				selected_tag_names: [],
 				total_coordinations: [],
-				selected_coordinations: [],
 				height: "150-160",
 				weight: "50-60",
 				clothes_dict: {},
@@ -190,6 +188,13 @@
 				isPresetOpen: true
 			}
 		},
+
+		computed: {
+			selected_coordinations() {
+				return this.total_coordinations.filter(coordination => this.filtering(coordination));
+			}
+		},
+
 		methods: {
 			showpopup(coordi){
 				console.log(coordi)
@@ -199,17 +204,13 @@
 			},
 			tagChanged(received){
 				this.selected_tag_names = received
-				this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
 			},
 			heightChanged(event){
 				this.height = event.target.value
-				this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
 
 			},
 			weightChanged(event){
 				this.weight = event.target.value
-				this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
-
 			},
 			filtering(coordination){
 				let coordination_height = coordination.bodyShape.height
@@ -271,8 +272,6 @@
 						return coord2.likes - coord1.likes
 					})
 					console.log(this.total_coordinations)
-					this.selected_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
-					// this.selected_coordinations = JSON.parse(JSON.stringify(this.total_coordinations))
 					console.log("finished")
 				})
 		},

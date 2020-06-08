@@ -210,11 +210,15 @@
 					"paunchy", "pear", "circle", "rectangle", "hourglass", "long_waist", "short_arms"
 				],
 				tagName: [],
-				selected: this.already_selected,
 				searchText: '',
 				ableToDelete: false,
 				isUserTagOpen: false
 			};
+		},
+
+		model: {
+			prop: 'already_selected',
+			event: 'tagChanged'
 		},
 
 		props: {
@@ -238,23 +242,32 @@
 
 			isTagsOpen() {
 				return this.isUserTagOpen || this.searchText.length > 0;
-			}
-		},
+			},
 
-		watch: {
-			selected: function(newSelected){
-				this.$emit('tagChanged', this.selected);
+			selected: {
+				get() {
+					return this.already_selected;
+				},
+
+				set(newSelected) {
+					this.$emit('tagChanged', newSelected);
+				}
 			}
 		},
 
 		methods: {
+			mutate(fn) {
+				const newSelected = this.selected.slice();
+				fn(newSelected);
+
+				this.selected = newSelected;
+			},
+
 			tagClicked(name) {
 				if(this.isSelected(name)) {
-					this.selected.splice(
-						this.selected.indexOf(name), 1
-					);
+					this.mutate(selected => selected.splice(selected.indexOf(name), 1));
 				} else {
-					this.selected.push(name);
+					this.mutate(selected => selected.push(name));
 					this.searchText = '';
 				}
 			},
@@ -265,7 +278,7 @@
 
 			searchKeyup(event) {
 				if(event.key === 'Backspace' && this.ableToDelete)
-					this.selected.pop();
+					this.mutate(selected => selected.pop());
 			},
 
 			searchKeydown(event) {
@@ -276,13 +289,13 @@
 						if(this.isSelected(this.candidates[0])){
 							return null
 						}
-						this.selected.push(this.candidates[0]);
+						this.mutate(selected => selected.push(this.candidates[0]));
 						this.searchText = '';
 					}
 				}
 
 				if (this.searchText.length === 0 && event.key === 'Backspace' && !event.repeat)
-					this.selected.pop();
+					this.mutate(selected => selected.pop());
 			},
 
 			onToggle(event) {

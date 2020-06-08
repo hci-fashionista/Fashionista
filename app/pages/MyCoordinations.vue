@@ -93,7 +93,6 @@
 <script>
 	import AppClothwithRank from "@/components/AppClothwithRank"
 	import AppTag from "@/components/AppTag"
-	import TagInput from "@/components/TagInput"
 	import firebase from "../src/firebase.js"
 	import CoordinationwithRank from "@/components/CoordinationwithRank"
 	import UploadRanking from "@/components/UploadRanking"
@@ -179,7 +178,6 @@
 		components: {
 			AppClothwithRank,
 			AppTag,
-			TagInput,
 			CoordinationwithRank,
 			UploadRanking,
 			IconPlus
