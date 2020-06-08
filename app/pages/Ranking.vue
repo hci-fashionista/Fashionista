@@ -58,17 +58,17 @@
 		& .center {
 			justify-content: center;
 		}
-	}
 
-	.root {
-		flex-direction: column;
-		align-items: center;
-	}
+		&.root {
+			flex-direction: column;
+			align-items: center;
+		}
 
-	.container{
-		width: 80vw;
-		flex-direction: column;
-		align-items: flex-start;
+		&.container{
+			width: 80vw;
+			flex-direction: column;
+			align-items: flex-start;
+		}
 	}
 
 	.search, .rankings{
@@ -104,7 +104,7 @@
 			display: flex;
 			background: transparent;
 			align-items: center;
-			font-family: "Roboto";
+			font-family: var(--main-font);
 			font-weight: 300;
 			font-size: 1.3rem;
 			color: var(--blue-500);
@@ -156,7 +156,7 @@
 		list-style: none;
 		padding: 0px 0px;
 		display: grid;
-		grid-template-columns: repeat(5, 1fr);
+		grid-template-columns: repeat(4, 1fr);
 		grid-gap: 10px;
 		grid-auto-rows: minmax(100px, auto);
 

@@ -135,8 +135,8 @@ export default {
 	data() {
 		return {
 			deliveryCompany: 'Daehan Tongun',
-			rating: '4 / 5',
-			likes: 198
+			rating: `${Math.floor(Math.random() * 5)} / 5`,
+			likes: 0
 		}
 	},
 	props: {
