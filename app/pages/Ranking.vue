@@ -197,10 +197,11 @@
 
 		methods: {
 			showpopup(coordi){
-				console.log(coordi)
 				this.selected_info = coordi
-				if(this.$refs.coordinationChooser)
-					this.$refs.coordinationChooser.open();
+				this.$nextTick(() => {
+					if(this.$refs.coordinationChooser)
+						this.$refs.coordinationChooser.open();
+				});
 			},
 			tagChanged(received){
 				this.selected_tag_names = received

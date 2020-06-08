@@ -52,6 +52,7 @@
 
 			close() {
 				this.opened = false;
+				this.$emit("popupClose")
 			},
 
 			toggle() {
