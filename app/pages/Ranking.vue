@@ -58,17 +58,17 @@
 		& .center {
 			justify-content: center;
 		}
-	}
 
-	.root {
-		flex-direction: column;
-		align-items: center;
-	}
+		&.root {
+			flex-direction: column;
+			align-items: center;
+		}
 
-	.container{
-		width: 80vw;
-		flex-direction: column;
-		align-items: flex-start;
+		&.container{
+			width: 80vw;
+			flex-direction: column;
+			align-items: flex-start;
+		}
 	}
 
 	.search, .rankings{
