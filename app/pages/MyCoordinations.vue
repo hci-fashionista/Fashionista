@@ -1,20 +1,23 @@
 <template>
-    <div class="container">
-        <div class="myCoordinations">
-            <h1>MyCoordinations</h1>
-            <ul class="coordinations_list">
-				<div class="plus_button">
-					<button @click="toGuideline">+</button>
-					<p>Create</p>
-				</div>
-                <li class="clickable" @click="uploadRankingPopupOpen(coordination)" v-for="(coordination, index) in my_coordinations" :key="index">
-					<CoordinationwithRank :clothes="clothes_dict[coordination.id]" :detail="coordination" :index="index">
-					</CoordinationwithRank>
-                </li>
-            </ul>
-        </div>
-		<UploadRanking ref="uploadRankingPopup" :Coordinations="selected_info" v-if="selected_info" @updateCloth="updateCloth" />
-    </div>
+	<div class='flex center'>
+		<div class="flex container">
+			<div class="flex coordinations">
+				<h1>My Coordinations</h1>
+				<ul class="coordinations_list">
+					<li class="create">
+						<button @click="toGuideline">
+							<IconPlus style="width: 5rem; height: 5rem; fill: var(--grey-300)" />
+						</button>
+						<p>Create</p>
+					</li>
+					<li @click="uploadRankingPopupOpen(coordination)" v-for="(coordination, index) in my_coordinations">
+						<CoordinationwithRank :clothes="clothes_dict[coordination.id]" :detail="coordination" :index="index" />
+					</li>
+				</ul>
+			</div>
+			<UploadRanking ref="uploadRankingPopup" :Coordinations="selected_info" v-if="selected_info" @updateCloth="updateCloth" />
+		</div>
+	</div>
 </template>
 
 <style scoped>
