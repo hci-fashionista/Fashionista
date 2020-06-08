@@ -40,7 +40,6 @@
         list-style: none;
         padding: 0px 0px;
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
         grid-gap: 10px;
         grid-auto-rows: minmax(100px, auto);
 		justify-items: center;
@@ -66,6 +65,7 @@
     .coordinations_list > li {
         margin: 20px 20px;
     }
+		grid-template-columns: repeat(4, 1fr);
 </style>
 
 <script>
