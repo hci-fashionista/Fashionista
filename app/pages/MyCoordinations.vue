@@ -103,7 +103,6 @@
 	export default {
 		data() {
 			return {
-				clothIds: [1,2,3,4,5,6,7,8,9],
 				total_coordinations: [],
 				my_coordinations: [],
 				height: "150~160",
