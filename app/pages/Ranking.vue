@@ -104,7 +104,7 @@
 			display: flex;
 			background: transparent;
 			align-items: center;
-			font-family: "Roboto";
+			font-family: var(--main-font);
 			font-weight: 300;
 			font-size: 1.3rem;
 			color: var(--blue-500);
