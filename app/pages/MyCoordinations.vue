@@ -75,10 +75,10 @@
     import firebase from "../src/firebase.js"
 	import CoordinationwithRank from "@/components/CoordinationwithRank"
 	import UploadRanking from "@/components/UploadRanking"
+	import IconPlus from "@/images/IconPlus.svg?inline";
 
     const db = firebase.firestore()
-    
-    
+
     export default {
         data() {
             return {
@@ -163,7 +163,8 @@
             AppTag,
             TagInput,
 			CoordinationwithRank,
-			UploadRanking
+			UploadRanking,
+			IconPlus
         }
     }
 </script>
