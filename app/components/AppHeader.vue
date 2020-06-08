@@ -21,7 +21,7 @@
 			</router-link>
 		</nav>
 	</header>
-	
+
 </template>
 
 <style scoped>
@@ -33,9 +33,8 @@
 		width: 100%;
 		background-color: var(--grey-850);
 		font-family: var(--main-font);
-		max-width: 1200px;
 		margin: 0 auto;
-		
+
 		&__brand {
 			margin: 0;
 		}
