@@ -128,19 +128,16 @@
 				else {
 					return false;
 				}
-            },
-			
+			},
 			toGuideline() {
 				this.$router.push('/coordinations/new');
 			},
-
 			updateCloth() {
 				this.total_coordinations = [];
 				this.my_coordinations = [];
 				this.clothes_dict = {};
 				this.makeMyCoordinations();
 			},
-
 			makeMyCoordinations() {
 				db.collection("ranking").get().then(async (querySnapshot)=>{
 					await querySnapshot.forEach((doc)=>{
@@ -175,17 +172,17 @@
 					// this.selected_coordinations = JSON.parse(JSON.stringify(this.total_coordinations))
 				})
 			}
-        },
-        mounted() {
-            this.makeMyCoordinations();
-        },
-        components: {
-            AppClothwithRank,
-            AppTag,
-            TagInput,
+		},
+		mounted() {
+			this.makeMyCoordinations();
+		},
+		components: {
+			AppClothwithRank,
+			AppTag,
+			TagInput,
 			CoordinationwithRank,
 			UploadRanking,
 			IconPlus
-        }
-    }
+		}
+	}
 </script>
