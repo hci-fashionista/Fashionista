@@ -140,13 +140,14 @@
 		font-weight: normal;
 		font-size: 13px;
 		line-height: 21px;
-
 	}
 
 	.review_text {
 		border: none;
 		background: var(--grey-750);
 		border-radius: 18px;
+		flex: 1;
+		margin-right: 10px;
 
 		&:focus {
 			outline: none;
@@ -328,7 +329,7 @@
 			},
 			newLikes(newlikes){
 				this.$emit('reload', this.Coordinations.id, newlikes);
-			},	
+			},
 		},
 
 		mounted() {

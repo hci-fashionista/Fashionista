@@ -103,7 +103,6 @@
 	export default {
 		data() {
 			return {
-				total_coordinations: [],
 				my_coordinations: [],
 				height: "150~160",
 				weight: "50~60",
@@ -138,15 +137,19 @@
 			},
 			makeMyCoordinations() {
 				db.collection("ranking").get().then(async (querySnapshot)=>{
+					const total_coordinations = [];
+
 					await querySnapshot.forEach((doc)=>{
 						// doc.data() is never undefined for query doc snapshots
 						let dataObject = doc.data()
 						dataObject["id"] = doc.id
-						this.total_coordinations.push(dataObject)
+						total_coordinations.push(dataObject)
 					});
+
+					return total_coordinations
 				})
-				.then(async ()=>{
-					await Promise.all(this.total_coordinations.map(async (coordination)=>{
+				.then(async total_coordinations =>{
+					await Promise.all(total_coordinations.map(async (coordination)=>{
 						let clothes = coordination.clothes
 						let docRef_top = db.collection("top").doc(clothes.top)
 						let docRef_pants = db.collection("pants").doc(clothes.pants)
@@ -154,20 +157,26 @@
 						await docRef_top.get().then((data)=>{
 							if (data.exists) {
 								this.clothes_dict[coordination.id].push(data.data())
-							} else {
 							}
 						})
 						await docRef_pants.get().then((data)=>{
 							if (data.exists) {
 								this.clothes_dict[coordination.id].push(data.data())
-							} else {
 							}
 						})
 					}))
+
+					return total_coordinations;
 				})
-				.then(()=>{
-					this.my_coordinations = this.total_coordinations.filter(coordination => this.filtering(coordination))
-					// this.selected_coordinations = JSON.parse(JSON.stringify(this.total_coordinations))
+				.then(total_coordinations => {
+					this.my_coordinations = total_coordinations
+						.filter(coordination => this.filtering(coordination))
+						.sort((c1, c2) => {
+							const likeDiff = Math.sign(c2.likes - c1.likes);
+							if(likeDiff !== 0) return likeDiff;
+
+							return c1.name.localeCompare(c2.name);
+						})
 				})
 			}
 		},
