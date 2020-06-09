@@ -200,7 +200,6 @@
 
 		methods: {
 			showpopup(coordi){
-				console.log(coordi)
 				this.selected_info = coordi
 				if(this.$refs.coordinationChooser)
 					this.$refs.coordinationChooser.open();
@@ -241,8 +240,6 @@
 				this.isPresetOpen = !this.isPresetOpen
 			},
 			reload(args){
-				console.log(args[0])
-				console.log(args[1])
 				const db = firebase.firestore();
 				let coordiRef = db.collection("ranking").doc(args[0]);
 				let updateThings = coordiRef.update({
@@ -254,7 +251,6 @@
 						coordination.likes = args[1]
 					}
 				})
-				console.log(this.selected_coordinations)
 			}
 		},
 		mounted() {
@@ -280,16 +276,12 @@
 					await docRef_top.get().then((data)=>{
 						if (data.exists) {
 							this.clothes_dict[coordination.id].push(data.data())
-						} else {
-							console.log("No such document!");
-						}
+						} 
 					})
 					await docRef_pants.get().then((data)=>{
 						if (data.exists) {
 							this.clothes_dict[coordination.id].push(data.data())
-						} else {
-							console.log("No such document!");
-						}
+						} 
 					})
 				}))
 
@@ -299,9 +291,7 @@
 				this.total_coordinations = total_coordinations.sort(function(coord1, coord2){
 					return coord2.likes - coord1.likes
 				})
-				console.log(this.total_coordinations)
 				this.selected_coordinations = JSON.parse(JSON.stringify(this.total_coordinations))
-				console.log("finished")
 			})
 		},
 		components: {

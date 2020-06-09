@@ -326,7 +326,6 @@
 				this.$refs.popup.close();
 			},
 			newLikes(newlikes){
-				console.log(newlikes)
 				this.$emit('reload', this.Coordinations.id, newlikes);
 			},	
 		},
