@@ -6,8 +6,8 @@
 				<div class='preset'>
 					<div v-if="isPresetOpen">
 						<div class="body flex">
-							<select id="height" name="height" v-model="height" v-on:input="heightChanged($event)">
-								<option value="all">height-free</option>
+							<select id="height" name="height" v-model="height">
+								<option value="all">All Height</option>
 								<option value="-150">-150cm</option>
 								<option value="150-160">150cm-160cm</option>
 								<option value="160-170">160cm-170cm</option>
@@ -15,8 +15,8 @@
 								<option value="180-190">180cm-190cm</option>
 								<option value="190-">190cm-</option>
 							</select>
-							<select id="weight" name="weight" v-model="weight" v-on:input="weightChanged($event)">
-								<option value="all">weight-free</option>
+							<select id="weight" name="weight" v-model="weight">
+								<option value="all">All Weight</option>
 								<option value="-50">-50kg</option>
 								<option value="50-60">50kg-60kg</option>
 								<option value="60-70">60kg-70kg</option>
@@ -48,7 +48,7 @@
 					</li>
 				</ul>
 			</div>
-			<RankingCoordinationDetail v-on:reload="(...args)=>this.reload([...args])" ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info" />
+			<RankingCoordinationDetail @reload="reload" ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info" />
 		</div>
 	</div>
 </template>
@@ -183,7 +183,6 @@
 			return {
 				selected_tag_names: [],
 				total_coordinations: [],
-				selected_coordinations: [],
 				height: "all",
 				weight: "all",
 				clothes_dict: {},
@@ -207,13 +206,6 @@
 			tagChanged(received){
 				this.selected_tag_names = received
 			},
-			heightChanged(event){
-				this.height = event.target.value
-
-			},
-			weightChanged(event){
-				this.weight = event.target.value
-			},
 			filtering(coordination){
 				let coordination_height = coordination.bodyShape.height
 				let coordination_weight = coordination.bodyShape.weight
@@ -234,20 +226,20 @@
 					else
 						return false
 				}
-				
+
 			},
 			togglePreset(event) {
 				this.isPresetOpen = !this.isPresetOpen
 			},
-			reload(args){
+			reload(...args){
 				const db = firebase.firestore();
 				let coordiRef = db.collection("ranking").doc(args[0]);
 				let updateThings = coordiRef.update({
 					likes : args[1]
 				});
-				this.selected_coordinations.forEach((coordination)=>{
+
+				this.total_coordinations.forEach(coordination => {
 					if(coordination.id == args[0]){
-						console.log("일단")
 						coordination.likes = args[1]
 					}
 				})
@@ -276,12 +268,12 @@
 					await docRef_top.get().then((data)=>{
 						if (data.exists) {
 							this.clothes_dict[coordination.id].push(data.data())
-						} 
+						}
 					})
 					await docRef_pants.get().then((data)=>{
 						if (data.exists) {
 							this.clothes_dict[coordination.id].push(data.data())
-						} 
+						}
 					})
 				}))
 
@@ -291,7 +283,6 @@
 				this.total_coordinations = total_coordinations.sort(function(coord1, coord2){
 					return coord2.likes - coord1.likes
 				})
-				this.selected_coordinations = JSON.parse(JSON.stringify(this.total_coordinations))
 			})
 		},
 		components: {
