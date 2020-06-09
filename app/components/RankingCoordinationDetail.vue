@@ -89,6 +89,7 @@
 
 	.textAndReview {
 		display: flex;
+		width: 100%;
 	}
 
 	.texts {

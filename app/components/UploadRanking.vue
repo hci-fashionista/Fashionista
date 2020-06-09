@@ -1,5 +1,5 @@
 <template>
-	<AppPopup ref='popup'>
+	<AppPopup ref='popup' @popupClose= "deleteAll">
 		<div class="coordination_detail">
 			<div class="clothes">
 				<div  v-for="cloth in this.clothes_item" :key="cloth.id">
@@ -52,9 +52,11 @@
 					{{saveMsg}}
 				</AppButton>
 				<AppButton @click="uploadToRanking" :disabled="canUpload" :color="btnUpload">
+					<IconUpload id="upload" />
 					{{uploadMsg}}
 				</AppButton>
 				<AppButton>
+					<IconCart id="cart" />
 					To Shopping Cart
 				</AppButton>
 				<AppButton @click="close">
@@ -99,6 +101,7 @@
 
 	.textAndTag {
 		display: flex;
+		width: 100%;
 	}
 
 	.texts, .tag_input_div{
@@ -135,13 +138,29 @@
 
 	.buttons {
 		display:flex;
+		margin-top: 20px;
 
-		& >>> button {
-			font-size: 13px;
-		}
+		button {
+			display: flex;
+			align-items: center;
+			font-size: 1.0rem;
+			margin: 0 10px;
 
-		& > * {
-			margin: 5px;
+			#cart {
+				width: 1.5rem;
+				height: 1.5rem;
+				margin-right: 10px;
+			}
+
+			#upload {
+				width: 1.2rem;
+				height: 1.2rem;
+				margin-right: 10px;
+			}
+
+			&.primary svg {
+				fill: var(--grey-900) !important;
+			}
 		}
 	}
 
@@ -158,6 +177,10 @@
 	import TagInput from "@/components/TagInput";
 	import AppPopup from "@/components/AppPopup";
 	import firebase from "@/src/firebase.js";
+
+	import IconCart from "@/images/IconCart.svg?inline";
+	import IconPlus from "@/images/IconPlus.svg?inline";
+	import IconUpload from "@/images/IconUpload.svg?inline";
 
 	export default {
 		data() {
@@ -176,7 +199,6 @@
 				else return "save";
 			},
 			uploadMsg() {
-				console.log(this.Coordinations);
 				if(this.Coordinations.published) return "Alreday Upload to Ranking!";
 				else return "Upload to Ranking";
 			},
@@ -203,11 +225,12 @@
 			}
 		},
 		watch: {
-			Coordinations () {
+			Coordinations() {
 				this.title_text = this.Coordinations.name;
 				this.description_text = this.Coordinations.description;
 				this.selected_height = this.Coordinations.bodyShape.height;
 				this.selected_weight = this.Coordinations.bodyShape.weight;
+				this.selected_tags= [...this.Coordinations.tags];
 				this.clothes_item=[];
 				this.makeClothesList();
 			}
@@ -250,7 +273,10 @@
 			AppReview,
 			TextInput,
 			TagInput,
-			AppPopup
+			AppPopup,
+			IconCart,
+			IconUpload,
+			IconPlus
 		},
 
 		methods: {
@@ -323,7 +349,16 @@
 			},
 
 			close() {
+				this.deleteAll();
 				this.$refs.popup.close();
+			},
+
+			deleteAll() {
+				this.title_text = this.Coordinations.name;
+				this.description_text = this.Coordinations.description;
+				this.selected_height = this.Coordinations.bodyShape.height;
+				this.selected_weight = this.Coordinations.bodyShape.weight;
+				this.selected_tags = [...this.Coordinations.tags];
 			}
 		},
 
