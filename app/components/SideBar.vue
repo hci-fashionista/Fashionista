@@ -7,7 +7,7 @@
 <style scoped>
 	.sidenav {
 		border-bottom: 1px solid var(--grey-600);
-		height: 100%;
+		height: 100vh;
 		max-width: 300px;
 		min-width: 220px;
 		display: flex;
