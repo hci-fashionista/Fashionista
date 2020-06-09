@@ -2,6 +2,8 @@
 
 Team Fashionista's High-Fidelity Prototype of Clothes Coordination Service Project for KAIST 2020 Spring Semester CS374: Introduction to Human-Computer Interaction course
 
+[Prototype](https://fashion.1e-9.space)
+
 ### Libraries used for this project:
 * [Vue js](https://vuejs.org/)
 * [Firebase](https://firebase.google.com/)
@@ -29,20 +31,20 @@ Team Fashionista's High-Fidelity Prototype of Clothes Coordination Service Proje
     * `Ranking`: Rankings page that allows users to upload their own coordinations or refer to other users' coordinations
 
 ### Screenshots
-Main Page
+**Main Page**  
 <img src="https://i.imgur.com/Na6dRu6.png" alt="Fashionista Main Page" width="800"/>
 
-My Coordinations Page
+**My Coordinations Page**  
 <img src="https://i.imgur.com/jsBVgT2.png" alt="Fashionista My Coordinations" width="800"/>
 
-Guideline Page
+**Guideline Page**  
 <img src="https://i.imgur.com/LGvHxn2.png" alt="Fashionista Guideline" width="800"/>
 
-Guideline Page - Custom Color Combinations
+**Guideline Page - Custom Color Combinations**  
 <img src="https://i.imgur.com/Lanx5Z0.png" alt="Fashionista Guideline - Color" width="400"/>
 
-Guideline Page - Cloth Preview
+**Guideline Page - Cloth Preview**  
 <img src="https://i.imgur.com/zzJwGv4.png" alt="Fashionista Guideline - Cloth Preview" width="400"/>
 
-Ranking Page
+**Ranking Page**  
 <img src="https://i.imgur.com/Nbn4mRX.png" alt="Fashionista Ranking" width="800"/>
