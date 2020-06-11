@@ -34,7 +34,7 @@
 
 	div.clothName{
 		font-family: var(--main-font);
-		width: 12vw;
+		width: 100%;
 		font-size: 18px;
 		margin-left: 5px;
 		white-space: nowrap;

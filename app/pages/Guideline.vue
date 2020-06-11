@@ -190,9 +190,15 @@
 			flex-direction: column;
 			align-items: center;
 			padding: 20px 30px;
-
-			* {
+			
+			.cloth {
+				padding: 0;
+				margin: 0;
+			}
+			
+			button, svg {
 				margin: 20px 0;
+				padding: 0;
 				width: 100%;
 				max-width: 140px;
 				height: auto;
