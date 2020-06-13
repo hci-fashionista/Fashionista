@@ -163,7 +163,7 @@
 
 			// initialize coordinations
 			const coordinations = {}
-			const rankingSnap = await db.collection("ranking").limit(4).get()
+			const rankingSnap = await db.collection("ranking").where("published", "==", true).limit(4).get()
 			rankingSnap.forEach((doc, idx) => {
 				coordinations[doc.id] = { "detail": doc.data() }
 			})
