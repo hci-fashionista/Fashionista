@@ -48,8 +48,8 @@
 				</div>
 			</div>
 
-			<div class="buttons">
-				<AppButton color="primary" full-width @click="close">
+			<div class="button">
+				<AppButton color="primary" full-width @click="uploadShoppingCart">
 					<IconCart id="cart" />
 					To Shopping Cart
 				</AppButton>
@@ -219,17 +219,19 @@
 </style>
 
 <script>
-	import AppCloth from "@/components/AppCloth";
-	import ColorScore from "@/components/ColorScore";
-	import AppTag from "@/components/AppTag";
-	import AppReview from "@/components/AppReview";
 	import AppButton from "@/components/AppButton";
+	import AppCloth from "@/components/AppCloth";
 	import AppLike from "@/components/AppLike";
+	import AppPopup from "@/components/AppPopup";
+	import AppReview from "@/components/AppReview";
+	import AppTag from "@/components/AppTag";
+	import ColorScore from "@/components/ColorScore";
+	import IconCart from "@/images/IconCart.svg?inline";
 	import TextInput from "@/components/TextInput";
 	import firebase from "@/src/firebase.js";
-	import AppPopup from "@/components/AppPopup";
 
-	import IconCart from "@/images/IconCart.svg?inline";
+
+	const db = firebase.firestore();
 
 	export default {
 		data() {
@@ -340,8 +342,10 @@
 				this.$refs.popup.open();
 			},
 
-			close() {
+			async uploadShoppingCart() {
+				await db.collection('cart').add(this.Coordinations);
 				this.$refs.popup.close();
+				this.$router.push('/cart');
 			},
 			newLikes(newlikes){
 				this.$emit('reload', this.Coordinations.id, newlikes);
