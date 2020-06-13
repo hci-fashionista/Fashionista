@@ -42,8 +42,7 @@
 				</div>
 			</div>
 		</div>
-		<RankingCoordinationDetail ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info">
-        </RankingCoordinationDetail>
+		<RankingCoordinationDetail ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info" />
 		<DetailPopup ref="clothChooser" :info="selected_info_cloth" v-if="selected_info_cloth">
 		</DetailPopup>
 	</main>
@@ -61,31 +60,29 @@
 		width: 100%;
 	}
 
-    .rankings{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+	.rankings{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		width: 100%;
 		& > h1 {
 			margin-left: 20px;
 			align-self: start;
 		}
-    }
-    .coordinations_list {
-        list-style: none;
-        padding: 0px 0px;
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
+	}
+	.coordinations_list {
+		list-style: none;
+		padding: 0px 0px;
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
 		margin: 0 auto;
-        grid-gap: 2vw;
-        grid-auto-rows: minmax(100px, auto);
+		grid-gap: 2vw;
+		grid-auto-rows: minmax(100px, auto);
 
 		& > li {
 			margin: 20px 20px;
 			cursor: pointer;
-			
 		}
-		
 	}
 </style>
 
@@ -145,18 +142,17 @@
 		},
 		methods:{
 			showpopupCoordi(coordi){
-                this.selected_info = coordi
+				this.selected_info = coordi
 				if(this.$refs.coordinationChooser){
 					this.$refs.coordinationChooser.open();
 				}
 			},
 			showpopupCloth(cloth){
-                console.log(cloth)
-                this.selected_info_cloth = cloth
+				this.selected_info_cloth = cloth
 				if(this.$refs.clothChooser){
 					this.$refs.clothChooser.open();
 				}
-            },
+			},
 		},
 		async mounted() {
 			const db = firebase.firestore()
