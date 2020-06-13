@@ -53,11 +53,9 @@
 	.flex.coordinations > ul {
 		list-style: none;
 		padding: 0px 0px;
-		justify-items: center;
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
 		grid-gap: 10px;
-		grid-auto-rows: minmax(100px, auto);
 		width: 100%;
 
 		& > .create {
@@ -79,6 +77,7 @@
 				border-radius: 10px;
 				cursor: pointer;
 				outline: none;
+				align-self: center;
 				font-size: 100px;
 				background-color: var(--grey-750)
 			}
