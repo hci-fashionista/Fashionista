@@ -9,20 +9,22 @@
 
 <style scoped>
 	div.clothwithrank{
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
 	div.info{
+		position: absolute;
+		left: -5px;
+		top: -5px;
 		height: 250px;
-		align-self: start;
 	}
 
 	div.rank{
 		width: 45px;
 		height: 45px;
-		margin-bottom: 5px;
 		background-color: var(--blue-400);
 		text-align: center;
 		color: white;
