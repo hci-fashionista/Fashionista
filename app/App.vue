@@ -29,6 +29,8 @@
 		--blue-500: #42a5f5;
 		--blue-800: #c1dffb;
 
+		--red-800: #f48484;
+
 		--main-font: 'Raleway', sans-serif;
 	}
 
