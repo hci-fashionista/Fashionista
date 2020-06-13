@@ -42,13 +42,6 @@
 			index: {
 				type: Number,
 				default: 0
-            },
-            detail: {
-                type: Object,
-            },
-            clothes: {
-                type: Array,
-            }
 		},
 		components: {
 			AppCoordination
