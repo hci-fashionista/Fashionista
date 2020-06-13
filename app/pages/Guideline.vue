@@ -190,12 +190,12 @@
 			flex-direction: column;
 			align-items: center;
 			padding: 20px 30px;
-			
+
 			.cloth {
 				padding: 0;
 				margin: 0;
 			}
-			
+
 			button, svg {
 				margin: 20px 0;
 				padding: 0;
@@ -545,6 +545,7 @@
 						return obj;
 					}, {}),
 					colors: this.compiledTemplate.components.map(v => v.color),
+					date: Date.now(),
 					description: '',
 					likes: 0,
 					name: `New Coordination ${(new Date).toLocaleString()}`,

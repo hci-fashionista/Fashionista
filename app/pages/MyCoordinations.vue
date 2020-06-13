@@ -11,7 +11,7 @@
 						<p>Create</p>
 					</li>
 					<li @click="uploadRankingPopupOpen(coordination)" v-for="(coordination, index) in my_coordinations">
-						<CoordinationwithRank :clothes="clothes_dict[coordination.id]" :detail="coordination" :index="index" />
+						<CoordinationwithRank :clothes="clothes_dict[coordination.id]" :detail="coordination" :index="index" :new-item="index === 0"/>
 					</li>
 				</ul>
 			</div>
@@ -170,12 +170,7 @@
 				.then(total_coordinations => {
 					this.my_coordinations = total_coordinations
 						.filter(coordination => this.filtering(coordination))
-						.sort((c1, c2) => {
-							const likeDiff = Math.sign(c2.likes - c1.likes);
-							if(likeDiff !== 0) return likeDiff;
-
-							return c1.name.localeCompare(c2.name);
-						})
+						.sort((c1, c2) => c1.date < c2.date ?  -1 : 1)
 				})
 			}
 		},
