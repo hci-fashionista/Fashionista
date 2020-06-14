@@ -17,7 +17,14 @@
 							<div>Size</div>
 							<div>{{ info.size.join(' / ') }}</div>
 							<div>Ratings</div>
-							<div>{{ rating }}</div>
+							<div class="rating">
+								<li v-for="n in rating" :key="n">
+									<i class="fas fa-star"></i>
+								</li>
+								<li v-for="n in rating_left" :key="n+10">
+									<i class="far fa-star"></i>
+								</li>
+							</div>
 						</div>
 					</div>
 					<hr />
@@ -119,6 +126,17 @@ h3 {
 	margin-bottom: 10px;
 }
 
+.rating > li{
+	list-style: none;
+}
+
+.rating{
+	display: flex;
+}
+
+.fa-star {
+	color: #FFBC42;
+}
 </style>
 
 <script>
@@ -132,10 +150,15 @@ export default {
 		AppButton,
 		AppPopup
 	},
+	computed: {
+		rating_left() {
+			return 5-this.rating
+		},
+	},
 	data() {
 		return {
 			deliveryCompany: 'Daehan Tongun',
-			rating: `${Math.floor(Math.random() * 5)} / 5`,
+			rating: Math.ceil(Math.random() * 4),
 			likes: 0
 		}
 	},
@@ -156,6 +179,11 @@ export default {
 					type: 'pants'
 				}
 			}
+		}
+	},
+	watch: {
+		info() {
+			this.rating = Math.ceil(Math.random() * 4)
 		}
 	},
 	methods: {
