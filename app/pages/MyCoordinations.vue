@@ -2,7 +2,12 @@
 	<div class='flex center'>
 		<div class="flex container">
 			<div class="flex coordinations">
-				<h1>My Coordinations</h1>
+				<div class="flex heading">
+					<h1>My Coordinations</h1>
+					<div class="flex" v-for="field in ['date', 'price', 'likes']">
+						<span @click="sortBy(field)" :class="fieldClass(field)"> ↓ {{ field }} </span>
+					</div>
+				</div>
 				<ul class="coordinations_list">
 					<li class="create">
 						<button @click="toGuideline">
@@ -10,8 +15,8 @@
 						</button>
 						<p>Create By Guideline</p>
 					</li>
-					<li @click="uploadRankingPopupOpen(coordination)" v-for="(coordination, index) in my_coordinations">
-						<CoordinationwithRank :clothes="clothes_dict[coordination.id]" :detail="coordination" :index="index" :new-item="index === 0"/>
+					<li @click="uploadRankingPopupOpen(coordination.detail)" v-for="(coordination, index) in my_coordinations">
+						<CoordinationwithRank :clothes="coordination.clothes" :detail="coordination.detail" :index="index" :new-item="sort_field === 'date' && index === 0"/>
 					</li>
 				</ul>
 			</div>
@@ -35,7 +40,29 @@
 		}
 	}
 
-	.coordinations {
+	.flex.heading {
+		align-items: center;
+
+		& > h1 {
+			margin-right: 30px;
+		}
+
+		& > div {
+			font-size: 1.5rem;
+		}
+
+		& > div > span {
+			margin: 0 30px;
+			text-transform: capitalize;
+			cursor: pointer;
+		}
+	}
+
+	.greyed {
+		color: var(--grey-550);
+	}
+
+	.flex.coordinations {
 		max-width: 1500px;
 		flex-direction: column;
 
@@ -93,8 +120,6 @@
 	import UploadRanking from "@/components/UploadRanking"
 	import IconPlus from "@/images/IconPlus.svg?inline";
 
-	const db = firebase.firestore()
-
 	export default {
 		data() {
 			return {
@@ -102,7 +127,8 @@
 				height: "150~160",
 				weight: "50~60",
 				clothes_dict: {},
-				selected_info: null
+				selected_info: null,
+				sort_field: 'date'
 			}
 		},
 
@@ -120,13 +146,8 @@
 						this.$refs.uploadRankingPopup.open();
 				});
 			},
-			filtering(coordination){
-				if (coordination.author == "Dol Lee") {
-					return true;
-				}
-				else {
-					return false;
-				}
+			filtering(coordination) {
+				return coordination.author === "Dol Lee"
 			},
 			toGuideline() {
 				this.$router.push('/coordinations/new');
@@ -143,6 +164,18 @@
 					},
 					coordination.detail.tags= args[5]
 				})
+			},
+			sortBy(field) {
+				this.sort_field = field
+				this.my_coordinations = [
+					...this.my_coordinations
+						.sort((c1, c2) => c1.detail[field] < c2.detail[field] ? -1 : 1)
+				]
+			},
+			fieldClass(field) {
+				return {
+					greyed: this.sort_field !== field
+				}
 			},
 			async makeMyCoordinations() {
 				/*NOTE:
