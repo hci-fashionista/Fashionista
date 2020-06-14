@@ -144,48 +144,45 @@
 					}
 				})
 			},
-			makeMyCoordinations() {
-				db.collection("ranking").get().then(async (querySnapshot)=>{
-					const total_coordinations = [];
-
-					await querySnapshot.forEach((doc)=>{
-						// doc.data() is never undefined for query doc snapshots
-						let dataObject = doc.data()
-						dataObject["id"] = doc.id
-						total_coordinations.push(dataObject)
-					});
-
-					return total_coordinations
-				})
-				.then(async total_coordinations =>{
-					await Promise.all(total_coordinations.map(async (coordination)=>{
-						let clothes = coordination.clothes
-						let docRef_top = db.collection("top").doc(clothes.top)
-						let docRef_pants = db.collection("pants").doc(clothes.pants)
-						this.clothes_dict[coordination.id] = []
-						await docRef_top.get().then((data)=>{
-							if (data.exists) {
-								this.clothes_dict[coordination.id].push(data.data())
-							}
-						})
-						await docRef_pants.get().then((data)=>{
-							if (data.exists) {
-								this.clothes_dict[coordination.id].push(data.data())
-							}
-						})
-					}))
-
-					return total_coordinations;
-				})
-				.then(total_coordinations => {
-					this.my_coordinations = total_coordinations
-						.filter(coordination => this.filtering(coordination))
-						.sort((c1, c2) => c1.date < c2.date ?  -1 : 1)
-				})
+			async makeMyCoordinations() {
+				/*NOTE:
+				This function initializes `this.my_coordinations`.
+				This is the structure of this.my_coordinations:
+				[
+					{
+						id: (document id)
+						detail: (document object of `ranking` collection)
+						clothes: [
+							(document object of `top` collection),
+							(document object of `pants` collection)
+						]
+					}
+				]*/
+				const db = firebase.firestore()
+				const rankingSnap = await db.collection("ranking").get()
+				const coordinations = rankingSnap.docs.map(doc => ({
+					detail: {
+						id: doc.id,
+						...doc.data()
+					},
+					id: doc.id
+				}))
+				const pushCoordInformation = async (coordination, idx) => {
+					const { detail: { clothes } } = coordination
+					const top = await db.collection("top").doc(clothes.top).get()
+					const pants = await db.collection("pants").doc(clothes.pants).get()
+					coordinations[idx].clothes = [top.data(), pants.data()]
+				}
+				await Promise.all(coordinations.map(pushCoordInformation))
+				this.my_coordinations = [
+					...coordinations
+						.filter(c => this.filtering(c.detail))
+						.sort((c1, c2) => c1.detail.date < c2.detail.date ? -1 : 1)
+				]
 			}
 		},
-		mounted() {
-			this.makeMyCoordinations();
+		async mounted() {
+			await this.makeMyCoordinations();
 		},
 		components: {
 			AppClothwithRank,
