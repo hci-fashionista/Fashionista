@@ -32,6 +32,9 @@
 					<AppLike id="app_like" @newLikes="newLikes" :likes="this.Coordinations.likes"></AppLike>
 					<hr>
 					<ul class="reviews_list">
+						<li v-if="this.Coordinations.reviews.length == 0">
+							There is no review. You can write first review!
+						</li>
 						<li v-for="(review_set,i) in this.Coordinations.reviews" :key="i">
 							<AppReview :id="review_set.review_id" :content="review_set.review_content"></AppReview>
 						</li>
@@ -45,9 +48,13 @@
 				</div>
 			</div>
 
-			<div class="button">
+			<div class="buttons">
 				<AppButton color="primary" full-width @click="close">
+					<IconCart id="cart" />
 					To Shopping Cart
+				</AppButton>
+				<AppButton @click="close">
+					Cancel
 				</AppButton>
 			</div>
 		</div>
@@ -170,7 +177,7 @@
 		font-family: var(--main-font);
 		font-style: normal;
 		font-weight: bold;
-		font-size: 13px;
+		font-size: 20px;
 		line-height: 15px;
 	}
 
@@ -191,15 +198,21 @@
 		margin: auto;
 	}
 
-	.button {
+	.buttons {
 		display:flex;
+		margin-top: 20px;
 
-		& >>> button {
-			font-size: 13px;
-		}
+		button {
+			display: flex;
+			align-items: center;
+			font-size: 1.0rem;
+			margin: 0 10px;
 
-		& > * {
-			margin: 5px;
+			#cart {
+				width: 1.5rem;
+				height: 1.5rem;
+				margin-right: 10px;
+			}
 		}
 	}
 
@@ -215,6 +228,8 @@
 	import TextInput from "@/components/TextInput";
 	import firebase from "@/src/firebase.js";
 	import AppPopup from "@/components/AppPopup";
+
+	import IconCart from "@/images/IconCart.svg?inline";
 
 	export default {
 		data() {
@@ -266,7 +281,8 @@
 			AppLike,
 			AppReview,
 			TextInput,
-			AppPopup
+			AppPopup,
+			IconCart
 		},
 
 		methods: {
