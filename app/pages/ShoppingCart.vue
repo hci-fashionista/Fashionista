@@ -1,5 +1,5 @@
 <template>
-	<div class='root flex'>
+	<div class="root flex">
 		<div class="container flex">
 			<div class="cart flex">
 				<h1>Shopping Cart</h1>
@@ -9,7 +9,12 @@
 					</li>
 				</ul>
 			</div>
-			<CartPopup ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info" />
+			<RankingCoordinationDetail
+				ref="coordinationChooser"
+				:Coordinations="selected_info"
+				v-if="selected_info"
+				immutable
+			/>
 		</div>
 	</div>
 </template>
@@ -133,7 +138,7 @@
 	import AppClothwithRank from "@/components/AppClothwithRank"
 	import firebase from "../src/firebase.js"
 	import CoordinationwithRank from "@/components/CoordinationwithRank"
-	import CartPopup from "@/components/CartPopup"
+	import RankingCoordinationDetail from "@/components/RankingCoordinationDetail"
 
 
 	const db = firebase.firestore()
@@ -142,8 +147,8 @@
 			return {
 				selected_tag_names: [],
 				total_coordinations: [],
-                clothes_dict: {},
-                selected_info: null,
+				clothes_dict: {},
+				selected_info: null
 			}
 		},
 
@@ -198,7 +203,7 @@
 		components: {
 			AppClothwithRank,
 			CoordinationwithRank,
-			CartPopup,
+			RankingCoordinationDetail
 		}
 	}
 </script>

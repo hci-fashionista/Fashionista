@@ -40,16 +40,18 @@
 						</li>
 					</ul>
 					<hr>
-					<div class="review_input">
-						<input class="review_text" type="text" @keyup.enter="submitReview" v-model="my_review">
-						<button class="review_submit" @click="submitReview" >submit</button>
-					</div>
-					<hr>
+					<template v-if="!immutable">
+						<div class="review_input">
+							<input class="review_text" type="text" @keyup.enter="submitReview" v-model="my_review">
+							<button class="review_submit" @click="submitReview" >submit</button>
+						</div>
+						<hr>
+					</template>
 				</div>
 			</div>
 
 			<div class="button">
-				<AppButton color="primary" full-width @click="uploadShoppingCart">
+				<AppButton color="primary" full-width @click="uploadShoppingCart" v-if="!immutable">
 					<IconCart id="cart" />
 					To Shopping Cart
 				</AppButton>
@@ -273,6 +275,7 @@
 
 				}
 			},
+			immutable: Boolean
 		},
 
 		components: {
@@ -342,12 +345,18 @@
 				this.$refs.popup.open();
 			},
 
+			close() {
+				this.$refs.popup.close();
+			},
+
 			async uploadShoppingCart() {
 				await db.collection('cart').add(this.Coordinations);
-				this.$refs.popup.close();
 				this.$router.push('/cart');
 			},
 			newLikes(newlikes){
+				if(this.immutable)
+					return;
+
 				this.$emit('reload', this.Coordinations.id, newlikes);
 			},
 		},
