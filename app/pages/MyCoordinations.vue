@@ -133,15 +133,15 @@
 			},
 			updateCloth(...args) {
 				this.my_coordinations.forEach(coordination => {
-					if(coordination.id == args[0]){
-						coordination.name = args[1],
-						coordination.description=args[2],
-						coordination.bodyShape= {
-							height: args[3],
-							weight: args[4]
-						},
-						coordination.tags= args[5]
-					}
+					if (coordination.detail.id !== args[0])
+						return
+					coordination.detail.name = args[1],
+					coordination.detail.description=args[2],
+					coordination.detail.bodyShape= {
+						height: args[3],
+						weight: args[4]
+					},
+					coordination.detail.tags= args[5]
 				})
 			},
 			async makeMyCoordinations() {
