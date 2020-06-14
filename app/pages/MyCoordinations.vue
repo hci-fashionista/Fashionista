@@ -11,7 +11,7 @@
 						<p>Create</p>
 					</li>
 					<li @click="uploadRankingPopupOpen(coordination)" v-for="(coordination, index) in my_coordinations">
-						<CoordinationwithRank :clothes="clothes_dict[coordination.id]" :detail="coordination" :index="index" />
+						<CoordinationwithRank :clothes="clothes_dict[coordination.id]" :detail="coordination" :index="index" :new-item="index === 0"/>
 					</li>
 				</ul>
 			</div>
@@ -53,11 +53,9 @@
 	.flex.coordinations > ul {
 		list-style: none;
 		padding: 0px 0px;
-		justify-items: center;
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
 		grid-gap: 10px;
-		grid-auto-rows: minmax(100px, auto);
 		width: 100%;
 
 		& > .create {
@@ -79,6 +77,7 @@
 				border-radius: 10px;
 				cursor: pointer;
 				outline: none;
+				align-self: center;
 				font-size: 100px;
 				background-color: var(--grey-750)
 			}
@@ -171,12 +170,7 @@
 				.then(total_coordinations => {
 					this.my_coordinations = total_coordinations
 						.filter(coordination => this.filtering(coordination))
-						.sort((c1, c2) => {
-							const likeDiff = Math.sign(c2.likes - c1.likes);
-							if(likeDiff !== 0) return likeDiff;
-
-							return c1.name.localeCompare(c2.name);
-						})
+						.sort((c1, c2) => c1.date < c2.date ?  -1 : 1)
 				})
 			}
 		},

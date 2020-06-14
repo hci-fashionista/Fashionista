@@ -1,8 +1,7 @@
 <template>
-	<div @click = "popup" class="clothwithrank">
+	<div class="clothwithrank">
 		<div class="info">
 			<div class="rank">{{clothId + 1}}</div>
-			<!-- <div class="new" v-if="detail.is_new">new</div> -->
 		</div>
 		<AppCloth :cloth="detail"></AppCloth>
 	</div>
@@ -10,20 +9,22 @@
 
 <style scoped>
 	div.clothwithrank{
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
 	div.info{
+		position: absolute;
+		left: -5px;
+		top: -5px;
 		height: 250px;
-		align-self: start;
 	}
 
 	div.rank{
 		width: 45px;
 		height: 45px;
-		margin-bottom: 5px;
 		background-color: var(--blue-400);
 		text-align: center;
 		color: white;
@@ -62,11 +63,6 @@
 		},
 		components: {
 			AppCloth
-		},
-		methods: {
-			popup() {
-
-			}
 		}
 	}
 </script>

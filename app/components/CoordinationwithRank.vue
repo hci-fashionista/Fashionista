@@ -1,8 +1,10 @@
 <template>
-	<div @click = "popup" class="clothwithrank">
+	<div class="clothwithrank">
 		<div class="info">
 			<div class="rank">{{index + 1}}</div>
-			<!-- <div class="new" v-if="detail.is_new">new</div> -->
+		</div>
+		<div v-if="newItem" class="new">
+			<div>new</div>
 		</div>
 		<AppCoordination :clothes="clothes" :name="detail.name" :price="detail.totalPrice" :likes="detail.likes"></AppCoordination>
 	</div>
@@ -10,20 +12,42 @@
 
 <style scoped>
 	div.clothwithrank{
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
 	div.info{
+		position: absolute;
+		left: 0;
+		top: -5px;
 		height: 250px;
-		align-self: start;
 	}
 
-	div.rank{
+	div.new {
+		position: absolute;
+		left: 0;
+		top: 50px;
+		height: 250px;
+
+		& > div {
+			border-radius: 50%;
+			width: 45px;
+			height: 45px;
+			display: flex;
+			align-items: center;
+			background-color: var(--red-800);
+			color: var(--grey-900);
+			justify-content: center;
+			font-weight: bold;
+			font-size: 20px;
+		}
+	}
+
+	div.rank {
 		width: 45px;
 		height: 45px;
-		margin-bottom: 5px;
 		background-color: var(--blue-400);
 		text-align: center;
 		color: white;
@@ -42,21 +66,20 @@
 			index: {
 				type: Number,
 				default: 0
-            },
-            detail: {
-                type: Object,
-            },
-            clothes: {
-                type: Array,
-            }
+			},
+			detail: {
+				type: Object,
+			},
+			clothes: {
+				type: Array,
+			},
+			newItem: {
+				type: Boolean,
+				default: false
+			}
 		},
 		components: {
 			AppCoordination
-		},
-		methods: {
-			popup() {
-
-			}
 		}
 	}
 </script>
