@@ -1,5 +1,7 @@
 <template>
 	<main class="Guideline">
+		<h1 class="Guideline__title">Guideline</h1>
+
 		<div class="Progress">
 			<div class="Progress__item" v-for="stage in stages">
 				<div class="Progress__item__decorator"></div>
@@ -29,7 +31,7 @@
 						:key="candidate.id"
 						:template="candidate"
 						:selected="colors && colors.id === candidate.id"
-						@select="colors = candidate"
+						@select="openColor(candidate)"
 					/>
 
 					<GuidelineButton
@@ -56,6 +58,8 @@
 							<component :is="getIcon(component.icon)" v-if="!results[component.id]" />
 							<AppCloth :cloth="results[component.id]" v-else />
 						</button>
+
+						Total Price: ￦{{ totalPrice }}
 					</div>
 
 					<div class="Clothes__container">
@@ -164,6 +168,10 @@
 					background: rgba(0, 0, 0, .5);
 				}
 			}
+		}
+
+		&__title {
+			font-size: 3rem;
 		}
 
 		&__buttons {
@@ -417,7 +425,9 @@
 				results: {},
 				cache: {},
 				loading: false,
-				selectedClothes: null
+				selectedClothes: null,
+				editingColor: null,
+				customCount: 0
 			};
 		},
 
@@ -467,28 +477,63 @@
 				delete template.colorCandidates;
 
 				return template;
+			},
+
+			totalPrice() {
+				return Object.keys(this.results)
+					.map(v => this.results[v])
+					.reduce((prev, {price}) => prev + price, 0);
 			}
 		},
 
 		methods: {
-			showColorChooser() {
-				if(this.$refs.colorChooser)
+			showColorChooser(editingColor = null) {
+				this.editingColor = editingColor || `custom-${this.customCount}`;
+
+				if(!this.$refs.colorChooser)
+					return;
+
+				const originalColor = this.template.colorCandidates.find(v => v.id === this.editingColor);
+				if(!originalColor) {
 					this.$refs.colorChooser.open();
+					this.customCount++;
+					return;
+				}
+
+				const palette = originalColor.components.map(v => {
+					if(v.colorHex)
+						return { hex: v.colorHex };
+
+					return v.color;
+				});
+
+				this.$refs.colorChooser.open(palette);
 			},
 
 			setCustomColor(colors) {
-				const customIdx = this.template.colorCandidates.findIndex(v => v.id === 'custom');
-				if(customIdx > 0)
-					this.template.colorCandidates.splice(customIdx, 1);
-
+				const customIdx = this.template.colorCandidates.findIndex(v => v.id === this.editingColor);
 				const newCandidate = {
-					id: 'custom',
+					id: this.editingColor,
 					name: 'Custom',
+					isCustom: true,
 					...colors
 				};
 
-				this.template.colorCandidates.push(newCandidate);
+				if(customIdx > 0)
+					this.template.colorCandidates.splice(customIdx, 1, newCandidate);
+				else
+					this.template.colorCandidates.push(newCandidate);
+
 				this.colors = newCandidate;
+			},
+
+			openColor(candidate) {
+				if(candidate.isCustom && this.colors && this.colors.id === candidate.id) {
+					this.showColorChooser(candidate.id);
+					return;
+				}
+
+				this.colors = candidate;
 			},
 
 			async openCategory(component) {
@@ -552,11 +597,7 @@
 					published: false,
 					reviews: [],
 					tags: [],
-					totalPrice: `${
-						Object.keys(this.results)
-							.map(v => this.results[v])
-							.reduce((prev, {price}) => prev + price, 0)
-					}`
+					totalPrice: `${this.totalPrice}`
 				};
 
 				await db.collection('ranking').add(coordination);
