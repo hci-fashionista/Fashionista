@@ -20,24 +20,30 @@
 
 					<p id="heightweight">Body Shape</p>
 					<div class="select_list">
-						<select v-model="selected_height">
-							<option disabled value="">Height</option>
-							<option>-150</option>
-							<option>150-160</option>
-							<option>160-170</option>
-							<option>170-180</option>
-							<option>180-190</option>
-							<option>190-</option>
-						</select>
-						<select v-model="selected_weight">
-							<option disabled value="">Weight</option>
-							<option>-50</option>
-							<option>50-60</option>
-							<option>60-70</option>
-							<option>70-80</option>
-							<option>80-90</option>
-							<option>90-</option>
-						</select>
+						<div>
+							<label> Height </label>
+							<select v-model="selected_height">
+								<option disabled value="">height</option>
+								<option>-150</option>
+								<option>150-160</option>
+								<option>160-170</option>
+								<option>170-180</option>
+								<option>180-190</option>
+								<option>190-</option>
+							</select>
+						</div>
+						<div>
+							<label> Weight </label>
+							<select v-model="selected_weight">
+								<option disabled value="">weight</option>
+								<option>-50</option>
+								<option>50-60</option>
+								<option>60-70</option>
+								<option>70-80</option>
+								<option>80-90</option>
+								<option>90-</option>
+							</select>
+						</div>
 					</div>
 				</div>
 
@@ -128,12 +134,24 @@
 		}
 	}
 
-	#title, #description, #heightweight, #tags {
+	.select_list {
+		display: flex;
+		justify-content: space-around;
+	}
+
+	#title, #description, #heightweight, #tags{
 		font-family: var(--main-font);
 		font-style: normal;
 		font-weight: bold;
-		font-size: 13px;
+		font-size: 20px;
 		line-height: 15px;
+	}
+
+	label {
+		font-family: var(--main-font);
+		font-style: normal;
+		font-weight: 500;
+		font-size: 16px;
 	}
 
 	.buttons {
@@ -327,8 +345,7 @@
 					},
 					tags: this.selected_tags
 				});
-				this.$emit('updateCloth');
-				this.close();
+				this.$emit('updateCloth', this.Coordinations.id, this.title_text, this.description_text, this.selected_height, this.selected_weight, this.selected_tags);
 			},
 			uploadToRanking() {
 				if(this.Coordinations.published){

@@ -8,7 +8,7 @@
 						<button @click="toGuideline">
 							<IconPlus style="width: 5rem; height: 5rem; fill: var(--grey-300)" />
 						</button>
-						<p>Create</p>
+						<p>Create By Guideline</p>
 					</li>
 					<li @click="uploadRankingPopupOpen(coordination)" v-for="(coordination, index) in my_coordinations">
 						<CoordinationwithRank :clothes="clothes_dict[coordination.id]" :detail="coordination" :index="index" :new-item="index === 0"/>
@@ -43,10 +43,6 @@
 			margin-bottom: 0;
 			align-self: start;
 			font-size: 2.4rem;
-		}
-
-		& li {
-			cursor: pointer;
 		}
 	}
 
@@ -109,6 +105,13 @@
 				selected_info: null
 			}
 		},
+
+		computed: {
+			new_coordinations() {
+				return this.my_coordinations;
+			}
+		},
+
 		methods: {
 			uploadRankingPopupOpen(coordi) {
 				this.selected_info = coordi;
@@ -128,11 +131,18 @@
 			toGuideline() {
 				this.$router.push('/coordinations/new');
 			},
-			updateCloth() {
-				this.total_coordinations = [];
-				this.my_coordinations = [];
-				this.clothes_dict = {};
-				this.makeMyCoordinations();
+			updateCloth(...args) {
+				this.my_coordinations.forEach(coordination => {
+					if(coordination.id == args[0]){
+						coordination.name = args[1],
+						coordination.description=args[2],
+						coordination.bodyShape= {
+							height: args[3],
+							weight: args[4]
+						},
+						coordination.tags= args[5]
+					}
+				})
 			},
 			makeMyCoordinations() {
 				db.collection("ranking").get().then(async (querySnapshot)=>{

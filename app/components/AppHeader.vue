@@ -17,7 +17,7 @@
 			</router-link>
 
 			<router-link class="AppHeader__item" to="/mypage">
-				<IconShirt /> My Coordinates
+				<IconShirt /> My Coordinations
 			</router-link>
 		</nav>
 	</header>
