@@ -40,16 +40,18 @@
 						</li>
 					</ul>
 					<hr>
-					<div class="review_input">
-						<input class="review_text" type="text" @keyup.enter="submitReview" v-model="my_review">
-						<button class="review_submit" @click="submitReview" >submit</button>
-					</div>
-					<hr>
+					<template v-if="!immutable">
+						<div class="review_input">
+							<input class="review_text" type="text" @keyup.enter="submitReview" v-model="my_review">
+							<button class="review_submit" @click="submitReview" >submit</button>
+						</div>
+						<hr>
+					</template>
 				</div>
 			</div>
 
-			<div class="buttons">
-				<AppButton color="primary" full-width @click="close">
+			<div class="button">
+				<AppButton color="primary" full-width @click="uploadShoppingCart" v-if="!immutable">
 					<IconCart id="cart" />
 					To Shopping Cart
 				</AppButton>
@@ -219,17 +221,19 @@
 </style>
 
 <script>
-	import AppCloth from "@/components/AppCloth";
-	import ColorScore from "@/components/ColorScore";
-	import AppTag from "@/components/AppTag";
-	import AppReview from "@/components/AppReview";
 	import AppButton from "@/components/AppButton";
+	import AppCloth from "@/components/AppCloth";
 	import AppLike from "@/components/AppLike";
+	import AppPopup from "@/components/AppPopup";
+	import AppReview from "@/components/AppReview";
+	import AppTag from "@/components/AppTag";
+	import ColorScore from "@/components/ColorScore";
+	import IconCart from "@/images/IconCart.svg?inline";
 	import TextInput from "@/components/TextInput";
 	import firebase from "@/src/firebase.js";
-	import AppPopup from "@/components/AppPopup";
 
-	import IconCart from "@/images/IconCart.svg?inline";
+
+	const db = firebase.firestore();
 
 	export default {
 		data() {
@@ -271,6 +275,7 @@
 
 				}
 			},
+			immutable: Boolean
 		},
 
 		components: {
@@ -343,7 +348,15 @@
 			close() {
 				this.$refs.popup.close();
 			},
+
+			async uploadShoppingCart() {
+				await db.collection('cart').add(this.Coordinations);
+				this.$router.push('/cart');
+			},
 			newLikes(newlikes){
+				if(this.immutable)
+					return;
+
 				this.$emit('reload', this.Coordinations.id, newlikes);
 			},
 		},
