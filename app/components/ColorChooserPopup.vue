@@ -12,6 +12,7 @@
 					<div class="Dots">
 						<div class="Item" v-for="(component, index) in template.components">
 							<div class="Dot Item__dot"
+								:data-color="getColorName(component.color || palette[index])"
 								:style="{ background: getColor(component.color || palette[index]) }"
 							>
 							</div>
@@ -27,12 +28,14 @@
 						>
 							<button class="Dot Palette__dot"
 								v-for="color in colors"
+								:data-color="getColorName(color)"
 								:style="{ background: getColor(color) }"
 								@click="setPalette(index, color)"
 							>
 							</button>
 
 							<button class="Dot Palette__dot Palette__dot--plus"
+								data-color="Add Custom Color"
 								@click="openColorChooser(index)"
 								v-click-outside="addColor(index)"
 							>
@@ -138,6 +141,23 @@
 		padding: 0;
 		border-radius: 50%;
 		border: 1px solid rgba(0, 0, 0, .3);
+		position: relative;
+
+		&:hover {
+			&::after {
+				position: absolute;
+				content: attr(data-color);
+				white-space: nowrap;
+				z-index: 1;
+				background: var(--grey-900);
+				border-radius: 5px;
+				padding: 5px 10px;
+				box-shadow: 0 0 4px 0 rgba(0, 0, 0, .4);
+				top: 50%;
+				left: 25px;
+				transform: translate(0, -50%);
+			}
+		}
 	}
 
 	.Item {
@@ -269,7 +289,20 @@
 				return toRGB(color);
 			},
 
-			open() {
+			getColorName(color) {
+				if(!color)
+					return 'Unselected';
+
+				if(typeof color === 'object')
+					return 'Custom Color: ' + color.hex;
+
+				return color;
+			},
+
+			open(colors) {
+				if(colors)
+					this.palette = colors;
+
 				this.$refs.popup.open();
 			},
 
