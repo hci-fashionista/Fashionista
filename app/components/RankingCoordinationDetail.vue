@@ -50,7 +50,7 @@
 				</div>
 			</div>
 
-			<div class="button">
+			<div class="buttons">
 				<AppButton color="primary" full-width @click="uploadShoppingCart" v-if="!immutable">
 					<IconCart id="cart" />
 					To Shopping Cart
