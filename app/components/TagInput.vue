@@ -1,8 +1,18 @@
 <template>
 	<div class="tag_input"  :class="{'small': this.small}">
 		<div class="selected">
-			<AppTag class="tag" v-for="tagName in selected" :key="tagName" :name="tagName"></AppTag>
-			<div class="searchbox"><input class="search" type="text" placeholder="type tag" v-model="searchText" @keydown="searchKeydown" key="input" autofocus></div>
+			<AppTag class="tag"
+				v-for="tagName in selected"
+				:key="tagName" :name="tagName"
+				selected selectable
+				@select="tagClicked(tagName)"
+			/>
+
+			<div class="searchbox">
+				<input class="search" type="text" placeholder="type tag"
+					v-model="searchText" @keydown="searchKeydown" key="input" autofocus
+				>
+			</div>
 		</div>
 
 		<div class="tags">
