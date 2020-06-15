@@ -92,12 +92,14 @@
 	import firebase from "@/src/firebase.js"
 	import RankingCoordinationDetail from "@/components/RankingCoordinationDetail"
 	import DetailPopup from "@/components/DetailPopup"
+	import IconPlus from "@/images/IconPlus.svg?inline";
 
 	export default {
 		data() {
 			return {
 				coordinations: [],
 				clothes: [],
+				rankings: [],
 				selected_info: {
 					'id': '0nZifbU3OmmfCI6wRfSY',
 					'name': "None",
@@ -156,25 +158,25 @@
 		async mounted() {
 			const db = firebase.firestore()
 
+			const generateElement = doc => ({ detail: { id: doc.id, ...doc.data() }, id: doc.id })
 			// initialize coordinations
 			const rankingSnap = await db.collection("ranking").where("published", "==", true).limit(4).get()
-			const coordinations = rankingSnap.docs.map(doc => ({
-				detail: {
-					id: doc.id,
-					...doc.data()
-				},
-				id: doc.id
-			}))
-			const pushCoordInformation = async (coordination, idx) => {
+			const rankings = rankingSnap.docs.map(generateElement)
+			const pushCoordInformation = async (coordination, idx, array) => {
 				const { detail: { clothes } } = coordination
 				const top = await db.collection("top").doc(clothes.top).get()
 				const pants = await db.collection("pants").doc(clothes.pants).get()
-				coordinations[idx].clothes = [top.data(), pants.data()]
+				array[idx].clothes = [top.data(), pants.data()]
 			}
-			await Promise.all(coordinations.map(pushCoordInformation))
-			this.coordinations = [
-				...coordinations.sort((c1, c2) => c1.detail.likes > c2.detail.likes ? -1 : 1)
+			await Promise.all(rankings.map(pushCoordInformation))
+			this.rankings = [
+				...rankings.sort((c1, c2) => c1.detail.likes > c2.detail.likes ? -1 : 1)
 			]
+
+			const coordinationSnap = await db.collection("ranking").where("author", "==", "Dol Lee").limit(3).get()
+			const coordinations = coordinationSnap.docs.map(generateElement)
+			await Promise.all(coordinations.map(pushCoordInformation))
+			this.coordinations = [ ...coordinations ]
 
 			// initialize clothes
 			const clothes = {}
