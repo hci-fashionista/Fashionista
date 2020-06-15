@@ -1,66 +1,71 @@
 <template>
-	<AppPopup ref='popup'>
-		<div class="coordination_detail">
-			<div class="clothes">
-				<div  v-for="cloth in this.clothes_item" :key="cloth.id">
-					<AppCloth :cloth="cloth"/>
-				</div>
-				<div class="color_match">
-					<ColorScore :colors="this.Coordinations.colors" />
-				</div>
-			</div>
-
-			<div class="textAndReview">
-				<div class="texts">
-					<p id="title">Title</p>
-					<p id="title_content">{{this.Coordinations.name}}</p>
-
-					<p id="description">Description</p>
-					<p id="description_content">{{this.Coordinations.description}}</p>
-
-					<p id="tag">Tags</p>
-					<ul class="tags_list">
-						<li v-for="tag_name in this.Coordinations.tags" :key="tag_name">
-							<AppTag class="apptag" :name="tag_name"></AppTag>
-						</li>
-					</ul>
+	<div>
+		<AppPopup ref='popup'>
+			<div class="coordination_detail">
+				<div class="clothes">
+					<p id="title">Clothes</p>
+					<div @click="showpopupCloth(cloth)" v-for="cloth in this.clothes_item" :key="cloth.id">
+						<AppCloth :cloth="cloth" />
+					</div>
+					<div class="color_match">
+						<p id="color_match_score">Color Match Score</p>
+						<ColorScore :colors="this.Coordinations.colors" />
+					</div>
 				</div>
 
-				<div class="reviews">
-					<p id="review">Reviews</p>
-					<hr>
-					<AppLike id="app_like" @newLikes="newLikes" :likes="this.Coordinations.likes"></AppLike>
-					<hr>
-					<ul class="reviews_list">
-						<li v-if="this.Coordinations.reviews.length == 0">
-							There is no review. You can write first review!
-						</li>
-						<li v-for="(review_set,i) in this.Coordinations.reviews" :key="i">
-							<AppReview :id="review_set.review_id" :content="review_set.review_content"></AppReview>
-						</li>
-					</ul>
-					<hr>
-					<template v-if="!immutable">
-						<div class="review_input">
-							<input class="review_text" type="text" @keyup.enter="submitReview" v-model="my_review">
-							<button class="review_submit" @click="submitReview" >submit</button>
-						</div>
+				<div class="textAndReview">
+					<div class="texts">
+						<p id="title">Title</p>
+						<p id="title_content">{{this.Coordinations.name}}</p>
+
+						<p id="description">Description</p>
+						<p id="description_content">{{this.Coordinations.description}}</p>
+
+						<p id="tag">Tags</p>
+						<ul class="tags_list">
+							<li v-for="tag_name in this.Coordinations.tags" :key="tag_name">
+								<AppTag class="apptag" :name="tag_name"></AppTag>
+							</li>
+						</ul>
+					</div>
+
+					<div class="reviews">
+						<p id="review">Reviews</p>
 						<hr>
-					</template>
+						<AppLike id="app_like" @newLikes="newLikes" :likes="this.Coordinations.likes"></AppLike>
+						<hr>
+						<ul class="reviews_list">
+							<li v-if="this.Coordinations.reviews.length == 0">
+								There is no review. You can write first review!
+							</li>
+							<li v-for="(review_set,i) in this.Coordinations.reviews" :key="i">
+								<AppReview :id="review_set.review_id" :content="review_set.review_content"></AppReview>
+							</li>
+						</ul>
+						<hr>
+						<template v-if="!immutable">
+							<div class="review_input">
+								<input class="review_text" type="text" @keyup.enter="submitReview" v-model="my_review">
+								<button class="review_submit" @click="submitReview" >submit</button>
+							</div>
+							<hr>
+						</template>
+					</div>
+				</div>
+
+				<div class="buttons">
+					<AppButton color="primary" full-width @click="uploadShoppingCart" v-if="!immutable">
+						<IconCart id="cart" />
+						To Shopping Cart
+					</AppButton>
+					<AppButton @click="close">
+						Cancel
+					</AppButton>
 				</div>
 			</div>
-
-			<div class="buttons">
-				<AppButton color="primary" full-width @click="uploadShoppingCart" v-if="!immutable">
-					<IconCart id="cart" />
-					To Shopping Cart
-				</AppButton>
-				<AppButton @click="close">
-					Cancel
-				</AppButton>
-			</div>
-		</div>
-	</AppPopup>
+		</AppPopup>
+		<DetailPopup ref="clothChooser" not_selectable :info="selected_info_cloth" v-if="selected_info_cloth" />
+	</div>
 </template>
 
 <style scoped>
@@ -85,6 +90,9 @@
 
 	.color_match {
 		display: flex;
+		flex-direction: column;
+		justify-items: center;
+		padding-left: 10px;
 
 		& >>> .flex {
 			font-size : 20px;
@@ -94,6 +102,13 @@
 			width: 30px;
 			height: 30px;
 		}
+	}
+
+	#color_match_score {
+		font-family: var(--main-font);
+		font-style: normal;
+		font-weight: 500;
+		font-size: 16px;
 	}
 
 	.textAndReview {
@@ -144,11 +159,13 @@
 		display: flex;
 		justify-content: flex-end;
 
-		font-family: var(--main-font);
-		font-style: normal;
-		font-weight: normal;
-		font-size: 13px;
-		line-height: 21px;
+		.review_text {
+			font-family: var(--main-font);
+			font-style: normal;
+			font-weight: normal;
+			line-height: 21px;
+			font-size: 15px;
+		}
 	}
 
 	.review_text {
@@ -156,6 +173,7 @@
 		background: var(--grey-750);
 		border-radius: 18px;
 		flex: 1;
+		padding: 5px 15px;
 		margin-right: 10px;
 
 		&:focus {
@@ -168,7 +186,7 @@
 		color: var(--grey-100);
 		background: var(--grey-700);
 		font-family: var(--main-font);
-		font-size: 13px;
+		font-size: 15px;
 		border: none;
 		border-radius: 5px;
 		padding: 5px 10px;
@@ -198,6 +216,16 @@
 
 	#app_like {
 		margin: auto;
+
+		&:hover {
+			cursor: pointer;
+			& >>> img {
+				-webkit-transform: scale(1.3);
+				transform: scale(1.3);
+				-webkit-filter: drop-shadow(0px 0px 5px var(--blue-500));
+				filter: drop-shadow(0px 0px 5px var(--blue-500));
+			}
+		}
 	}
 
 	.buttons {
@@ -231,6 +259,7 @@
 	import IconCart from "@/images/IconCart.svg?inline";
 	import TextInput from "@/components/TextInput";
 	import firebase from "@/src/firebase.js";
+	import DetailPopup from "@/components/DetailPopup"
 
 
 	const db = firebase.firestore();
@@ -239,7 +268,19 @@
 		data() {
 			return {
 				clothes_item : [],
-				my_review: ""
+				my_review: "",
+				selected_info_cloth: {
+					brand: 'Gap',
+					color: '데님',
+					'delivery-date': 2,
+					gender: 'M',
+					image: 'https://image.msscdn.net/images/goods_img/20190416/1014964/1014964_2_125.jpg',
+					image_large: 'https://image.msscdn.net/images/goods_img/20180813/827198/827198_2_500.jpg',
+					name: '멋쟁이 청바지',
+					price: 10000,
+					size: ['XS', 'S', 'M', 'L', 'XL'],
+					type: 'pants'
+				}
 			}
 		},
 		watch: {
@@ -287,24 +328,22 @@
 			AppReview,
 			TextInput,
 			AppPopup,
-			IconCart
+			IconCart,
+			DetailPopup
 		},
 
 		methods: {
 			makeClothesList() {
 				const db = firebase.firestore();
+				console.log("1");
 
 				let topRef = db.collection("top").doc(this.Coordinations.clothes.top);
 				let pantsRef = db.collection("pants").doc(this.Coordinations.clothes.pants);
 				let getTopDoc = topRef.get()
 					.then(doc => {
 						if (doc.exists) {
-							let data = {
-								name : doc.data().name,
-								id : doc.id,
-								price : doc.data().price,
-								image : doc.data().image
-							}
+							let data = doc.data();
+							data.id = doc.id;
 							this.clothes_item.push(data);
 						}
 					})
@@ -313,12 +352,8 @@
 				let getPantsDoc = pantsRef.get()
 					.then(doc => {
 						if (doc.exists) {
-							let data = {
-								name : doc.data().name,
-								id : doc.id,
-								price : doc.data().price,
-								image : doc.data().image
-							}
+							let data = doc.data();
+							data.id = doc.id;
 							this.clothes_item.push(data);
 						}
 					})
@@ -359,6 +394,13 @@
 
 				this.$emit('reload', this.Coordinations.id, newlikes);
 			},
+			showpopupCloth(cloth){
+				console.log("click");
+				this.selected_info_cloth = cloth;
+				if(this.$refs.clothChooser){
+					this.$refs.clothChooser.open();
+				}
+			}
 		},
 
 		mounted() {
