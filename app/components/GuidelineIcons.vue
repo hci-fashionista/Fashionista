@@ -1,10 +1,13 @@
 <script>
+	import IconCardigan from "@/images/IconCardigan.svg?inline";
+	import IconHoodie from "@/images/IconHoodie.svg?inline";
 	import IconJeans from "@/images/IconJeans.svg?inline";
+	import IconShirts from "@/images/IconShirts.svg?inline";
 	import IconTshirts from "@/images/IconTshirts.svg?inline";
 	import IconUnknown from "@/images/IconUnknown.svg?inline";
 	import { toRGB } from "@/src/color.js";
 
-	const icons = { IconJeans, IconTshirts };
+	const icons = { IconCardigan, IconHoodie, IconJeans, IconShirts, IconTshirts };
 	const getIcon = icon => {
 		if(icon.length === 0)
 			return IconUnknown;
