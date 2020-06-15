@@ -25,7 +25,7 @@
 				<h1>New Item</h1>
 				<div class="center">
 					<ul class="coordinations_list">
-						<li @click="showpopupCloth(value)" v-for="(value, id, index) in clothes" :key="index">
+						<li @click="showpopupCloth(value)" v-for="(value, index) in clothes" :key="index">
 							<AppClothwithRank :clothId="index" :detail="value" />
 						</li>
 					</ul>
@@ -35,7 +35,7 @@
 				<h1>Ranking</h1>
 				<div class="center">
 					<ul class="coordinations_list">
-						<li @click="showpopupCoordi(value.detail)" v-for="(value, name, index) in coordinations" :key="index">
+						<li @click="showpopupCoordi(value.detail)" v-for="(value, index) in coordinations" :key="index">
 							<CoordinationwithRank :clothes="value.clothes" :detail="value.detail" :index="index"/>
 						</li>
 					</ul>
@@ -43,8 +43,7 @@
 			</div>
 		</div>
 		<RankingCoordinationDetail ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info" />
-		<DetailPopup ref="clothChooser" :info="selected_info_cloth" v-if="selected_info_cloth">
-		</DetailPopup>
+		<DetailPopup ref="clothChooser" :info="selected_info_cloth" v-if="selected_info_cloth" />
 	</main>
 </template>
 
@@ -97,8 +96,8 @@
 	export default {
 		data() {
 			return {
-				coordinations: {},
-				clothes: {},
+				coordinations: [],
+				clothes: [],
 				selected_info: {
 					'id': '0nZifbU3OmmfCI6wRfSY',
 					'name': "None",
@@ -158,28 +157,31 @@
 			const db = firebase.firestore()
 
 			// initialize coordinations
-			const coordinations = {}
 			const rankingSnap = await db.collection("ranking").where("published", "==", true).limit(4).get()
-			rankingSnap.forEach((doc, idx) => {
-				coordinations[doc.id] = { "detail": doc.data() }
-			})
-			const pushCoordInformation = async docid => {
-				const { detail: { clothes } } = coordinations[docid]
+			const coordinations = rankingSnap.docs.map(doc => ({
+				detail: {
+					id: doc.id,
+					...doc.data()
+				},
+				id: doc.id
+			}))
+			const pushCoordInformation = async (coordination, idx) => {
+				const { detail: { clothes } } = coordination
 				const top = await db.collection("top").doc(clothes.top).get()
 				const pants = await db.collection("pants").doc(clothes.pants).get()
-				coordinations[docid].clothes = [top.data(), pants.data()]
+				coordinations[idx].clothes = [top.data(), pants.data()]
 			}
-			await Promise.all(Object.keys(coordinations).map(pushCoordInformation))
-			this.coordinations = { ...coordinations }
+			await Promise.all(coordinations.map(pushCoordInformation))
+			this.coordinations = [
+				...coordinations.sort((c1, c2) => c1.detail.likes > c2.detail.likes ? -1 : 1)
+			]
 
 			// initialize clothes
 			const clothes = {}
 			const topSnap = await db.collection("top").orderBy("image").limit(2).get()
 			const pantsSnap = await db.collection("pants").orderBy("image").limit(2).get()
-			const pushClothInformation = doc => { clothes[doc.id] = doc.data() }
-			topSnap.forEach(pushClothInformation)
-			pantsSnap.forEach(pushClothInformation)
-			this.clothes = Object.keys(clothes).sort(() => Math.random() - 0.5).reduce((acc, key) => ({ ...acc, [key]: clothes[key] }), {})
+			const pushClothInformation = doc => ({ id: doc.id, ...doc.data() })
+			this.clothes = [...topSnap.docs, ...pantsSnap.docs].map(pushClothInformation).sort(() => Math.random() - 0.5)
 		}
 	}
 </script>

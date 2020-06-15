@@ -17,7 +17,7 @@
 
 	div.info{
 		position: absolute;
-		left: -5px;
+		left: 0;
 		top: -5px;
 		height: 250px;
 	}

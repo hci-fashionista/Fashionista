@@ -210,7 +210,7 @@
 				this.my_coordinations = [
 					...coordinations
 						.filter(c => this.filtering(c.detail))
-						.sort((c1, c2) => c1.detail.date < c2.detail.date ? -1 : 1)
+						.sort((c1, c2) => c1.detail.date > c2.detail.date ? -1 : 1)
 				]
 			}
 		},
