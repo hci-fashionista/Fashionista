@@ -4,8 +4,10 @@
 			<div class="flex coordinations">
 				<div class="flex heading">
 					<h1>My Coordinations</h1>
-					<div class="flex" v-for="field in ['date', 'price', 'likes']">
-						<span @click="sortBy(field)" :class="fieldClass(field)"> ↓ {{ field }} </span>
+					<div class="flex">
+						<span @click="sortBy('date')" :class="fieldClass('date')"> ↓ Date </span>
+						<span @click="sortBy('totalPrice')" :class="fieldClass('totalPrice')"> ↓ Price </span>
+						<span @click="sortBy('likes')" :class="fieldClass('likes')"> ↓ Likes </span>
 					</div>
 				</div>
 				<ul class="coordinations_list">
@@ -169,7 +171,7 @@
 				this.sort_field = field
 				this.my_coordinations = [
 					...this.my_coordinations
-						.sort((c1, c2) => c1.detail[field] < c2.detail[field] ? -1 : 1)
+						.sort((c1, c2) => c1.detail[field] > c2.detail[field] ? -1 : 1)
 				]
 			},
 			fieldClass(field) {
