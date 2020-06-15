@@ -1,76 +1,81 @@
 <template>
-	<AppPopup ref='popup' @popupClose= "deleteAll">
-		<div class="coordination_detail">
-			<div class="clothes">
-				<div  v-for="cloth in this.clothes_item" :key="cloth.id">
-					<AppCloth :cloth="cloth"/>
-				</div>
-				<div class="color_match">
-					<ColorScore :colors="this.Coordinations.colors" />
-				</div>
-			</div>
-
-			<div class="textAndTag">
-				<div class="texts">
-					<p id="title">Title</p>
-					<TextInput class="textinput" v-model="title_text"></TextInput>
-
-					<p id="description">Description</p>
-					<TextInput class="textinput" v-model="description_text"></TextInput>
-
-					<p id="heightweight">Body Shape</p>
-					<div class="select_list">
-						<div>
-							<label> Height </label>
-							<select v-model="selected_height">
-								<option disabled value="">height</option>
-								<option>-150</option>
-								<option>150-160</option>
-								<option>160-170</option>
-								<option>170-180</option>
-								<option>180-190</option>
-								<option>190-</option>
-							</select>
-						</div>
-						<div>
-							<label> Weight </label>
-							<select v-model="selected_weight">
-								<option disabled value="">weight</option>
-								<option>-50</option>
-								<option>50-60</option>
-								<option>60-70</option>
-								<option>70-80</option>
-								<option>80-90</option>
-								<option>90-</option>
-							</select>
-						</div>
+	<div>
+		<AppPopup ref='popup' @popupClose= "deleteAll">
+			<div class="coordination_detail">
+				<div class="clothes">
+					<p id="title">Clothes</p>
+					<div @click="showpopupCloth(cloth)" v-for="cloth in this.clothes_item" :key="cloth.id">
+						<AppCloth :cloth="cloth"/>
+					</div>
+					<div class="color_match">
+						<p id="color_match_score">Color Match Score</p>
+						<ColorScore :colors="this.Coordinations.colors" />
 					</div>
 				</div>
 
-				<div class="tag_input_div">
-					<p id="tags">Tags</p>
-					<TagInput v-model="selected_tags" small/>
+				<div class="textAndTag">
+					<div class="texts">
+						<p id="title">Title</p>
+						<TextInput class="textinput" v-model="title_text"></TextInput>
+
+						<p id="description">Description</p>
+						<TextInput class="textinput" v-model="description_text"></TextInput>
+
+						<p id="heightweight">Body Shape</p>
+						<div class="select_list">
+							<div>
+								<label> Height </label>
+								<select v-model="selected_height">
+									<option disabled value="">height</option>
+									<option>-150</option>
+									<option>150-160</option>
+									<option>160-170</option>
+									<option>170-180</option>
+									<option>180-190</option>
+									<option>190-</option>
+								</select>
+							</div>
+							<div>
+								<label> Weight </label>
+								<select v-model="selected_weight">
+									<option disabled value="">weight</option>
+									<option>-50</option>
+									<option>50-60</option>
+									<option>60-70</option>
+									<option>70-80</option>
+									<option>80-90</option>
+									<option>90-</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="tag_input_div">
+						<p id="tags">Tags</p>
+						<TagInput v-model="selected_tags" small/>
+					</div>
+				</div>
+
+				<div class="buttons">
+					<AppButton @click="saveCoordinationDetail" :disabled="canSave" :color="btnSave">
+						{{saveMsg}}
+					</AppButton>
+					<AppButton @click="uploadToRanking" :disabled="canUpload" :color="btnUpload">
+						<IconUpload id="upload" />
+						{{uploadMsg}}
+					</AppButton>
+					<AppButton>
+						<IconCart id="cart" />
+						To Shopping Cart
+					</AppButton>
+					<AppButton @click="close">
+						Cancel
+					</AppButton>
 				</div>
 			</div>
-
-			<div class="buttons">
-				<AppButton @click="saveCoordinationDetail" :disabled="canSave" :color="btnSave">
-					{{saveMsg}}
-				</AppButton>
-				<AppButton @click="uploadToRanking" :disabled="canUpload" :color="btnUpload">
-					<IconUpload id="upload" />
-					{{uploadMsg}}
-				</AppButton>
-				<AppButton>
-					<IconCart id="cart" />
-					To Shopping Cart
-				</AppButton>
-				<AppButton @click="close">
-					Cancel
-				</AppButton>
-			</div>
-		</div>
-	</AppPopup>
+		</AppPopup>
+		<DetailPopup ref="clothChooser" not_selectable :info="selected_info_cloth" v-if="selected_info_cloth" />
+	</div>
 </template>
 
 
@@ -94,6 +99,9 @@
 
 	.color_match {
 		display: flex;
+		flex-direction: column;
+		justify-items: center;
+		padding-left: 10px;
 
 		& >>> .flex {
 			font-size : 20px;
@@ -147,7 +155,7 @@
 		line-height: 15px;
 	}
 
-	label {
+	label, #color_match_score {
 		font-family: var(--main-font);
 		font-style: normal;
 		font-weight: 500;
@@ -195,6 +203,8 @@
 	import TagInput from "@/components/TagInput";
 	import AppPopup from "@/components/AppPopup";
 	import firebase from "@/src/firebase.js";
+	import DetailPopup from "@/components/DetailPopup"
+
 
 	import IconCart from "@/images/IconCart.svg?inline";
 	import IconPlus from "@/images/IconPlus.svg?inline";
@@ -208,7 +218,19 @@
 				description_text: this.Coordinations.description,
 				selected_height : this.Coordinations.bodyShape.height,
 				selected_weight : this.Coordinations.bodyShape.weight,
-				selected_tags: [...this.Coordinations.tags]
+				selected_tags: [...this.Coordinations.tags],
+				selected_info_cloth: {
+					brand: 'Gap',
+					color: '데님',
+					'delivery-date': 2,
+					gender: 'M',
+					image: 'https://image.msscdn.net/images/goods_img/20190416/1014964/1014964_2_125.jpg',
+					image_large: 'https://image.msscdn.net/images/goods_img/20180813/827198/827198_2_500.jpg',
+					name: '멋쟁이 청바지',
+					price: 10000,
+					size: ['XS', 'S', 'M', 'L', 'XL'],
+					type: 'pants'
+				}
 			}
 		},
 		computed: {
@@ -234,7 +256,7 @@
 			},
 			canUpload() {
 				if(this.Coordinations.published) return true;
-				if(this.title_text && this.description_text && this.selected_height && this.selected_weight && this.selected_tags.length) return false;
+				if(this.title_text && this.description_text && this.selected_height !="height" && this.selected_weight !="weight" && this.selected_tags.length) return false;
 				return true;
 			},
 			btnUpload() {
@@ -294,7 +316,8 @@
 			AppPopup,
 			IconCart,
 			IconUpload,
-			IconPlus
+			IconPlus,
+			DetailPopup
 		},
 
 		methods: {
@@ -306,12 +329,8 @@
 				let getTopDoc = topRef.get()
 					.then(doc => {
 						if (doc.exists) {
-							let data = {
-								name : doc.data().name,
-								id : doc.id,
-								price : doc.data().price,
-								image : doc.data().image
-							}
+							let data = doc.data();
+							data.id = doc.id;
 							this.clothes_item.push(data);
 						}
 					})
@@ -320,12 +339,8 @@
 				let getPantsDoc = pantsRef.get()
 					.then(doc => {
 						if (doc.exists) {
-							let data = {
-								name : doc.data().name,
-								id : doc.id,
-								price : doc.data().price,
-								image : doc.data().image
-							}
+							let data = doc.data();
+							data.id = doc.id;
 							this.clothes_item.push(data);
 						}
 					})
@@ -376,6 +391,14 @@
 				this.selected_height = this.Coordinations.bodyShape.height;
 				this.selected_weight = this.Coordinations.bodyShape.weight;
 				this.selected_tags = [...this.Coordinations.tags];
+			},
+
+			showpopupCloth(cloth){
+				console.log("click");
+				this.selected_info_cloth = cloth;
+				if(this.$refs.clothChooser){
+					this.$refs.clothChooser.open();
+				}
 			}
 		},
 

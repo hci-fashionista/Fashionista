@@ -48,7 +48,7 @@
 				</div>
 				<div>
 					<div class='flex buttons'>
-						<AppButton color='primary' @click="select" fullWidth>Select</AppButton>
+						<AppButton v-if="!not_selectable" color='primary' @click="select" fullWidth>Select</AppButton>
 						<AppButton fullWidth @click='close'>Cancel</AppButton>
 					</div>
 				</div>
@@ -179,6 +179,10 @@ export default {
 					type: 'pants'
 				}
 			}
+		},
+		not_selectable: {
+			type: Boolean,
+			default: false
 		}
 	},
 	watch: {
