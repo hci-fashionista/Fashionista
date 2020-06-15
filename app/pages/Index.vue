@@ -25,7 +25,7 @@
 				<h1>New Item</h1>
 				<div class="center">
 					<ul class="coordinations_list">
-						<li @click="showpopupCloth(value)" v-for="(value, id, index) in clothes" :key="index">
+						<li @click="showpopupCloth(value)" v-for="(value, index) in clothes" :key="index">
 							<AppClothwithRank :clothId="index" :detail="value" />
 						</li>
 					</ul>
@@ -43,8 +43,7 @@
 			</div>
 		</div>
 		<RankingCoordinationDetail ref="coordinationChooser" :Coordinations="selected_info" v-if="selected_info" />
-		<DetailPopup ref="clothChooser" :info="selected_info_cloth" v-if="selected_info_cloth">
-		</DetailPopup>
+		<DetailPopup ref="clothChooser" :info="selected_info_cloth" v-if="selected_info_cloth" />
 	</main>
 </template>
 
@@ -98,7 +97,7 @@
 		data() {
 			return {
 				coordinations: [],
-				clothes: {},
+				clothes: [],
 				selected_info: {
 					'id': '0nZifbU3OmmfCI6wRfSY',
 					'name': "None",
@@ -181,10 +180,8 @@
 			const clothes = {}
 			const topSnap = await db.collection("top").orderBy("image").limit(2).get()
 			const pantsSnap = await db.collection("pants").orderBy("image").limit(2).get()
-			const pushClothInformation = doc => { clothes[doc.id] = doc.data() }
-			topSnap.forEach(pushClothInformation)
-			pantsSnap.forEach(pushClothInformation)
-			this.clothes = Object.keys(clothes).sort(() => Math.random() - 0.5).reduce((acc, key) => ({ ...acc, [key]: clothes[key] }), {})
+			const pushClothInformation = doc => ({ id: doc.id, ...doc.data() })
+			this.clothes = [...topSnap.docs, ...pantsSnap.docs].map(pushClothInformation).sort(() => Math.random() - 0.5)
 		}
 	}
 </script>
