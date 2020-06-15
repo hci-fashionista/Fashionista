@@ -366,50 +366,7 @@
 
 	import firebase from "@/src/firebase";
 	import { getIcon } from "@/components/GuidelineIcons";
-
-	const getMock = () => [
-		{
-			id: 'tshirts-jeans',
-			name: 'T-shirts + Jeans',
-			components: [
-				{
-					id: 'top',
-					name: 'T-Shirts',
-					icon: 'tshirts',
-					tags: [
-						'Category:T-Shirts'
-					]
-				},
-
-				{
-					id: 'pants',
-					name: 'Jeans',
-					icon: 'jeans',
-					tags: [
-						'Category:Jeans'
-					]
-				}
-			],
-
-			colorCandidates: [
-				{
-					id: 'black-black',
-					name: 'Black + Black',
-					components: [
-						{
-							id: 'top',
-							color: '검정색'
-						},
-
-						{
-							id: 'pants',
-							color: '검정색'
-						}
-					]
-				}
-			]
-		}
-	];
+	import getTemplates from "@/src/templates";
 
 	const db = firebase.firestore();
 
@@ -417,7 +374,7 @@
 		data() {
 			return {
 				stages: ['Template', 'Color', 'Clothes', 'Finish'],
-				templateCandidates: getMock(),
+				templateCandidates: getTemplates(),
 				template: null,
 				colors: null,
 				category: null,
