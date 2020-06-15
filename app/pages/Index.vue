@@ -21,22 +21,38 @@
 		</SideBar>
 
 		<div class='content'>
-			<div class="rankings">
+			<div class="clothes_container">
+				<h1>Ranking</h1>
+				<div class="center">
+					<ul class="coordinations_list">
+						<li @click="showpopupCoordi(value.detail)" v-for="(value, index) in rankings" :key="index">
+							<CoordinationwithRank :clothes="value.clothes" :detail="value.detail" :index="index"/>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="clothes_container">
+				<h1>My Coordinations</h1>
+				<div class="center">
+					<ul class="coordinations_list">
+						<li @click="showpopupCoordi(value.detail)" v-for="(value, index) in coordinations" :key="index">
+							<CoordinationwithRank :clothes="value.clothes" :detail="value.detail" :index="index"/>
+						</li>
+						<li class="create">
+							<button @click="toGuideline">
+								<IconPlus style="width: 5rem; height: 5rem; fill: var(--grey-300)" />
+							</button>
+							<p>Create By Guideline</p>
+						</li>
+					</ul>
+				</div>
+			</div>
+			<div class="clothes_container">
 				<h1>New Item</h1>
 				<div class="center">
 					<ul class="coordinations_list">
 						<li @click="showpopupCloth(value)" v-for="(value, index) in clothes" :key="index">
 							<AppClothwithRank :clothId="index" :detail="value" />
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="rankings">
-				<h1>Ranking</h1>
-				<div class="center">
-					<ul class="coordinations_list">
-						<li @click="showpopupCoordi(value.detail)" v-for="(value, index) in coordinations" :key="index">
-							<CoordinationwithRank :clothes="value.clothes" :detail="value.detail" :index="index"/>
 						</li>
 					</ul>
 				</div>
@@ -59,7 +75,7 @@
 		width: 100%;
 	}
 
-	.rankings{
+	.clothes_container {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -69,6 +85,7 @@
 			align-self: start;
 		}
 	}
+
 	.coordinations_list {
 		list-style: none;
 		padding: 0px 0px;
@@ -81,6 +98,31 @@
 		& > li {
 			margin: 20px 20px;
 			cursor: pointer;
+		}
+	}
+
+	.create {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		margin: 20px 20px;
+
+		& > p {
+			font-size: 20px;
+			margin: 10px;
+			text-align: center;
+		}
+
+		& > button {
+			width: 160px;
+			height: 160px;
+			border: none;
+			border-radius: 10px;
+			cursor: pointer;
+			outline: none;
+			align-self: center;
+			font-size: 100px;
+			background-color: var(--grey-750)
 		}
 	}
 </style>
@@ -139,7 +181,8 @@
 			AppClothwithRank,
 			CoordinationwithRank,
 			RankingCoordinationDetail,
-			DetailPopup
+			DetailPopup,
+			IconPlus
 		},
 		methods:{
 			showpopupCoordi(coordi){
@@ -153,6 +196,9 @@
 				if(this.$refs.clothChooser){
 					this.$refs.clothChooser.open();
 				}
+			},
+			toGuideline() {
+				this.$router.push('/coordinations/new');
 			},
 		},
 		async mounted() {
