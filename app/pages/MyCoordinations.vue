@@ -2,7 +2,12 @@
 	<div class='flex center'>
 		<div class="flex container">
 			<div class="flex coordinations">
-				<h1>My Coordinations</h1>
+				<div class="flex heading">
+					<h1>My Coordinations</h1>
+					<div class="flex" v-for="field in ['date', 'price', 'likes']">
+						<span @click="sortBy(field)" :class="fieldClass(field)"> ↓ {{ field }} </span>
+					</div>
+				</div>
 				<ul class="coordinations_list">
 					<li class="create">
 						<button @click="toGuideline">
@@ -10,8 +15,8 @@
 						</button>
 						<p>Create By Guideline</p>
 					</li>
-					<li @click="uploadRankingPopupOpen(coordination)" v-for="(coordination, index) in my_coordinations">
-						<CoordinationwithRank :clothes="clothes_dict[coordination.id]" :detail="coordination" :index="index" :new-item="index === 0"/>
+					<li @click="uploadRankingPopupOpen(coordination.detail)" v-for="(coordination, index) in my_coordinations">
+						<CoordinationwithRank :clothes="coordination.clothes" :detail="coordination.detail" :index="index" :new-item="sort_field === 'date' && index === 0"/>
 					</li>
 				</ul>
 			</div>
@@ -35,7 +40,29 @@
 		}
 	}
 
-	.coordinations {
+	.flex.heading {
+		align-items: center;
+
+		& > h1 {
+			margin-right: 30px;
+		}
+
+		& > div {
+			font-size: 1.5rem;
+		}
+
+		& > div > span {
+			margin: 0 30px;
+			text-transform: capitalize;
+			cursor: pointer;
+		}
+	}
+
+	.greyed {
+		color: var(--grey-550);
+	}
+
+	.flex.coordinations {
 		max-width: 1500px;
 		flex-direction: column;
 
@@ -93,8 +120,6 @@
 	import UploadRanking from "@/components/UploadRanking"
 	import IconPlus from "@/images/IconPlus.svg?inline";
 
-	const db = firebase.firestore()
-
 	export default {
 		data() {
 			return {
@@ -102,7 +127,8 @@
 				height: "150~160",
 				weight: "50~60",
 				clothes_dict: {},
-				selected_info: null
+				selected_info: null,
+				sort_field: 'date'
 			}
 		},
 
@@ -120,72 +146,76 @@
 						this.$refs.uploadRankingPopup.open();
 				});
 			},
-			filtering(coordination){
-				if (coordination.author == "Dol Lee") {
-					return true;
-				}
-				else {
-					return false;
-				}
+			filtering(coordination) {
+				return coordination.author === "Dol Lee"
 			},
 			toGuideline() {
 				this.$router.push('/coordinations/new');
 			},
 			updateCloth(...args) {
 				this.my_coordinations.forEach(coordination => {
-					if(coordination.id == args[0]){
-						coordination.name = args[1],
-						coordination.description=args[2],
-						coordination.bodyShape= {
-							height: args[3],
-							weight: args[4]
-						},
-						coordination.tags= args[5]
-					}
+					if (coordination.detail.id !== args[0])
+						return
+					coordination.detail.name = args[1],
+					coordination.detail.description=args[2],
+					coordination.detail.bodyShape= {
+						height: args[3],
+						weight: args[4]
+					},
+					coordination.detail.tags= args[5]
 				})
 			},
-			makeMyCoordinations() {
-				db.collection("ranking").get().then(async (querySnapshot)=>{
-					const total_coordinations = [];
-
-					await querySnapshot.forEach((doc)=>{
-						// doc.data() is never undefined for query doc snapshots
-						let dataObject = doc.data()
-						dataObject["id"] = doc.id
-						total_coordinations.push(dataObject)
-					});
-
-					return total_coordinations
-				})
-				.then(async total_coordinations =>{
-					await Promise.all(total_coordinations.map(async (coordination)=>{
-						let clothes = coordination.clothes
-						let docRef_top = db.collection("top").doc(clothes.top)
-						let docRef_pants = db.collection("pants").doc(clothes.pants)
-						this.clothes_dict[coordination.id] = []
-						await docRef_top.get().then((data)=>{
-							if (data.exists) {
-								this.clothes_dict[coordination.id].push(data.data())
-							}
-						})
-						await docRef_pants.get().then((data)=>{
-							if (data.exists) {
-								this.clothes_dict[coordination.id].push(data.data())
-							}
-						})
-					}))
-
-					return total_coordinations;
-				})
-				.then(total_coordinations => {
-					this.my_coordinations = total_coordinations
-						.filter(coordination => this.filtering(coordination))
-						.sort((c1, c2) => c1.date < c2.date ?  -1 : 1)
-				})
+			sortBy(field) {
+				this.sort_field = field
+				this.my_coordinations = [
+					...this.my_coordinations
+						.sort((c1, c2) => c1.detail[field] < c2.detail[field] ? -1 : 1)
+				]
+			},
+			fieldClass(field) {
+				return {
+					greyed: this.sort_field !== field
+				}
+			},
+			async makeMyCoordinations() {
+				/*NOTE:
+				This function initializes `this.my_coordinations`.
+				This is the structure of this.my_coordinations:
+				[
+					{
+						id: (document id)
+						detail: (document object of `ranking` collection)
+						clothes: [
+							(document object of `top` collection),
+							(document object of `pants` collection)
+						]
+					}
+				]*/
+				const db = firebase.firestore()
+				const rankingSnap = await db.collection("ranking").get()
+				const coordinations = rankingSnap.docs.map(doc => ({
+					detail: {
+						id: doc.id,
+						...doc.data()
+					},
+					id: doc.id
+				}))
+				const pushCoordInformation = async (coordination, idx) => {
+					const { detail: { clothes } } = coordination
+					const top = await db.collection("top").doc(clothes.top).get()
+					const pants = await db.collection("pants").doc(clothes.pants).get()
+					coordinations[idx].clothes = [top.data(), pants.data()]
+				}
+				await Promise.all(coordinations.map(pushCoordInformation))
+				this.my_coordinations = [
+					...coordinations
+						.filter(c => this.filtering(c.detail))
+						.sort((c1, c2) => c1.detail.date < c2.detail.date ? -1 : 1)
+				]
 			}
 		},
-		mounted() {
-			this.makeMyCoordinations();
+		async mounted() {
+			await this.makeMyCoordinations();
 		},
 		components: {
 			AppClothwithRank,
