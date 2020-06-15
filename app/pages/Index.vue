@@ -35,7 +35,7 @@
 				<h1>Ranking</h1>
 				<div class="center">
 					<ul class="coordinations_list">
-						<li @click="showpopupCoordi(value.detail)" v-for="(value, name, index) in coordinations" :key="index">
+						<li @click="showpopupCoordi(value.detail)" v-for="(value, index) in coordinations" :key="index">
 							<CoordinationwithRank :clothes="value.clothes" :detail="value.detail" :index="index"/>
 						</li>
 					</ul>
@@ -97,7 +97,7 @@
 	export default {
 		data() {
 			return {
-				coordinations: {},
+				coordinations: [],
 				clothes: {},
 				selected_info: {
 					'id': '0nZifbU3OmmfCI6wRfSY',
@@ -158,19 +158,24 @@
 			const db = firebase.firestore()
 
 			// initialize coordinations
-			const coordinations = {}
 			const rankingSnap = await db.collection("ranking").where("published", "==", true).limit(4).get()
-			rankingSnap.forEach((doc, idx) => {
-				coordinations[doc.id] = { "detail": doc.data() }
-			})
-			const pushCoordInformation = async docid => {
-				const { detail: { clothes } } = coordinations[docid]
+			const coordinations = rankingSnap.docs.map(doc => ({
+				detail: {
+					id: doc.id,
+					...doc.data()
+				},
+				id: doc.id
+			}))
+			const pushCoordInformation = async (coordination, idx) => {
+				const { detail: { clothes } } = coordination
 				const top = await db.collection("top").doc(clothes.top).get()
 				const pants = await db.collection("pants").doc(clothes.pants).get()
-				coordinations[docid].clothes = [top.data(), pants.data()]
+				coordinations[idx].clothes = [top.data(), pants.data()]
 			}
-			await Promise.all(Object.keys(coordinations).map(pushCoordInformation))
-			this.coordinations = { ...coordinations }
+			await Promise.all(coordinations.map(pushCoordInformation))
+			this.coordinations = [
+				...coordinations.sort((c1, c2) => c1.detail.likes > c2.detail.likes ? -1 : 1)
+			]
 
 			// initialize clothes
 			const clothes = {}
