@@ -18,7 +18,13 @@
 						<p>Create By Guideline</p>
 					</li>
 					<li @click="uploadRankingPopupOpen(coordination.detail)" v-for="(coordination, index) in my_coordinations">
-						<CoordinationwithRank :clothes="coordination.clothes" :detail="coordination.detail" :index="index" :new-item="sort_field === 'date' && index === 0"/>
+						<CoordinationwithRank
+							:clothes="coordination.clothes"
+							:detail="coordination.detail"
+							:index="index"
+							:new-item="sort_field === 'date' && index === 0"
+							:show-published="true"
+						/>
 					</li>
 				</ul>
 			</div>
