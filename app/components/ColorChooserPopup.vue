@@ -27,7 +27,8 @@
 							v-for="(selectedColor, index) in palette"
 						>
 							<button class="Dot Palette__dot"
-								v-for="color in colors"
+								v-for="color in colors[index]"
+								:key="getColorName(color)"
 								:data-color="getColorName(color)"
 								:style="{ background: getColor(color) }"
 								@click="setPalette(index, color)"
@@ -219,14 +220,25 @@
 	import GuidelineIcons from "@/components/GuidelineIcons";
 	import IconResult from "@/images/IconResult.svg?inline";
 
-	import { colors, colorMatchScoreMulti, normalizeColor, toRGB } from "@/src/color.js";
+	import {
+		colors,
+		colorMatchScoreMulti,
+		normalizeColor,
+		sortColor,
+		toRGB
+	} from "@/src/color.js";
+	import firebase from "@/src/firebase";
+
+	const definedColors = colors;
+	const db = firebase.firestore();
 
 	export default {
 		data() {
 			return {
 				palette: [...Array(this.template.components.length)],
 				colorChooser: [...Array(this.template.components.length)],
-				colors: [...colors],
+				colors: [...Array(this.template.components.length)].map(v => []),
+				defaultColors: [...Array(this.template.components.length)].map(v => []),
 				newColor: "#404040"
 			};
 		},
@@ -249,7 +261,7 @@
 			},
 
 			paletteNormalized() {
-				return this.palette.filter(v => v).map(v => normalizeColor(v));
+				return this.palette.filter(v => v).map((v, i) => normalizeColor(v, this.defaultColors[i]));
 			},
 
 			colorScore() {
@@ -316,7 +328,7 @@
 						return;
 
 					this.$set(this.colorChooser, index, false);
-					this.colors.push(this.newColor);
+					this.colors[index].push(this.newColor);
 				};
 			},
 
@@ -332,6 +344,22 @@
 			cancel() {
 				this.$refs.popup.close();
 			}
+		},
+
+		async mounted() {
+			const items = await db.collection('colors').get();
+			items.forEach(item => {
+				const { id, colors } = item.data();
+				const index = this.template.components.findIndex(({ id: componentId }) => componentId === id);
+				if(index < 0) return;
+
+				const colorsSorted = colors
+					.sort(sortColor)
+					.filter(color => definedColors.includes(color));
+
+				this.$set(this.colors, index, [...colorsSorted]);
+				this.$set(this.defaultColors, index, [...colorsSorted]);
+			});
 		},
 
 		components: {
