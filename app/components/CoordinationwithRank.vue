@@ -6,7 +6,7 @@
 		<div v-if="newItem" class="new first">
 			<div>new</div>
 		</div>
-		<div v-if="detail.published" class="published" :class="{first: !newItem, second: newItem}">
+		<div v-if="showPublished && detail.published" class="published" :class="{first: !newItem, second: newItem}">
 			<IconCheck />
 		</div>
 		<AppCoordination :clothes="clothes" :name="detail.name" :price="detail.totalPrice" :likes="detail.likes"></AppCoordination>
@@ -127,6 +127,10 @@
 				type: Array,
 			},
 			newItem: {
+				type: Boolean,
+				default: false
+			},
+			showPublished: {
 				type: Boolean,
 				default: false
 			}
