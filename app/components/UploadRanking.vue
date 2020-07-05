@@ -15,13 +15,13 @@
 
 				<div class="textAndTag">
 					<div class="texts">
-						<p id="title">Title</p>
-						<TextInput class="textinput" v-model="title_text"></TextInput>
+						<p id="title">Title *</p>
+						<TextInput class="textinput" v-model="title_text" id="tit_text"></TextInput>
 
-						<p id="description">Description</p>
-						<TextInput class="textinput" v-model="description_text"></TextInput>
+						<p id="description">Description *</p>
+						<TextInput class="textinput" v-model="description_text" id="des_text"></TextInput>
 
-						<p id="heightweight">Body Shape</p>
+						<p id="heightweight">Body Shape *</p>
 						<div class="select_list">
 							<div>
 								<label> Height </label>
@@ -51,7 +51,7 @@
 					</div>
 
 					<div class="tag_input_div">
-						<p id="tags">Tags</p>
+						<p id="tags">Tags *</p>
 						<TagInput v-model="selected_tags" small/>
 					</div>
 				</div>
@@ -60,10 +60,15 @@
 					<AppButton @click="saveCoordinationDetail" :disabled="canSave" :color="btnSave">
 						{{saveMsg}}
 					</AppButton>
-					<AppButton @click="uploadToRanking" :disabled="canUpload" :color="btnUpload">
-						<IconUpload id="upload" />
-						{{uploadMsg}}
+					
+					
+					<AppButton class="uploadRanking" @click="uploadToRanking" :disabled="canUpload" :color="btnUpload">
+						<div class="uploadPopUp" @click="clickEvent">
+							<IconUpload id="upload"/>
+							{{uploadMsg}}
+						</div>
 					</AppButton>
+					
 					<AppButton>
 						<IconCart id="cart" />
 						To Shopping Cart
@@ -166,6 +171,12 @@
 		display:flex;
 		margin-top: 20px;
 
+		.uploadRanking{
+			padding: 0px;
+		}
+		.uploadPopUp{
+			padding: 10px 20px;
+		}
 		button {
 			display: flex;
 			align-items: center;
@@ -209,6 +220,7 @@
 	import IconCart from "@/images/IconCart.svg?inline";
 	import IconPlus from "@/images/IconPlus.svg?inline";
 	import IconUpload from "@/images/IconUpload.svg?inline";
+	import swal from 'sweetalert'
 
 	export default {
 		data() {
@@ -262,6 +274,25 @@
 			btnUpload() {
 				if(this.canUpload) return "default";
 				else return "primary";
+			},
+			notfill() {
+				let notfilled_input = []
+				if (this.title_text == ""){
+					notfilled_input.push("Title")
+				}
+				if (this.description_text == ""){
+					notfilled_input.push("Description")
+				}
+				if (this.selected_height == "height"){
+					notfilled_input.push("Height")
+				}
+				if (this.selected_weight == "weight"){
+					notfilled_input.push("Weight")
+				}
+				if (this.selected_tags.length == 0){
+					notfilled_input.push("Tags")
+				}
+				return notfilled_input
 			}
 		},
 		watch: {
@@ -399,6 +430,17 @@
 				if(this.$refs.clothChooser){
 					this.$refs.clothChooser.open();
 				}
+			},
+			clickEvent(){
+				console.log(this.notfill)
+				if(this.notfill.length != 0){
+					let alert_text = "Please fill in "
+					this.notfill.forEach(function(item){
+						alert_text = alert_text + item + ", "
+					})
+					swal("Oops", alert_text.slice(0, -2), "warning");
+				}
+				
 			}
 		},
 

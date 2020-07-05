@@ -49,6 +49,7 @@
   "dependencies": {
     "@babel/runtime": "^7.10.1",
     "firebase": "^7.14.6",
+    "sweetalert": "^2.1.2",
     "vue": "^2.6.11",
     "vue-click-outside": "^1.1.0",
     "vue-color": "^2.7.1",
