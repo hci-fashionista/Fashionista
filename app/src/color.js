@@ -142,12 +142,13 @@ export function toRGB(color) {
 	return RGBToHEX(...RGBMap[color])
 }
 
-export function normalizeColor(color) {
+export function normalizeColor(color, target = colors) {
 	if(typeof color !== 'object')
 		return color;
 
-	const { r, g, b } = color.rgba;
-	const { value } = Object.keys(RGBMap)
+	const [r, g, b] = color.rgba ? Object.values(color.rgba) : HEXToRGB(color.hex);
+
+	const { value } = target
 		.reduce((minDistance, key) => {
 			const [r1, g1, b1] = RGBMap[key];
 			const distance = Math.hypot(r - r1, g - g1, b - b1);
@@ -209,11 +210,13 @@ const getHSLVal = (num, step = 1) => color =>
 const getHue = getHSLVal(0);
 const getLightness = getHSLVal(2);
 
-export const colors = Object.keys(RGBMap)
-	.sort((color1, color2) => {
-		const lightDiff = getLightness(color1) - getLightness(color2);
-		if(lightDiff !== 0)
-			return Math.sign(lightDiff);
+export function sortColor(color1, color2) {
+	const lightDiff = getLightness(color1) - getLightness(color2);
+	if(lightDiff !== 0)
+		return Math.sign(lightDiff);
 
-		return Math.sign(getHue(color1) - getHue(color2));
-	});
+	return Math.sign(getHue(color1) - getHue(color2));
+}
+
+export const colors = Object.keys(RGBMap)
+	.sort(sortColor);
