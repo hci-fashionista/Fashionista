@@ -48,7 +48,6 @@
 		},
 		computed: {
 			score() {
-				console.log(this.colors)
 				return colorMatchScoreMulti(this.colors)
 			}
 		}
